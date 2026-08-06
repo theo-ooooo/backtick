@@ -67,7 +67,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </div>
         </header>
         {children}
-        <div className="h-[68px] sm:hidden" aria-hidden />
+        <div className="h-[92px] sm:hidden" aria-hidden />
         <footer className="mt-auto border-t border-line py-8">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-2 px-6 text-center">
             <span className="font-mono text-[12px] tracking-[0.14em] text-faint">BACKTICK · 개발자의 글쓰기</span>

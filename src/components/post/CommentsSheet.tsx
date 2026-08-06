@@ -31,7 +31,7 @@ export function CommentsSheet(props: Props) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-[84px] right-5 z-40 flex items-center gap-2 sm:bottom-6 sm:right-6 rounded-full bg-ink px-5 py-3.5 text-[14px] font-bold text-white shadow-[0_8px_24px_rgba(26,24,21,.35)] transition hover:opacity-90 active:scale-95"
+        className="fixed bottom-[104px] right-5 z-40 flex items-center gap-2 sm:bottom-6 sm:right-6 rounded-full bg-ink px-5 py-3.5 text-[14px] font-bold text-white shadow-[0_8px_24px_rgba(26,24,21,.35)] transition hover:opacity-90 active:scale-95"
         aria-label="댓글 열기"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
