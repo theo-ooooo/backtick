@@ -60,23 +60,32 @@ export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
   };
 }
 
-export async function getFeed(tab: FeedTab, sort: FeedSort = "latest", take = 40): Promise<FeedItem[]> {
+/** 통합 피드 — page 단위 무한스크롤 (0부터). 병합 정렬 특성상 오버페치 후 창을 자른다. */
+export async function getFeed(
+  tab: FeedTab,
+  sort: FeedSort = "latest",
+  page = 0,
+  take = 20,
+  sources?: string[], // 기술블로그 소스 필터 (비면 전체)
+): Promise<FeedItem[]> {
   const wantNative = tab === "all" || tab === "backtick";
   const wantExternal = tab === "all" || tab === "tech";
+  const window = (page + 1) * take;
 
   const [posts, externals] = await Promise.all([
     wantNative
       ? prisma.post.findMany({
           where: { status: "PUBLISHED" },
           orderBy: { publishedAt: "desc" },
-          take,
+          take: window,
           include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
         })
       : Promise.resolve([]),
     wantExternal
       ? prisma.externalPost.findMany({
+          where: sources?.length ? { feed: { name: { in: sources } } } : undefined,
           orderBy: { publishedAt: "desc" },
-          take: take * 4, // over-fetch so per-source capping still fills the page
+          take: Math.min(window * 4, 600), // over-fetch so per-source capping still fills pages
           include: { feed: true },
         })
       : Promise.resolve([]),
@@ -85,8 +94,8 @@ export async function getFeed(tab: FeedTab, sort: FeedSort = "latest", take = 40
   const native: FeedItem[] = posts.map(toFeedItem);
   const external: FeedItem[] = externals.map(toExternalFeedItem);
 
-  // cap per external source so a chatty feed (e.g. GeekNews) can't flood the page
-  const PER_SOURCE_CAP = 6;
+  // cap per external source so a chatty feed (e.g. GeekNews) can't flood — 페이지가 깊어질수록 상한도 함께 확장
+  const PER_SOURCE_CAP = 6 * (page + 1);
   const seen = new Map<string, number>();
   const capped = external
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
@@ -105,7 +114,7 @@ export async function getFeed(tab: FeedTab, sort: FeedSort = "latest", take = 40
   } else {
     merged.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
   }
-  return merged.slice(0, take);
+  return merged.slice(page * take, window);
 }
 
 export interface TrendingTag {

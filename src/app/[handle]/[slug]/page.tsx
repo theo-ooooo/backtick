@@ -68,10 +68,6 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             )}
           </div>
 
-          <div className="pt-7">
-            <Markdown content={post.content} />
-          </div>
-
           <PostActions
             postId={post.id}
             views={post.views}
@@ -79,6 +75,10 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             liked={liked}
             loggedIn={Boolean(me)}
           />
+
+          <div className="pt-7">
+            <Markdown content={post.content} />
+          </div>
 
           <CommentsSheet postId={post.id} comments={comments} count={commentCount} meId={me?.id ?? null} />
         </article>

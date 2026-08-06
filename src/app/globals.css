@@ -163,3 +163,6 @@ body {
   60% { width: 70%; }
   100% { width: 92%; opacity: 1; }
 }
+@keyframes btSpin {
+  to { transform: rotate(360deg); }
+}

@@ -63,7 +63,7 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
   }
 
   return (
-    <div className="mt-10 flex items-center gap-3 border-t border-line pt-6">
+    <div className="mt-5 flex items-center gap-3">
       <button
         type="button"
         onClick={onLike}

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { getFeed, getTrendingTags, type FeedTab, type FeedSort } from "@/lib/feed";
 import { SortSelect } from "@/components/feed/SortSelect";
 import { getEnabledFeeds } from "@/lib/queries/source";
-import { FeedList } from "@/components/feed/FeedList";
+import { HomeFeed } from "@/components/feed/HomeFeed";
+import { IntroPopup } from "@/components/home/IntroPopup";
 import { Panel } from "@/components/ui/Panel";
 
 export const revalidate = 300;
@@ -18,13 +19,14 @@ export default async function Home(props: PageProps<"/">) {
   const tab: FeedTab = rawTab === "backtick" || rawTab === "tech" ? rawTab : "all";
   const sort: FeedSort = rawSort === "popular" ? "popular" : "latest";
   const [items, feeds, trending] = await Promise.all([
-    getFeed(tab, sort),
+    getFeed(tab, sort, 0, 20),
     getEnabledFeeds(),
     getTrendingTags(6),
   ]);
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-6 py-8">
+      <IntroPopup />
       <div className="flex gap-8">
         <section className="min-w-0 flex-1">
           <div className="flex items-center border-b border-line">
@@ -44,7 +46,7 @@ export default async function Home(props: PageProps<"/">) {
             <SortSelect current={sort} />
           </div>
 
-          <FeedList items={items} />
+          <HomeFeed initialItems={items} tab={tab} sort={sort} sourceNames={feeds.map((f) => f.name)} />
         </section>
 
         <aside className="hidden w-[280px] shrink-0 lg:block">
