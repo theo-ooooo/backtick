@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { searchAll } from "@/lib/queries/search";
-import { FeedItemRow } from "@/components/feed/FeedItemRow";
+import { FeedList } from "@/components/feed/FeedList";
 
 export const metadata: Metadata = { title: "검색" };
 
@@ -18,16 +18,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
               <span className="font-extrabold text-acc">{q}</span>
               <span className="ml-2 font-semibold text-muted">검색 결과 {items.length}건</span>
             </div>
-            <ul className="divide-y divide-line/70">
-              {items.map((item) => (
-                <li key={item.url}>
-                  <FeedItemRow item={item} />
-                </li>
-              ))}
-              {items.length === 0 && (
-                <li className="py-20 text-center text-sm text-faint">검색 결과가 없어요</li>
-              )}
-            </ul>
+            <FeedList items={items} empty="검색 결과가 없어요" />
           </>
         ) : (
           <div className="py-20 text-center text-sm text-faint">검색어를 입력해주세요</div>

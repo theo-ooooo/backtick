@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTagFeed } from "@/lib/queries/tag";
-import { FeedItemRow } from "@/components/feed/FeedItemRow";
+import { FeedList } from "@/components/feed/FeedList";
 
 export const revalidate = 600;
 
@@ -24,14 +24,7 @@ export default async function TagPage(props: PageProps<"/tags/[tag]">) {
         </h1>
         <p className="mt-1 text-[13.5px] font-medium text-muted">관련 글 {items.length}건</p>
       </div>
-      <ul className="divide-y divide-line/70">
-        {items.map((item) => (
-          <li key={item.url}>
-            <FeedItemRow item={item} />
-          </li>
-        ))}
-        {items.length === 0 && <li className="py-20 text-center text-sm text-faint">이 태그의 글이 아직 없어요</li>}
-      </ul>
+      <FeedList items={items} empty="이 태그의 글이 아직 없어요" />
     </main>
   );
 }

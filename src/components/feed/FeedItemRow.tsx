@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 import type { FeedItem } from "@/lib/feed";
 import { timeAgo } from "@/lib/format";
@@ -5,15 +7,23 @@ import { dotColor } from "@/lib/colors";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
 
+interface Props {
+  item: FeedItem;
+  read?: boolean;
+  onRead?: () => void;
+}
+
 /** One row in the unified feed — native posts and collected external posts share this. */
-export function FeedItemRow({ item }: { item: FeedItem }) {
+export function FeedItemRow({ item, read = false, onRead }: Props) {
   const external = item.kind === "external";
   return (
     <a
       href={item.url}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="group flex gap-5 py-[22px]"
+      onClick={onRead}
+      onAuxClick={onRead}
+      className={`group flex gap-5 py-[22px] ${read ? "opacity-[.55]" : ""}`}
     >
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex items-center gap-2 text-[12.5px]">
@@ -25,6 +35,7 @@ export function FeedItemRow({ item }: { item: FeedItem }) {
               />
               <span className="font-mono text-[12px] font-semibold text-sub">{item.source}</span>
               <span className="text-faint">수집됨 · {timeAgo(item.publishedAt)}</span>
+            {read && <span className="rounded bg-paper px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-faint">읽음</span>}
             </>
           ) : (
             <>

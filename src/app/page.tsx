@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getFeed, getTrendingTags, type FeedTab, type FeedSort } from "@/lib/feed";
 import { SortSelect } from "@/components/feed/SortSelect";
 import { getEnabledFeeds } from "@/lib/queries/source";
-import { FeedItemRow } from "@/components/feed/FeedItemRow";
+import { FeedList } from "@/components/feed/FeedList";
 import { Panel } from "@/components/ui/Panel";
 
 export const revalidate = 300;
@@ -44,14 +44,7 @@ export default async function Home(props: PageProps<"/">) {
             <SortSelect current={sort} />
           </div>
 
-          <ul className="divide-y divide-line/70">
-            {items.map((item) => (
-              <li key={item.url}>
-                <FeedItemRow item={item} />
-              </li>
-            ))}
-            {items.length === 0 && <li className="py-24 text-center text-sm text-faint">아직 글이 없어요</li>}
-          </ul>
+          <FeedList items={items} />
         </section>
 
         <aside className="hidden w-[280px] shrink-0 lg:block">
