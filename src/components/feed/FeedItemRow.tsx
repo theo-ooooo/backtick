@@ -118,7 +118,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
           </div>
       </div>
       {item.thumbnail && (
-        <div className="hidden h-[76px] w-[116px] shrink-0 self-center overflow-hidden rounded-lg border border-line bg-paper sm:block">
+        <div className="h-[64px] w-[92px] shrink-0 self-center overflow-hidden rounded-lg border border-line bg-paper sm:h-[76px] sm:w-[116px]">
           <img
             src={item.thumbnail}
             alt=""
