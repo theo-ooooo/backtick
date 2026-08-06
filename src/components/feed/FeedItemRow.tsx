@@ -85,17 +85,15 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
         {item.excerpt && (
           <p className="mt-1.5 line-clamp-2 max-w-[620px] text-[14px] leading-relaxed text-muted">{item.excerpt}</p>
         )}
-        <div className="mt-3 flex items-center gap-1.5">
-            <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
-              {item.tags.slice(0, 3).map((t) => (
-                <TagChip key={t} name={t} />
-              ))}
-              {item.likes != null && item.likes > 0 && (
-                <span className="ml-1 flex shrink-0 items-center gap-1 text-[12px] font-semibold text-faint">
-                  <span className="text-acc">♡</span> {item.likes}
-                </span>
-              )}
-            </div>
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            {item.tags.slice(0, 3).map((t) => (
+              <TagChip key={t} name={t} />
+            ))}
+            {item.likes != null && item.likes > 0 && (
+              <span className="ml-1 flex shrink-0 items-center gap-1 text-[12px] font-semibold text-faint">
+                <span className="text-acc">♡</span> {item.likes}
+              </span>
+            )}
             {external && (
               <button
                 type="button"
