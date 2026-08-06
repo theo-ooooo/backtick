@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#F1EFEB; font-family:Pretendard,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+  :root { --acc:#E0533D; --acc-soft:#FCEFEC; --code-bg:#1B1A18; --code-fg:#E8E4DE; --code-chrome:#242220; }
+  a { color:var(--acc); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  ::selection { background:#FBDCD5; }
+</style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:72px 48px 120px;background:#F1EFEB">
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:34px">
+    <div style="display:flex;align-items:baseline;gap:3px">
+      <span style="font-family:'Source Code Pro',monospace;color:var(--acc);font-size:34px;font-weight:600;line-height:1">`</span>
+      <span style="font-size:30px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+    </div>
+    <div style="font-family:'Source Code Pro',monospace;font-size:12px;letter-spacing:.14em;color:#8A837C;text-transform:uppercase">Backtick — web design draft</div>
+  </div>
+
+  <!-- ══════════ 01 HOME FEED ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:16px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:var(--acc);letter-spacing:.1em">01</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">홈 피드</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:center;gap:30px">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:var(--acc);font-size:21px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:22px;font-size:14px;color:#6B6560">
+          <span style="color:#1A1815;font-weight:600">피드</span>
+          <span>태그</span>
+          <span>기업 블로그</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px;width:230px;height:36px;padding:0 12px;background:#F7F5F2;border:1px solid #EDEAE5;border-radius:8px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.6"><circle cx="7" cy="7" r="4.7"/><path d="M10.5 10.5 14 14"/></svg>
+          <span style="font-size:13px;color:#A39D96">검색</span>
+          <span style="margin-left:auto;font-family:'Source Code Pro',monospace;font-size:11px;color:#B8B2AB">⌘K</span>
+        </div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 15px;background:#1A1815;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600">글쓰기</div>
+        <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 296px;gap:60px;padding:36px 60px 64px;align-items:start">
+
+      <div style="min-width:0">
+        <div style="display:flex;align-items:center;gap:26px;border-bottom:1px solid #EFEDE9;margin-bottom:6px">
+          <div style="padding:0 1px 13px;font-size:15px;font-weight:700;color:#1A1815;box-shadow:inset 0 -2px 0 var(--acc)">전체</div>
+          <div style="padding:0 1px 13px;font-size:15px;font-weight:500;color:#8A837C">백틱</div>
+          <div style="padding:0 1px 13px;font-size:15px;font-weight:500;color:#8A837C">기술블로그</div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding-bottom:13px;font-size:13px;color:#8A837C">
+            <span>최신순</span>
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#A39D96" stroke-width="1.5"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column">
+
+          <div style="display:flex;gap:28px;padding:28px 0;border-bottom:1px solid #F2F0EC">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="width:20px;height:20px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">SH</div>
+                <span style="font-size:13px;font-weight:600;color:#4A453F">이수현</span>
+                <span style="font-size:13px;color:#B8B2AB">·</span>
+                <span style="font-size:13px;color:#8A837C">2시간 전</span>
+              </div>
+              <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.4;margin-bottom:9px">React 서버 컴포넌트를 6개월 써보고 정리한 것들</div>
+              <div style="font-size:14.5px;line-height:1.75;color:#6B6560;text-wrap:pretty;margin-bottom:14px">RSC로 전환한 뒤 번들 크기는 38% 줄었지만, 데이터 페칭 경계를 잘못 잡으면 오히려 워터폴이 생긴다. 실제 서비스에 적용하며 부딪힌 경계 설계 문제와 해결 과정을 정리했다.</div>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">react</span>
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">next.js</span>
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">performance</span>
+                <span style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#A39D96">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.4"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+                  128
+                </span>
+              </div>
+            </div>
+            <div style="width:132px;height:104px;border-radius:8px;background:linear-gradient(140deg,#F4EFE8,#EAE4DA);flex-shrink:0"></div>
+          </div>
+
+          <div style="display:flex;gap:28px;padding:28px 0;border-bottom:1px solid #F2F0EC">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 6px;background:var(--acc-soft);border-radius:5px">
+                  <span style="width:6px;height:6px;border-radius:1.5px;background:#0064FF"></span>
+                  <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;color:#B9422F">toss tech</span>
+                </div>
+                <span style="font-size:13px;color:#8A837C">수집됨 · 5시간 전</span>
+              </div>
+              <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.4;margin-bottom:9px">대규모 트래픽에서 멱등성 키를 설계하는 방법</div>
+              <div style="font-size:14.5px;line-height:1.75;color:#6B6560;text-wrap:pretty;margin-bottom:14px">결제 요청의 중복을 막는 멱등성 키는 단순해 보이지만, 키의 수명과 저장소 선택에 따라 장애 양상이 완전히 달라진다. 토스페이먼츠가 겪은 사례를 공유한다.</div>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">backend</span>
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">payments</span>
+                <span style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#A39D96">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.4"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+                  341
+                </span>
+              </div>
+            </div>
+            <div style="width:132px;height:104px;border-radius:8px;background:linear-gradient(140deg,#E7EDF6,#DCE4F0);flex-shrink:0"></div>
+          </div>
+
+          <div style="display:flex;gap:28px;padding:28px 0;border-bottom:1px solid #F2F0EC">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="width:20px;height:20px;border-radius:50%;background:#D9E2E8;color:#3F5966;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">MJ</div>
+                <span style="font-size:13px;font-weight:600;color:#4A453F">박민준</span>
+                <span style="font-size:13px;color:#B8B2AB">·</span>
+                <span style="font-size:13px;color:#8A837C">어제</span>
+              </div>
+              <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.4;margin-bottom:9px">터미널 없이는 못 사는 사람의 2026년 셸 설정</div>
+              <div style="font-size:14.5px;line-height:1.75;color:#6B6560;text-wrap:pretty;margin-bottom:14px">zsh에서 fish로 넘어온 뒤 바뀐 것, 그리고 여전히 zsh 쪽이 나은 것. dotfiles 전체를 공개하고 각 설정을 왜 그렇게 두었는지 설명한다.</div>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">shell</span>
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">dotfiles</span>
+                <span style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#A39D96">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.4"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+                  57
+                </span>
+              </div>
+            </div>
+            <div style="width:132px;height:104px;border-radius:8px;background:#1B1A18;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#8FA36B">~ ❯ _</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:28px;padding:28px 0;border-bottom:1px solid #F2F0EC">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 6px;background:var(--acc-soft);border-radius:5px">
+                  <span style="width:6px;height:6px;border-radius:1.5px;background:#2AC1BC"></span>
+                  <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;color:#B9422F">우아한형제들</span>
+                </div>
+                <span style="font-size:13px;color:#8A837C">수집됨 · 2일 전</span>
+              </div>
+              <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.4;margin-bottom:9px">배달 라우팅 엔진을 Kotlin으로 다시 쓴 이야기</div>
+              <div style="font-size:14.5px;line-height:1.75;color:#6B6560;text-wrap:pretty;margin-bottom:14px">피크 시간 30만 건의 배차를 3초 안에 계산해야 한다. 기존 파이썬 엔진의 한계와 재작성 과정에서 세운 성능 목표, 그리고 실제 측정 결과.</div>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">kotlin</span>
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">architecture</span>
+                <span style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#A39D96">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.4"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+                  219
+                </span>
+              </div>
+            </div>
+            <div style="width:132px;height:104px;border-radius:8px;background:linear-gradient(140deg,#E6F1EE,#D8E8E3);flex-shrink:0"></div>
+          </div>
+
+          <div style="display:flex;gap:28px;padding:28px 0">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <div style="width:20px;height:20px;border-radius:50%;background:#EADCE4;color:#75465F;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">YE</div>
+                <span style="font-size:13px;font-weight:600;color:#4A453F">정예린</span>
+                <span style="font-size:13px;color:#B8B2AB">·</span>
+                <span style="font-size:13px;color:#8A837C">3일 전</span>
+              </div>
+              <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.4;margin-bottom:9px">타입스크립트 5.9의 satisfies를 실전에서 쓰는 다섯 가지 패턴</div>
+              <div style="font-size:14.5px;line-height:1.75;color:#6B6560;text-wrap:pretty;margin-bottom:14px">as를 쓰던 자리를 satisfies로 바꾸면 추론은 유지하면서 검증만 얻을 수 있다. 라우팅 테이블, 테마 토큰, API 스키마에 적용한 예시.</div>
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">typescript</span>
+                <span style="margin-left:8px;display:flex;align-items:center;gap:5px;font-size:12.5px;color:#A39D96">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.4"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+                  92
+                </span>
+              </div>
+            </div>
+            <div style="width:132px;height:104px;border-radius:8px;background:linear-gradient(140deg,#F1EEF7,#E5E0F0);flex-shrink:0"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px 20px 8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <span style="font-size:13.5px;font-weight:700;color:#1A1815">트렌딩 태그</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:11px;color:#A39D96">7d</span>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:var(--acc);width:14px">01</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">typescript</span>
+              <span style="font-size:12px;color:#A39D96">412</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:var(--acc);width:14px">02</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">llm</span>
+              <span style="font-size:12px;color:#A39D96">387</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;width:14px">03</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">kubernetes</span>
+              <span style="font-size:12px;color:#A39D96">265</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;width:14px">04</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">react</span>
+              <span style="font-size:12px;color:#A39D96">241</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;width:14px">05</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">rust</span>
+              <span style="font-size:12px;color:#A39D96">198</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #F4F2EE">
+              <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;width:14px">06</span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723;flex:1">observability</span>
+              <span style="font-size:12px;color:#A39D96">154</span>
+            </div>
+            <div style="padding:12px 0 12px;font-size:12.5px;color:#8A837C">태그 전체 보기</div>
+          </div>
+        </div>
+
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-size:13.5px;font-weight:700;color:#1A1815;margin-bottom:14px">수집 중인 기술블로그</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">toss</span>
+            <span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">kakao</span>
+            <span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">우아한형제들</span>
+            
+<span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">네이버 D2</span>
+            <span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">당근</span>
+            <span style="padding:5px 9px;border:1px solid #EDEAE5;border-radius:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">+ 18</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ 02 POST DETAIL ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">02</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">글 상세</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/@soohyun/react-server-components</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:baseline;gap:2px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;height:34px;padding:0 14px;border:1px solid #E5E1DB;border-radius:8px;font-size:13px;font-weight:600;color:#4A453F">공유</div>
+        <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 264px;gap:64px;padding:56px 72px 72px;align-items:start">
+
+      <div style="min-width:0;max-width:720px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:20px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">react</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">next.js</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">performance</span>
+        </div>
+        <h1 style="margin:0 0 18px;font-size:40px;line-height:1.32;letter-spacing:-.035em;font-weight:800;color:#121110;text-wrap:pretty">React 서버 컴포넌트를 6개월 써보고 정리한 것들</h1>
+        <div style="display:flex;align-items:center;gap:9px;padding-bottom:30px;border-bottom:1px solid #EFEDE9;margin-bottom:36px">
+          <div style="width:26px;height:26px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700">SH</div>
+          <span style="font-size:14px;font-weight:600;color:#2A2723">이수현</span>
+          <span style="font-size:14px;color:#C4BFB8">·</span>
+          <span style="font-size:14px;color:#8A837C">2026년 8월 6일</span>
+          <span style="font-size:14px;color:#C4BFB8">·</span>
+          <span style="font-size:14px;color:#8A837C">12분 읽기</span>
+        </div>
+
+        <p style="margin:0 0 26px;font-size:17px;line-height:1.9;color:#33302C;letter-spacing:-.008em;text-wrap:pretty">RSC를 프로덕션에 넣기로 결정한 건 작년 12월이었다. 당시 우리 서비스의 초기 번들은 gzip 기준 412KB였고, 그중 절반 이상이 상세 페이지에서만 쓰이는 마크다운 렌더러와 하이라이터였다. 클라이언트로 내려보낼 이유가 없는 코드였다.</p>
+
+        <h2 style="margin:44px 0 16px;font-size:25px;font-weight:700;letter-spacing:-.03em;color:#141210">경계는 폴더가 아니라 데이터가 정한다</h2>
+        <p style="margin:0 0 26px;font-size:17px;line-height:1.9;color:#33302C;letter-spacing:-.008em;text-wrap:pretty">처음엔 <code style="font-family:'Source Code Pro',monospace;font-size:14.5px;background:#F4F2EE;border:1px solid #EAE7E1;border-radius:4px;padding:1.5px 5px;color:#B9422F">app/</code> 아래를 기능별로 나누고 각 폴더 최상단에 <code style="font-family:'Source Code Pro',monospace;font-size:14.5px;background:#F4F2EE;border:1px solid #EAE7E1;border-radius:4px;padding:1.5px 5px;color:#B9422F">"use client"</code>를 붙였다. 편했지만 트리 전체가 클라이언트로 넘어갔다. 경계를 정하는 기준은 폴더 구조가 아니라 그 컴포넌트가 서버 데이터에 직접 의존하는지 여부여야 한다.</p>
+
+        <div style="border-radius:10px;overflow:hidden;border:1px solid #2C2A27;margin:0 0 30px">
+          <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;background:#242220;border-bottom:1px solid #2F2C29">
+            <span style="width:9px;height:9px;border-radius:50%;background:#3E3B37"></span>
+            <span style="width:9px;height:9px;border-radius:50%;background:#3E3B37"></span>
+            <span style="width:9px;height:9px;border-radius:50%;background:#3E3B37"></span>
+            <span style="margin-left:6px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#8B857D">app/post/[slug]/page.tsx</span>
+            <span style="margin-left:auto;font-family:'Source Code Pro',monospace;font-size:11px;color:#6E6862">복사</span>
+          </div>
+          <pre style="margin:0;padding:20px 22px;background:#1B1A18;overflow:auto"><code style="font-family:'Source Code Pro',monospace;font-size:14px;line-height:1.85;color:#E8E4DE;display:block;white-space:pre"><span style="color:#A78BC0">export default async function</span> <span style="color:#E3B778">Page</span>({ params }: Props) {
+  <span style="color:#A78BC0">const</span> post = <span style="color:#A78BC0">await</span> <span style="color:#E3B778">getPost</span>(params.slug)   <span style="color:#6E6862">// 서버에서만 실행</span>
+  <span style="color:#A78BC0">const</span> html = <span style="color:#A78BC0">await</span> <span style="color:#E3B778">renderMarkdown</span>(post.body)
+
+  <span style="color:#A78BC0">return</span> (
+    &lt;<span style="color:#8FA36B">article</span>&gt;
+      &lt;<span style="color:#8FA36B">PostHeader</span> <span style="color:#D08770">post</span>={post} /&gt;
+      &lt;<span style="color:#8FA36B">div</span> <span style="color:#D08770">dangerouslySetInnerHTML</span>={<span>{</span> __html: html }} /&gt;
+      &lt;<span style="color:#8FA36B">Comments</span> <span style="color:#D08770">postId</span>={post.id} /&gt;   <span style="color:#6E6862">{<span style="color:#6E6862">/* 여기서만 "use client" */</span>}</span>
+    &lt;/<span style="color:#8FA36B">article</span>&gt;
+  )
+}</code></pre>
+        </div>
+
+        <p style="margin:0 0 26px;font-size:17px;line-height:1.9;color:#33302C;letter-spacing:-.008em;text-wrap:pretty">이렇게 바꾼 뒤 상세 페이지의 클라이언트 번들은 <strong style="font-weight:700;color:#141210">412KB에서 254KB</strong>로 줄었다. 마크다운 파이프라인 전체가 서버에 남았기 때문이다.</p>
+
+        <blockquote style="margin:0 0 30px;padding:2px 0 2px 22px;border-left:2px solid #E0533D;font-size:17px;line-height:1.85;color:#4A453F;font-style:normal">경계를 옮기는 작업은 리팩터링이 아니라 성능 예산을 다시 배분하는 일에 가깝다. 어디까지 서버에 둘지는 팀이 합의해야 한다.</blockquote>
+
+        <h2 style="margin:44px 0 16px;font-size:25px;font-weight:700;letter-spacing:-.03em;color:#141210">워터폴은 조용히 생긴다</h2>
+        <p style="margin:0 0 26px;font-size:17px;line-height:1.9;color:#33302C;letter-spacing:-.008em;text-wrap:pretty">서버 컴포넌트 안에서 <code style="font-family:'Source Code Pro',monospace;font-size:14.5px;background:#F4F2EE;border:1px solid #EAE7E1;border-radius:4px;padding:1.5px 5px;color:#B9422F">await</code>를 순차로 쓰면 네트워크 탭에는 아무 흔적도 남지 않는다. 문제가 드러나는 건 TTFB뿐이다. 우리는 부모에서 필요한 데이터를 모두 병렬로 시작하고, 자식에는 프로미스를 내려보내는 방식으로 정리했다.</p>
+
+        <div style="display:flex;align-items:center;gap:10px;padding-top:34px;border-top:1px solid #EFEDE9">
+          <div style="display:flex;align-items:center;gap:7px;height:38px;padding:0 15px;border:1px solid #E5E1DB;border-radius:19px;font-size:13.5px;font-weight:600;color:#4A453F">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#E0533D" stroke-width="1.5"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+            좋아요 128
+          </div>
+          <div style="display:flex;align-items:center;height:38px;padding:0 15px;border:1px solid #E5E1DB;border-radius:19px;font-size:13.5px;font-weight:600;color:#4A453F">댓글 14</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:24px">
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:22px">
+          <div style="width:52px;height:52px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin-bottom:14px">SH</div>
+          <div style="font-size:16px;font-weight:700;color:#141210;letter-spacing:-.02em">이수현</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:12.5px;color:#8A837C;margin-top:3px">@soohyun</div>
+          <div style="font-size:13.5px;line-height:1.7;color:#6B6560;margin-top:12px;text-wrap:pretty">프론트엔드 엔지니어. 렌더링 성능과 디자인 시스템에 관심이 많습니다.</div>
+          <div style="display:flex;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #F2F0EC">
+            <div><div style="font-size:15px;font-weight:700;color:#141210">42</div><div style="font-size:12px;color:#8A837C">글</div></div>
+            <div><div style="font-size:15px;font-weight:700;color:#141210">1.2k</div><div style="font-size:12px;color:#8A837C">구독자</div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:center;height:38px;margin-top:16px;background:#1A1815;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600">구독하기</div>
+        </div>
+
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-family:'Source Code Pro',monospace;font-size:11px;letter-spacing:.1em;color:#A39D96;margin-bottom:12px">ON THIS PAGE</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="font-size:13px;color:#E0533D;font-weight:600;padding-left:10px;box-shadow:inset 2px 0 0 #E0533D">경계는 폴더가 아니라 데이터가 정한다</div>
+            <div style="font-size:13px;color:#8A837C;padding-left:10px;line-height:1.5">워터폴은 조용히 생긴다</div>
+            <div style="font-size:13px;color:#8A837C;padding-left:10px;line-height:1.5">6개월 뒤의 측정 결과</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- ══════════ 03 EDITOR ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">03</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">에디터</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/write</span>
+  </div>
+  <div style="width:1200px;height:760px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 24px;border-bottom:1px solid #EFEDE9;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:19px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:16px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <div style="width:1px;height:18px;background:#EAE7E1"></div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#8A837C">
+          <span style="width:6px;height:6px;border-radius:50%;background:#8FA36B"></span>
+          <span>1분 전 자동 저장됨</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;height:34px;padding:0 14px;font-size:13px;font-weight:600;color:#6B6560">임시저장</div>
+        <div style="display:flex;align-items:center;height:34px;padding:0 16px;background:#E0533D;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600">발행하기</div>
+      </div>
+    </div>
+
+    <div style="padding:26px 32px 18px;border-bottom:1px solid #EFEDE9;flex-shrink:0">
+      <div style="font-size:29px;font-weight:800;letter-spacing:-.035em;color:#141210;margin-bottom:14px">RSC 경계 설계 노트</div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="display:flex;align-items:center;gap:6px;padding:5px 9px;background:#FCEFEC;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#B9422F">react <span style="color:#DDA79B">×</span></span>
+        <span style="display:flex;align-items:center;gap:6px;padding:5px 9px;background:#FCEFEC;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#B9422F">next.js <span style="color:#DDA79B">×</span></span>
+        <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#B8B2AB">태그를 입력하세요</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0">
+      <div style="display:flex;flex-direction:column;border-right:1px solid #EFEDE9;min-height:0">
+        <div style="display:flex;align-items:center;gap:18px;height:40px;padding:0 24px;border-bottom:1px solid #F4F2EE;flex-shrink:0">
+          <span style="font-family:'Source Code Pro',monospace;font-size:11px;letter-spacing:.09em;color:#A39D96">MARKDOWN</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:14px;font-family:'Source Code Pro',monospace;font-size:12px;color:#8A837C">
+            <span style="font-weight:700">B</span>
+            <span style="font-style:italic">I</span>
+            <span>#</span>
+            <span style="color:#E0533D">`</span>
+            <span>link</span>
+            <span>img</span>
+          </div>
+        </div>
+        <pre style="margin:0;padding:22px 24px;overflow:auto;flex:1;min-height:0"><code style="font-family:'Source Code Pro',monospace;font-size:13.5px;line-height:1.95;color:#33302C;display:block;white-space:pre-wrap"><span style="color:#E0533D">##</span> 경계는 폴더가 아니라 데이터가 정한다
+
+처음엔 <span style="color:#B9422F">`app/`</span> 아래를 기능별로 나누고
+각 폴더 최상단에 <span style="color:#B9422F">`"use client"`</span>를 붙였다.
+편했지만 트리 전체가 클라이언트로 넘어갔다.
+
+<span style="color:#E0533D">```tsx
+</span><span style="color:#8A837C">export default async function</span> Page({ params }) {
+  const post = await getPost(params.slug)
+  return &lt;Article post={post} /&gt;
+}
+<span style="color:#E0533D">```
+
+</span><span style="color:#E0533D">&gt;</span> 경계를 옮기는 작업은 리팩터링이 아니라
+<span style="color:#E0533D">&gt;</span> 성능 예산을 다시 배분하는 일에 가깝다.
+
+<span style="color:#E0533D">-</span> 번들 412KB → 254KB
+<span style="color:#E0533D">-</span> TTFB 측정은 별도 문서로<span style="display:inline-block;width:2px;height:15px;background:#E0533D;vertical-align:-2px;margin-left:1px"></span></code></pre>
+        <div style="display:flex;align-items:center;gap:16px;height:34px;padding:0 24px;border-top:1px solid #F4F2EE;font-family:'Source Code Pro',monospace;font-size:11px;color:#A39D96;flex-shrink:0">
+          <span>Ln 24, Col 18</span>
+          <span>1,284자</span>
+          <span style="margin-left:auto">이미지를 드래그해 업로드</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;background:#FCFBFA;min-height:0">
+        <div style="display:flex;align-items:center;height:40px;padding:0 24px;border-bottom:1px solid #F4F2EE;flex-shrink:0">
+          <span style="font-family:'Source Code Pro',monospace;font-size:11px;letter-spacing:.09em;color:#A39D96">PREVIEW</span>
+        </div>
+        <div style="padding:22px 32px;overflow:auto;flex:1;min-height:0">
+          <h2 style="margin:0 0 14px;font-size:22px;font-weight:700;letter-spacing:-.03em;color:#141210">경계는 폴더가 아니라 데이터가 정한다</h2>
+          <p style="margin:0 0 20px;font-size:15.5px;line-height:1.85;color:#33302C;text-wrap:pretty">처음엔 <code style="font-family:'Source Code Pro',monospace;font-size:13.5px;background:#F4F2EE;border:1px solid #EAE7E1;border-radius:4px;padding:1.5px 5px;color:#B9422F">app/</code> 아래를 기능별로 나누고 각 폴더 최상단에 <code style="font-family:'Source Code Pro',monospace;font-size:13.5px;background:#F4F2EE;border:1px solid #EAE7E1;border-radius:4px;padding:1.5px 5px;color:#B9422F">"use client"</code>를 붙였다. 편했지만 트리 전체가 클라이언트로 넘어갔다.</p>
+          <div style="border-radius:9px;overflow:hidden;border:1px solid #2C2A27;margin:0 0 20px">
+            <div style="display:flex;align-items:center;height:32px;padding:0 13px;background:#242220;font-family:'Source Code Pro',monospace;font-size:11px;color:#8B857D">tsx</div>
+            <pre style="margin:0;padding:16px 18px;background:#1B1A18;overflow:auto"><code style="font-family:'Source Code Pro',monospace;font-size:13px;line-height:1.8;color:#E8E4DE;display:block;white-space:pre"><span style="color:#A78BC0">export default async function</span> <span style="color:#E3B778">Page</span>({ params }) {
+  <span style="color:#A78BC0">const</span> post = <span style="color:#A78BC0">await</span> <span style="color:#E3B778">getPost</span>(params.slug)
+  <span style="color:#A78BC0">return</span> &lt;<span style="color:#8FA36B">Article</span> <span style="color:#D08770">post</span>={post} /&gt;
+}</code></pre>
+          </div>
+          <blockquote style="margin:0 0 20px;padding:2px 0 2px 18px;border-left:2px solid #E0533D;font-size:15.5px;line-height:1.8;color:#4A453F">경계를 옮기는 작업은 리팩터링이 아니라 성능 예산을 다시 배분하는 일에 가깝다.</blockquote>
+          <ul style="margin:0;padding-left:20px;font-size:15.5px;line-height:1.9;color:#33302C">
+            <li>번들 412KB → 254KB</li>
+            <li>TTFB 측정은 별도 문서로</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 04 BLOG HOME ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">04</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">개인 블로그 홈</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/@soohyun</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:baseline;gap:2px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+
+    <div style="padding:64px 72px 44px;border-bottom:1px solid #EFEDE9;background:linear-gradient(180deg,#FBFAF8,#fff)">
+      <div style="display:flex;align-items:flex-start;gap:28px;max-width:840px">
+        <div style="width:88px;height:88px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;flex-shrink:0">SH</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <span style="font-size:28px;font-weight:800;letter-spacing:-.035em;color:#121110">이수현</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:15px;color:#A39D96">@soohyun</span>
+          </div>
+          <div style="font-size:15.5px;line-height:1.75;color:#5C5751;margin-top:10px;max-width:560px;text-wrap:pretty">프론트엔드 엔지니어. 렌더링 성능과 디자인 시스템에 관심이 많습니다. 매주 목요일에 글을 씁니다.</div>
+          <div style="display:flex;align-items:center;gap:18px;margin-top:16px">
+            <div style="display:flex;align-items:center;gap:6px;font-family:'Source Code Pro',monospace;font-size:13px;color:#4A453F">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#4A453F"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.14.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+              github.com/soohyun
+            </div>
+            <div style="font-size:13px;color:#8A837C">구독자 1,204명</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 18px;background:#1A1815;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600;flex-shrink:0">구독하기</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:26px;margin-top:40px;margin-bottom:-45px">
+        <div style="padding:0 1px 14px;font-size:15px;font-weight:700;color:#1A1815;box-shadow:inset 0 -2px 0 #E0533D">글 42</div>
+        <div style="padding:0 1px 14px;font-size:15px;font-weight:500;color:#8A837C">시리즈 3</div>
+        <div style="padding:0 1px 14px;font-size:15px;font-weight:500;color:#8A837C">소개</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 56px;padding:20px 72px 64px">
+      <div style="padding:32px 0;border-bottom:1px solid #F2F0EC">
+        <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;margin-bottom:10px">2026.08.06</div>
+        <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:8px">React 서버 컴포넌트를 6개월 써보고 정리한 것들</div>
+        <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">RSC로 전환한 뒤 번들 크기는 38% 줄었지만, 데이터 페칭 경계를 잘못 잡으면 오히려 워터폴이 생긴다.</div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">react</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">next.js</span>
+        </div>
+      </div>
+      <div style="padding:32px 0;border-bottom:1px solid #F2F0EC">
+        <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;margin-bottom:10px">2026.07.30</div>
+        <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:8px">디자인 토큰을 CSS 변수로 옮기며 버린 것들</div>
+        <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">JS 객체로 관리하던 토큰을 빌드 타임 CSS 변수로 내리자 테마 전환의 리렌더가 사라졌다.</div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">css</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">design-system</span>
+        </div>
+      </div>
+      <div style="padding:32px 0;border-bottom:1px solid #F2F0EC">
+        <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;margin-bottom:10px">2026.07.23</div>
+        <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:8px">스크롤 성능을 망치는 것은 대개 레이아웃이다</div>
+        <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">긴 피드에서 프레임이 떨어질 때 가장 먼저 봐야 할 것은 애니메이션이 아니라 리플로우를 유발하는 속성이다.</div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">performance</span>
+        </div>
+      </div>
+      <div style="padding:32px 0;border-bottom:1px solid #F2F0EC">
+        <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96;margin-bottom:10px">2026.07.11</div>
+        <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:8px">모노레포에서 타입 검사를 12분에서 90초로</div>
+        <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">프로젝트 레퍼런스와 증분 빌드를 제대로 설정하는 것만으로 CI 시간의 대부분을 되찾을 수 있었다.</div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">typescript</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">ci</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 05 LOGIN ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">05</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">로그인</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/login</span>
+  </div>
+  <div style="width:1200px;height:660px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;flex-direction:column;align-items:center;width:360px">
+      <div style="display:flex;align-items:baseline;gap:3px;margin-bottom:14px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:40px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:34px;font-weight:800;letter-spacing:-.04em;color:#1A1815">백틱</span>
+      </div>
+      <div style="font-size:15.5px;line-height:1.7;color:#6B6560;text-align:center;margin-bottom:38px;text-wrap:pretty">코드를 감싸는 기호처럼,<br>당신의 기록을 감싸는 곳.</div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:50px;background:#1A1815;color:#fff;border-radius:10px;font-size:15px;font-weight:600">
+        <svg width="19" height="19" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.14.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub으로 계속하기
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;width:100%;margin:24px 0">
+        <div style="flex:1;height:1px;background:#EDEAE5"></div>
+        <span style="font-family:'Source Code Pro',monospace;font-size:11px;color:#B8B2AB">OR</span>
+        <div style="flex:1;height:1px;background:#EDEAE5"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;height:48px;border:1px solid #E5E1DB;border-radius:10px;font-size:14.5px;font-weight:600;color:#4A453F">이메일로 계속하기</div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-top:32px;padding:10px 14px;background:#F7F5F2;border-radius:8px">
+        <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#E0533D">`</span>
+        <span style="font-family:'Source Code Pro',monospace;font-size:12.5px;color:#6B6560">backtick.dev/@your-handle</span>
+      </div>
+      <div style="font-size:12.5px;line-height:1.7;color:#A39D96;text-align:center;margin-top:26px">계속하면 <span style="color:#6B6560;text-decoration:underline">이용약관</span>과 <span style="color:#6B6560;text-decoration:underline">개인정보처리방침</span>에<br>동의하는 것으로 간주합니다.</div>
+    </div>
+  </div>
+
+  <!-- ══════════ 06 SOURCES ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">06</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">기업 블로그 목록</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/sources</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:center;gap:30px">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:22px;font-size:14px;color:#6B6560">
+          <span>피드</span>
+          <span>태그</span>
+          <span style="color:#1A1815;font-weight:600">기업 블로그</span>
+        </div>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+
+    <div style="padding:56px 72px 24px">
+      <h1 style="margin:0 0 10px;font-size:32px;font-weight:800;letter-spacing:-.035em;color:#121110">기업 기술블로그</h1>
+      <div style="font-size:15.5px;line-height:1.75;color:#6B6560;max-width:520px;text-wrap:pretty">국내 23개 기업의 기술블로그를 RSS로 수집합니다. 원문 링크로 연결되며, 피드에는 출처 배지가 붙습니다.</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:24px">
+        <div style="display:flex;align-items:center;gap:8px;width:260px;height:36px;padding:0 12px;background:#F7F5F2;border:1px solid #EDEAE5;border-radius:8px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.6"><circle cx="7" cy="7" r="4.7"/><path d="M10.5 10.5 14 14"/></svg>
+          <span style="font-size:13px;color:#A39D96">기업 이름으로 검색</span>
+        </div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 13px;background:#1A1815;color:#fff;border-radius:8px;font-size:13px;font-weight:600">전체</div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 13px;border:1px solid #E5E1DB;border-radius:8px;font-size:13px;font-weight:500;color:#6B6560">구독 중 4</div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 13px;border:1px solid #E5E1DB;border-radius:8px;font-size:13px;font-weight:500;color:#6B6560">최근 활동순</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:20px 72px 64px">
+      <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:34px;height:34px;border-radius:8px;background:#0064FF;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">T</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700;color:#141210;letter-spacing:-.02em">토스</div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">toss.tech</div>
+          </div>
+          <div style="display:flex;align-items:center;height:28px;padding:0 11px;background:#FCEFEC;border-radius:6px;font-size:12px;font-weight:600;color:#B9422F">구독 중</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:14px">결제·금융 인프라, 프론트엔드 성능, 조직 문화</div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:13px;border-top:1px solid #F4F2EE;font-size:12.5px;color:#8A837C">
+          <span>글 312</span>
+          <span>·</span>
+          <span>5시간 전 수집</span>
+        </div>
+      </div>
+      <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:34px;height:34px;border-radius:8px;background:#FEE500;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#3C1E1E">K</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700;color:#141210;letter-spacing:-.02em">카카오</div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">tech.kakao.com</div>
+          </div>
+          <div style="display:flex;align-items:center;height:28px;padding:0 11px;border:1px solid #E5E1DB;border-radius:6px;font-size:12px;font-weight:600;color:#4A453F">구독</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:14px">추천 시스템, 대규모 분산 처리, AI 리서치</div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:13px;border-top:1px solid #F4F2EE;font-size:12.5px;color:#8A837C">
+          <span>글 486</span>
+          <span>·</span>
+          <span>1일 전 수집</span>
+        </div>
+      </div>
+      <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:34px;height:34px;border-radius:8px;background:#2AC1BC;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">우</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700;color:#141210;letter-spacing:-.02em">우아한형제들</div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">techblog.woowahan.com</div>
+          </div>
+          <div style="display:flex;align-items:center;height:28px;padding:0 11px;background:#FCEFEC;border-radius:6px;font-size:12px;font-weight:600;color:#B9422F">구독 중</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:14px">배차 알고리즘, JVM, 테스트 전략</div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:13px;border-top:1px solid #F4F2EE;font-size:12.5px;color:#8A837C">
+          <span>글 274</span>
+          <span>·</span>
+          <span>2일 전 수집</span>
+        </div>
+      </div>
+      <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:34px;height:34px;border-radius:8px;background:#03C75A;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff">D2</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700;color:#141210;letter-spacing:-.02em">네이버 D2</div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">d2.naver.com</div>
+          </div>
+          <div style="display:flex;align-items:center;height:28px;padding:0 11px;border:1px solid #E5E1DB;border-radius:6px;font-size:12px;font-weight:600;color:#4A453F">구독</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:14px">검색 엔진, 컴파일러, 오픈소스 기여</div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:13px;border-top:1px solid #F4F2EE;font-size:12.5px;color:#8A837C">
+          <span>글 521</span>
+          <span>·</span>
+          <span>3일 전 수집</span>
+        </div>
+      </div>
+      <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:34px;height:34px;border-radius:8px;background:#FF6F0F;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">당</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:700;color:#141210;letter-spacing:-.02em">당근</div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">medium.com/daangn</div>
+          </div>
+          <div style="display:flex;align-items:center;height:28px;padding:0 11px;background:#FCEFEC;border-radius:6px;font-size:12px;font-weight:600;color:#B9422F">구독 중</div>
+        </div>
+        <div style="font-size:13.5px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:14px">마이크로서비스, 모바일 플랫폼, 데이터</div>
+        <div style="display:flex;align-items:center;gap:14px;padding-top:13px;border-top:1px solid #F4F2EE;font-size:12.5px;color:#8A837C">
+          <span>글 198</span>
+          <span>·</span>
+          <span>4일 전 수집</span>
+        </div>
+      </div>
+      <div style="border:1px dashed #DDD8D1;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px">
+        <div style="font-family:'Source Code Pro',monospace;font-size:19px;color:#E0533D;line-height:1">`</div>
+        <div style="font-size:14.5px;font-weight:700;color:#141210">블로그 추가 요청</div>
+        <div style="font-size:13px;line-height:1.65;color:#8A837C;text-wrap:pretty">수집되었으면 하는 기술블로그의 RSS 주소를 알려주세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 07 SOURCE DETAIL ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">07</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">기업 블로그 상세</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/sources/toss</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <span style="font-family:'Source Code Pro',monospace;font-size:12.5px;color:#C4BFB8">/</span>
+        <span style="font-size:13.5px;color:#8A837C">기업 블로그</span>
+        <span style="font-family:'Source Code Pro',monospace;font-size:12.5px;color:#C4BFB8">/</span>
+        <span style="font-size:13.5px;font-weight:600;color:#2A2723">토스</span>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+
+    <div style="padding:56px 72px 40px;border-bottom:1px solid #EFEDE9;background:linear-gradient(180deg,#FBFAF8,#fff)">
+      <div style="display:flex;align-items:flex-start;gap:22px">
+        <div style="width:64px;height:64px;border-radius:14px;background:#0064FF;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;flex-shrink:0">T</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <span style="font-size:28px;font-weight:800;letter-spacing:-.035em;color:#121110">토스</span>
+            <span style="padding:3px 8px;background:#F4F2EE;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#8A837C">수집 블로그</span>
+          </div>
+          <div style="font-size:15px;line-height:1.75;color:#5C5751;margin-top:9px;max-width:560px;text-wrap:pretty">결제·금융 인프라와 프론트엔드 성능을 다루는 토스팀의 기술블로그. 모든 글은 원문으로 연결됩니다.</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:14px;font-size:13px;color:#8A837C">
+            <span style="font-family:'Source Code Pro',monospace;color:#4A453F">toss.tech</span>
+            <span>글 312</span>
+            <span>주 2~3회 발행</span>
+            <span>5시간 전 수집</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 18px;background:#1A1815;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600;flex-shrink:0">피드에서 구독 중</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 264px;gap:56px;padding:36px 72px 64px;align-items:start">
+      <div style="min-width:0">
+        <div style="display:flex;align-items:center;gap:24px;border-bottom:1px solid #EFEDE9;margin-bottom:4px">
+          <div style="padding:0 1px 13px;font-size:14.5px;font-weight:700;color:#1A1815;box-shadow:inset 0 -2px 0 #E0533D">최신</div>
+          <div style="padding:0 1px 13px;font-size:14.5px;color:#8A837C">인기</div>
+        </div>
+        <div style="display:flex;gap:24px;padding:24px 0;border-bottom:1px solid #F2F0EC">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:18.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px">대규모 트래픽에서 멱등성 키를 설계하는 방법</div>
+            <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:11px">결제 요청의 중복을 막는 멱등성 키는 단순해 보이지만, 키의 수명과 저장소 선택에 따라 장애 양상이 완전히 달라진다.</div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">backend</span>
+              <span style="font-size:12.5px;color:#A39D96;margin-left:6px">5시간 전 · 원문 보기 ↗</span>
+            </div>
+          </div>
+          <div style="width:116px;height:88px;border-radius:8px;background:linear-gradient(140deg,#E7EDF6,#DCE4F0);flex-shrink:0"></div>
+        </div>
+        <div style="display:flex;gap:24px;padding:24px 0;border-bottom:1px solid #F2F0EC">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:18.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px">디자인 시스템 컴포넌트를 200개까지 늘리며 배운 것</div>
+            <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:11px">컴포넌트 수가 늘어날수록 중요한 것은 문서가 아니라 폐기 절차였다.</div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">design-system</span>
+              <span style="font-size:12.5px;color:#A39D96;margin-left:6px">3일 전 · 원문 보기 ↗</span>
+            </div>
+          </div>
+          <div style="width:116px;height:88px;border-radius:8px;background:linear-gradient(140deg,#F1EEF7,#E5E0F0);flex-shrink:0"></div>
+        </div>
+        <div style="display:flex;gap:24px;padding:24px 0">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:18.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px">서버 배포 시간을 절반으로 줄인 카나리 파이프라인</div>
+            <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty;margin-bottom:11px">배포 대기 시간의 대부분은 검증이 아니라 사람의 확인을 기다리는 시간이었다.</div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">devops</span>
+              <span style="font-size:12.5px;color:#A39D96;margin-left:6px">1주 전 · 원문 보기 ↗</span>
+            </div>
+          </div>
+          <div style="width:116px;height:88px;border-radius:8px;background:linear-gradient(140deg,#F4EFE8,#EAE4DA);flex-shrink:0"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-size:13.5px;font-weight:700;color:#1A1815;margin-bottom:14px">이 블로그의 태그</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">backend</span>
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">payments</span>
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">frontend</span>
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">devops</span>
+          </div>
+        </div>
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-size:13.5px;font-weight:700;color:#1A1815;margin-bottom:12px">수집 정보</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:12.5px">
+            <div style="display:flex;justify-content:space-between"><span style="color:#8A837C">방식</span><span style="font-family:'Source Code Pro',monospace;color:#4A453F">RSS</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8A837C">주기</span><span style="font-family:'Source Code Pro',monospace;color:#4A453F">1h</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8A837C">본문</span><span style="color:#4A453F">요약만 저장</span></div>
+          </div>
+          <div style="font-size:12px;line-height:1.65;color:#A39D96;margin-top:14px;padding-top:14px;border-top:1px solid #F4F2EE;text-wrap:pretty">저작권은 원저작자에게 있으며 전문은 원문에서 확인할 수 있습니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 08 TAGS ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">08</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">태그 탐색</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/tags</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:center;gap:30px">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:22px;font-size:14px;color:#6B6560">
+          <span>피드</span>
+          <span style="color:#1A1815;font-weight:600">태그</span>
+          <span>기업 블로그</span>
+        </div>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+    <div style="padding:56px 72px 64px">
+      <h1 style="margin:0 0 10px;font-size:32px;font-weight:800;letter-spacing:-.035em;color:#121110">태그</h1>
+      <div style="font-size:15.5px;line-height:1.75;color:#6B6560;max-width:520px;text-wrap:pretty">1,847개의 태그가 사용되고 있습니다. 태그를 구독하면 홈 피드 상단에 관련 글이 먼저 노출됩니다.</div>
+      <div style="display:flex;align-items:center;gap:8px;margin:26px 0 34px">
+        <div style="display:flex;align-items:center;gap:8px;width:260px;height:36px;padding:0 12px;background:#F7F5F2;border:1px solid #EDEAE5;border-radius:8px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#A39D96" stroke-width="1.6"><circle cx="7" cy="7" r="4.7"/><path d="M10.5 10.5 14 14"/></svg>
+          <span style="font-size:13px;color:#A39D96">태그 검색</span>
+        </div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 13px;background:#1A1815;color:#fff;border-radius:8px;font-size:13px;font-weight:600">인기순</div>
+        <div style="display:flex;align-items:center;height:36px;padding:0 13px;border:1px solid #E5E1DB;border-radius:8px;font-size:13px;font-weight:500;color:#6B6560">이름순</div>
+      </div>
+
+      <div style="font-family:'Source Code Pro',monospace;font-size:11px;letter-spacing:.1em;color:#A39D96;margin-bottom:16px">TRENDING · 7D</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px">
+        <div style="border:1px solid #EDEAE5;border-radius:10px;padding:16px 18px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+            <span style="font-family:'Source Code Pro',monospace;font-size:15px;font-weight:600;color:#141210">typescript</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#E0533D">+18%</span>
+          </div>
+          <div style="font-size:12.5px;color:#8A837C">글 412 · 구독 2.1k</div>
+        </div>
+        <div style="border:1px solid #EDEAE5;border-radius:10px;padding:16px 18px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+            <span style="font-family:'Source Code Pro',monospace;font-size:15px;font-weight:600;color:#141210">llm</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#E0533D">+42%</span>
+          </div>
+          <div style="font-size:12.5px;color:#8A837C">글 387 · 구독 3.4k</div>
+        </div>
+        <div style="border:1px solid #EDEAE5;border-radius:10px;padding:16px 18px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+            <span style="font-family:'Source Code Pro',monospace;font-size:15px;font-weight:600;color:#141210">kubernetes</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">+3%</span>
+          </div>
+          <div style="font-size:12.5px;color:#8A837C">글 265 · 구독 1.6k</div>
+        </div>
+        <div style="border:1px solid #EDEAE5;border-radius:10px;padding:16px 18px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+            <span style="font-family:'Source Code Pro',monospace;font-size:15px;font-weight:600;color:#141210">react</span>
+            <span style="font-family:'Source Code Pro',monospace;font-size:11.5px;color:#A39D96">+1%</span>
+          </div>
+          <div style="font-size:12.5px;color:#8A837C">글 241 · 구독 2.8k</div>
+        </div>
+      </div>
+
+      <div style="font-family:'Source Code Pro',monospace;font-size:11px;letter-spacing:.1em;color:#A39D96;margin-bottom:16px">ALL TAGS</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">rust <span style="color:#B8B2AB;font-size:11.5px">198</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">observability <span style="color:#B8B2AB;font-size:11.5px">154</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">next.js <span style="color:#B8B2AB;font-size:11.5px">147</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">postgres <span style="color:#B8B2AB;font-size:11.5px">132</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">go <span style="color:#B8B2AB;font-size:11.5px">129</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">design-system <span style="color:#B8B2AB;font-size:11.5px">118</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">testing <span style="color:#B8B2AB;font-size:11.5px">104</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">kotlin <span style="color:#B8B2AB;font-size:11.5px">98</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">webassembly <span style="color:#B8B2AB;font-size:11.5px">86</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">graphql <span style="color:#B8B2AB;font-size:11.5px">74</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">dotfiles <span style="color:#B8B2AB;font-size:11.5px">61</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#2A2723">shell <span style="color:#B8B2AB;font-size:11.5px">57</span></span>
+        <span style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #EDEAE5;border-radius:7px;font-family:'Source Code Pro',monospace;font-size:13px;color:#A39D96">+ 1,835</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 09 SEARCH ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">09</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">검색</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/search?q=rsc</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;align-items:center;gap:16px;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:baseline;gap:2px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;flex:1;max-width:460px;height:38px;padding:0 13px;background:#fff;border:1.5px solid #1A1815;border-radius:9px">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#4A453F" stroke-width="1.6"><circle cx="7" cy="7" r="4.7"/><path d="M10.5 10.5 14 14"/></svg>
+        <span style="font-size:14px;color:#141210">rsc</span>
+        <span style="width:1.5px;height:16px;background:#E0533D"></span>
+        <span style="margin-left:auto;font-family:'Source Code Pro',monospace;font-size:11px;color:#B8B2AB">esc</span>
+      </div>
+      <div style="margin-left:auto;width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 240px;gap:56px;padding:40px 72px 64px;align-items:start">
+      <div style="min-width:0">
+        <div style="font-size:14px;color:#8A837C;margin-bottom:22px"><span style="font-weight:700;color:#141210">rsc</span> 검색 결과 34건</div>
+        <div style="display:flex;align-items:center;gap:22px;border-bottom:1px solid #EFEDE9;margin-bottom:4px">
+          <div style="padding:0 1px 13px;font-size:14.5px;font-weight:700;color:#1A1815;box-shadow:inset 0 -2px 0 #E0533D">글 34</div>
+          <div style="padding:0 1px 13px;font-size:14.5px;color:#8A837C">태그 3</div>
+          <div style="padding:0 1px 13px;font-size:14.5px;color:#8A837C">사용자 2</div>
+        </div>
+        <div style="padding:24px 0;border-bottom:1px solid #F2F0EC">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">SH</div>
+            <span style="font-size:13px;font-weight:600;color:#4A453F">이수현</span>
+            <span style="font-size:13px;color:#8A837C">· 2시간 전</span>
+          </div>
+          <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px">React 서버 컴포넌트를 6개월 써보고 정리한 것들</div>
+          <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty"><mark style="background:#FBDCD5;color:#B9422F;padding:0 2px;border-radius:2px">RSC</mark>로 전환한 뒤 번들 크기는 38% 줄었지만, 데이터 페칭 경계를 잘못 잡으면 오히려 워터폴이 생긴다.</div>
+        </div>
+        <div style="padding:24px 0;border-bottom:1px solid #F2F0EC">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+            <div style="display:flex;align-items:center;gap:6px;height:22px;padding:0 8px 0 6px;background:#FCEFEC;border-radius:5px">
+              <span style="width:6px;height:6px;border-radius:1.5px;background:#03C75A"></span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;color:#B9422F">네이버 D2</span>
+            </div>
+            <span style="font-size:13px;color:#8A837C">수집됨 · 2주 전</span>
+          </div>
+          <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px">스트리밍 SSR과 <mark style="background:#FBDCD5;color:#B9422F;padding:0 2px;border-radius:2px">RSC</mark>는 어떻게 함께 동작하는가</div>
+          <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">Suspense 경계가 스트리밍 청크로 어떻게 변환되는지 렌더러 내부 동작을 따라가며 설명한다.</div>
+        </div>
+        <div style="padding:24px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+            <div style="width:20px;height:20px;border-radius:50%;background:#EADCE4;color:#75465F;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700">YE</div>
+            <span style="font-size:13px;font-weight:600;color:#4A453F">정예린</span>
+            <span style="font-size:13px;color:#8A837C">· 1개월 전</span>
+          </div>
+          <div style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:7px"><mark style="background:#FBDCD5;color:#B9422F;padding:0 2px;border-radius:2px">RSC</mark> 환경에서 폼 상태를 다루는 세 가지 방법</div>
+          <div style="font-size:14px;line-height:1.7;color:#6B6560;text-wrap:pretty">서버 액션, 낙관적 업데이트, 그리고 여전히 클라이언트 상태가 필요한 경우의 구분.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-size:13.5px;font-weight:700;color:#1A1815;margin-bottom:14px">필터</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:13px;color:#4A453F">
+            <div style="display:flex;align-items:center;gap:9px"><span style="width:14px;height:14px;border-radius:4px;background:#E0533D"></span>백틱 유저 글</div>
+            <div style="display:flex;align-items:center;gap:9px"><span style="width:14px;height:14px;border-radius:4px;background:#E0533D"></span>기업 기술블로그</div>
+            <div style="display:flex;align-items:center;gap:9px"><span style="width:14px;height:14px;border-radius:4px;border:1.5px solid #DDD8D1"></span>내가 저장한 글</div>
+          </div>
+          <div style="height:1px;background:#F4F2EE;margin:16px 0"></div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:13px;color:#8A837C">
+            <div style="color:#141210;font-weight:600">전체 기간</div>
+            <div>최근 1개월</div>
+            <div>최근 1년</div>
+          </div>
+        </div>
+        <div style="border:1px solid #EDEAE5;border-radius:12px;padding:20px">
+          <div style="font-size:13.5px;font-weight:700;color:#1A1815;margin-bottom:12px">연관 태그</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">react</span>
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">next.js</span>
+            <span style="padding:5px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11.5px;color:#6B6560">ssr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 10 SETTINGS ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">10</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">블로그 설정</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">/settings</span>
+  </div>
+  <div style="width:1200px;background:#fff;border:1px solid #E5E1DB;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 32px;border-bottom:1px solid #EFEDE9">
+      <div style="display:flex;align-items:baseline;gap:2px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:21px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:18px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700">KW</div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:56px;padding:52px 72px 64px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="padding:9px 12px;background:#F7F5F2;border-radius:7px;font-size:13.5px;font-weight:600;color:#141210">프로필</div>
+        <div style="padding:9px 12px;font-size:13.5px;color:#6B6560">블로그</div>
+        <div style="padding:9px 12px;font-size:13.5px;color:#6B6560">알림</div>
+        <div style="padding:9px 12px;font-size:13.5px;color:#6B6560">연동 계정</div>
+        <div style="padding:9px 12px;font-size:13.5px;color:#6B6560">데이터 내보내기</div>
+      </div>
+      <div style="max-width:600px">
+        <h1 style="margin:0 0 32px;font-size:26px;font-weight:800;letter-spacing:-.035em;color:#121110">프로필</h1>
+
+        <div style="display:flex;align-items:center;gap:18px;padding-bottom:28px;border-bottom:1px solid #F2F0EC;margin-bottom:28px">
+          <div style="width:64px;height:64px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700">SH</div>
+          <div style="display:flex;align-items:center;height:34px;padding:0 14px;border:1px solid #E5E1DB;border-radius:8px;font-size:13px;font-weight:600;color:#4A453F">이미지 변경</div>
+          <div style="font-size:12.5px;color:#A39D96">GitHub 아바타 사용 중</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#4A453F;margin-bottom:8px">이름</div>
+            <div style="display:flex;align-items:center;height:42px;padding:0 13px;border:1px solid #E5E1DB;border-radius:9px;font-size:14.5px;color:#141210">이수현</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#4A453F;margin-bottom:8px">핸들</div>
+            <div style="display:flex;align-items:center;height:42px;border:1px solid #E5E1DB;border-radius:9px;overflow:hidden">
+              <span style="display:flex;align-items:center;height:100%;padding:0 13px;background:#F7F5F2;border-right:1px solid #EDEAE5;font-family:'Source Code Pro',monospace;font-size:13px;color:#8A837C">backtick.dev/@</span>
+              <span style="padding:0 13px;font-family:'Source Code Pro',monospace;font-size:14px;color:#141210">soohyun</span>
+              <span style="margin-left:auto;padding:0 13px;font-size:12.5px;color:#7A8F5E">사용 가능</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#4A453F;margin-bottom:8px">소개</div>
+            <div style="height:84px;padding:12px 13px;border:1px solid #E5E1DB;border-radius:9px;font-size:14.5px;line-height:1.7;color:#141210">프론트엔드 엔지니어. 렌더링 성능과 디자인 시스템에 관심이 많습니다. 매주 목요일에 글을 씁니다.</div>
+            <div style="display:flex;justify-content:flex-end;font-size:12px;color:#A39D96;margin-top:6px">58 / 160</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#4A453F;margin-bottom:8px">GitHub</div>
+            <div style="display:flex;align-items:center;gap:10px;height:42px;padding:0 13px;background:#F7F5F2;border:1px solid #EDEAE5;border-radius:9px">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="#4A453F"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.14.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+              <span style="font-family:'Source Code Pro',monospace;font-size:13.5px;color:#4A453F">soohyun</span>
+              <span style="margin-left:auto;font-size:12.5px;font-weight:600;color:#8A837C">연결 해제</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-top:36px;padding-top:26px;border-top:1px solid #F2F0EC">
+          <div style="display:flex;align-items:center;height:40px;padding:0 18px;background:#1A1815;color:#fff;border-radius:9px;font-size:14px;font-weight:600">저장</div>
+          <div style="display:flex;align-items:center;height:40px;padding:0 16px;font-size:14px;font-weight:600;color:#8A837C">취소</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MOBILE ══════════ -->
+  <div style="width:1200px;display:flex;align-items:baseline;gap:10px;margin-top:52px">
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:#E0533D;letter-spacing:.1em">11</span>
+    <span style="font-size:14px;font-weight:600;color:#4A453F;letter-spacing:-.01em">모바일 대응</span>
+    <span style="font-family:'Source Code Pro',monospace;font-size:12px;color:#A39D96">390px</span>
+  </div>
+  <div style="width:1200px;display:flex;gap:28px;justify-content:center;padding:44px 0 8px">
+
+    <div style="width:390px;height:700px;background:#fff;border:1px solid #E5E1DB;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;border-bottom:1px solid #EFEDE9;flex-shrink:0">
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:19px;font-weight:600;line-height:1">`</span>
+          <span style="font-size:16px;font-weight:800;letter-spacing:-.035em;color:#1A1815">백틱</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#6B6560" stroke-width="1.6"><circle cx="7" cy="7" r="4.7"/><path d="M10.5 10.5 14 14"/></svg>
+          <div style="width:28px;height:28px;border-radius:50%;background:#DCE3DA;color:#4A5A48;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">KW</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;padding:0 18px;border-bottom:1px solid #EFEDE9;flex-shrink:0">
+        <div style="padding:13px 1px;font-size:14.5px;font-weight:700;color:#1A1815;box-shadow:inset 0 -2px 0 #E0533D">전체</div>
+        <div style="padding:13px 1px;font-size:14.5px;color:#8A837C">백틱</div>
+        <div style="padding:13px 1px;font-size:14.5px;color:#8A837C">기술블로그</div>
+      </div>
+      <div style="padding:0 18px;overflow:hidden;flex:1">
+        <div style="padding:20px 0;border-bottom:1px solid #F2F0EC">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
+            <div style="width:18px;height:18px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700">SH</div>
+            <span style="font-size:12.5px;font-weight:600;color:#4A453F">이수현</span>
+            <span style="font-size:12.5px;color:#8A837C">· 2시간 전</span>
+          </div>
+          <div style="display:flex;gap:14px">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:16.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:6px">React 서버 컴포넌트를 6개월 써보고 정리한 것들</div>
+              <div style="font-size:13.5px;line-height:1.65;color:#6B6560;text-wrap:pretty">RSC로 전환한 뒤 번들 크기는 38% 줄었지만, 데이터 페칭 경계를 잘못 잡으면 워터폴이 생긴다.</div>
+            </div>
+            <div style="width:76px;height:76px;border-radius:8px;background:linear-gradient(140deg,#F4EFE8,#EAE4DA);flex-shrink:0"></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:11px">
+            <span style="padding:3px 8px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">react</span>
+            <span style="padding:3px 8px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">next.js</span>
+          </div>
+        </div>
+        <div style="padding:20px 0;border-bottom:1px solid #F2F0EC">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
+            <div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 7px 0 5px;background:#FCEFEC;border-radius:5px">
+              <span style="width:5px;height:5px;border-radius:1.5px;background:#0064FF"></span>
+              <span style="font-family:'Source Code Pro',monospace;font-size:10.5px;font-weight:600;color:#B9422F">toss tech</span>
+            </div>
+            <span style="font-size:12.5px;color:#8A837C">수집됨</span>
+          </div>
+          <div style="display:flex;gap:14px">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:16.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45;margin-bottom:6px">대규모 트래픽에서 멱등성 키를 설계하는 방법</div>
+              <div style="font-size:13.5px;line-height:1.65;color:#6B6560;text-wrap:pretty">키의 수명과 저장소 선택에 따라 장애 양상이 완전히 달라진다.</div>
+            </div>
+            <div style="width:76px;height:76px;border-radius:8px;background:linear-gradient(140deg,#E7EDF6,#DCE4F0);flex-shrink:0"></div>
+          </div>
+        </div>
+        <div style="padding:20px 0">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
+            <div style="width:18px;height:18px;border-radius:50%;background:#D9E2E8;color:#3F5966;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700">MJ</div>
+            <span style="font-size:12.5px;font-weight:600;color:#4A453F">박민준</span>
+            <span style="font-size:12.5px;color:#8A837C">· 어제</span>
+          </div>
+          <div style="font-size:16.5px;font-weight:700;letter-spacing:-.025em;color:#141210;line-height:1.45">터미널 없이는 못 사는 사람의 2026년 셸 설정</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-around;height:58px;border-top:1px solid #EFEDE9;flex-shrink:0;padding-bottom:4px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:18px;height:18px;border:1.6px solid #1A1815;border-radius:4px"></div><span style="font-size:10.5px;font-weight:600;color:#1A1815">피드</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:18px;height:18px;border:1.6px solid #A39D96;border-radius:50%"></div><span style="font-size:10.5px;color:#A39D96">태그</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:34px;height:26px;background:#E0533D;border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Source Code Pro',monospace;font-size:13px;color:#fff;line-height:1">`</span></div><span style="font-size:10.5px;color:#A39D96">쓰기</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:18px;height:18px;border:1.6px solid #A39D96;border-radius:4px"></div><span style="font-size:10.5px;color:#A39D96">저장</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:18px;height:18px;border-radius:50%;background:#DCE3DA"></div><span style="font-size:10.5px;color:#A39D96">MY</span></div>
+      </div>
+    </div>
+
+    <div style="width:390px;height:700px;background:#fff;border:1px solid #E5E1DB;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+      <div style="display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 18px;border-bottom:1px solid #EFEDE9;flex-shrink:0">
+        <span style="font-size:19px;color:#4A453F">←</span>
+        <div style="display:flex;align-items:center;gap:14px;font-size:13px;font-weight:600;color:#4A453F"><span>공유</span></div>
+      </div>
+      <div style="padding:24px 22px;overflow:hidden;flex:1">
+        <div style="display:flex;gap:6px;margin-bottom:14px">
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">react</span>
+          <span style="padding:4px 9px;background:#F7F5F2;border-radius:5px;font-family:'Source Code Pro',monospace;font-size:11px;color:#6B6560">next.js</span>
+        </div>
+        <h1 style="margin:0 0 14px;font-size:26px;line-height:1.38;letter-spacing:-.035em;font-weight:800;color:#121110;text-wrap:pretty">React 서버 컴포넌트를 6개월 써보고 정리한 것들</h1>
+        <div style="display:flex;align-items:center;gap:8px;padding-bottom:20px;border-bottom:1px solid #EFEDE9;margin-bottom:22px">
+          <div style="width:24px;height:24px;border-radius:50%;background:#E8DCC8;color:#7A6440;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">SH</div>
+          <span style="font-size:13px;font-weight:600;color:#2A2723">이수현</span>
+          <span style="font-size:13px;color:#8A837C">· 12분 읽기</span>
+        </div>
+        <p style="margin:0 0 22px;font-size:16px;line-height:1.9;color:#33302C;letter-spacing:-.008em;text-wrap:pretty">RSC를 프로덕션에 넣기로 결정한 건 작년 12월이었다. 당시 초기 번들은 gzip 기준 412KB였고, 절반 이상이 상세 페이지에서만 쓰이는 마크다운 렌더러였다.</p>
+        <div style="border-radius:9px;overflow:hidden;border:1px solid #2C2A27">
+          <div style="display:flex;align-items:center;height:30px;padding:0 12px;background:#242220;font-family:'Source Code Pro',monospace;font-size:10.5px;color:#8B857D">page.tsx</div>
+          <pre style="margin:0;padding:14px 16px;background:#1B1A18;overflow:auto"><code style="font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.8;color:#E8E4DE;display:block;white-space:pre"><span style="color:#A78BC0">const</span> post = <span style="color:#A78BC0">await</span> <span style="color:#E3B778">getPost</span>(slug)
+<span style="color:#A78BC0">return</span> &lt;<span style="color:#8FA36B">Article</span> <span style="color:#D08770">post</span>={post} /&gt;</code></pre>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;height:64px;padding:0 18px;border-top:1px solid #EFEDE9;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;flex:1;height:42px;border:1px solid #E5E1DB;border-radius:21px;font-size:13.5px;font-weight:600;color:#4A453F">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#E0533D" stroke-width="1.5"><path d="M8 13.5S2 10 2 6.2A3.2 3.2 0 0 1 8 4.6a3.2 3.2 0 0 1 6 1.6C14 10 8 13.5 8 13.5Z"/></svg>
+          128
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1;height:42px;border:1px solid #E5E1DB;border-radius:21px;font-size:13.5px;font-weight:600;color:#4A453F">댓글 14</div>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1;height:42px;background:#1A1815;color:#fff;border-radius:21px;font-size:13.5px;font-weight:600">구독</div>
+      </div>
+    </div>
+
+    <div style="width:390px;height:700px;background:#fff;border:1px solid #E5E1DB;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 30px;box-shadow:0 1px 2px rgba(26,24,21,.04),0 22px 44px -28px rgba(26,24,21,.22)">
+      <div style="display:flex;align-items:baseline;gap:3px;margin-bottom:12px">
+        <span style="font-family:'Source Code Pro',monospace;color:#E0533D;font-size:34px;font-weight:600;line-height:1">`</span>
+        <span style="font-size:29px;font-weight:800;letter-spacing:-.04em;color:#1A1815">백틱</span>
+      </div>
+      <div style="font-size:14.5px;line-height:1.7;color:#6B6560;text-align:center;margin-bottom:34px;text-wrap:pretty">코드를 감싸는 기호처럼,<br>당신의 기록을 감싸는 곳.</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:50px;background:#1A1815;color:#fff;border-radius:10px;font-size:14.5px;font-weight:600">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="#fff"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.14.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub으로 계속하기
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;width:100%;margin:20px 0">
+        <div style="flex:1;height:1px;background:#EDEAE5"></div>
+        <span style="font-family:'Source Code Pro',monospace;font-size:11px;color:#B8B2AB">OR</span>
+        <div style="flex:1;height:1px;background:#EDEAE5"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;height:48px;border:1px solid #E5E1DB;border-radius:10px;font-size:14px;font-weight:600;color:#4A453F">이메일로 계속하기</div>
+    </div>
+
+  </div>
+
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:900}}"></script>
+</body>
+</html>
