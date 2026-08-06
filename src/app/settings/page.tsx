@@ -59,6 +59,9 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
         <Field label="GitHub">
           <Input name="githubUrl" defaultValue={user.githubUrl ?? ""} placeholder="github.com/username" className="font-mono text-[13.5px]" />
         </Field>
+        <Field label="웹사이트">
+          <Input name="websiteUrl" defaultValue={user.websiteUrl ?? ""} placeholder="https://my-site.com" className="font-mono text-[13.5px]" />
+        </Field>
         <div className="flex gap-2.5 pt-1">
           <Button className="rounded-xl px-6 py-3 text-[14px]">저장</Button>
         </div>

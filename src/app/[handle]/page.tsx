@@ -32,16 +32,19 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
             <span className="font-mono text-[13.5px] text-muted">@{user.handle}</span>
           </div>
           {user.bio && <p className="mt-2 max-w-[560px] text-[14.5px] leading-relaxed text-sub">{user.bio}</p>}
-          {user.githubUrl && (
-            <a
-              href={user.githubUrl.startsWith("http") ? user.githubUrl : `https://${user.githubUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2.5 inline-block font-mono text-[12.5px] font-medium text-muted hover:text-acc"
-            >
-              {user.githubUrl.replace(/^https?:\/\//, "")}
-            </a>
-          )}
+          <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
+            {[user.githubUrl, user.websiteUrl].filter(Boolean).map((url) => (
+              <a
+                key={url}
+                href={url!.startsWith("http") ? url! : `https://${url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[12.5px] font-medium text-muted hover:text-acc"
+              >
+                {url!.replace(/^https?:\/\//, "")}
+              </a>
+            ))}
+          </div>
         </div>
       </header>
 

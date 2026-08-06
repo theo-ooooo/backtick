@@ -2,6 +2,7 @@
 
 import { Markdown } from "@/components/markdown/Markdown";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
 
 interface Props {
@@ -12,6 +13,20 @@ interface Props {
   saved?: boolean; // just returned from a draft save
   error?: string;
   action: (formData: FormData) => Promise<void>;
+}
+
+function SubmitButtons() {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      <Button name="action" value="draft" variant="outline" size="sm" disabled={pending}>
+        {pending ? "저장 중…" : "임시저장"}
+      </Button>
+      <Button name="action" value="publish" variant="accent" size="sm" disabled={pending}>
+        {pending ? "저장 중…" : "발행하기"}
+      </Button>
+    </>
+  );
 }
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
@@ -30,8 +45,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         )}
         {error === "title" && <span className="text-[12px] font-bold text-acc">제목을 입력해주세요</span>}
         <div className="ml-auto flex items-center gap-2">
-          <Button name="action" value="draft" variant="outline" size="sm">임시저장</Button>
-          <Button name="action" value="publish" variant="accent" size="sm">발행하기</Button>
+          <SubmitButtons />
         </div>
       </div>
 

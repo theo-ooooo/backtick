@@ -4,6 +4,7 @@ import { Source_Code_Pro } from "next/font/google";
 import { currentUser } from "@/lib/auth";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
+import { ProgressBar } from "@/components/layout/ProgressBar";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="flex min-h-full flex-col">
+        <ProgressBar />
         <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur">
           <div className="mx-auto flex h-[60px] w-full max-w-[1200px] items-center gap-7 px-6">
             <Link href="/" className="flex items-baseline gap-[3px]">

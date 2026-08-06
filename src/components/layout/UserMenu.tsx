@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Avatar } from "@/components/ui/Avatar";
 import { logout } from "@/lib/actions/auth";
@@ -14,6 +14,7 @@ interface Props {
 /** 헤더 아바타 드롭다운 — 내 블로그 / 내 글 / 설정 / 로그아웃 */
 export function UserMenu({ name, image, handle }: Props) {
   const [open, setOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,11 +62,20 @@ export function UserMenu({ name, image, handle }: Props) {
             <Link href="/settings" className={item} role="menuitem">
               설정
             </Link>
-            <form action={logout}>
-              <button type="submit" className={`${item} text-acc hover:text-acc`} role="menuitem">
-                로그아웃
-              </button>
-            </form>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={(e) => {
+                e.stopPropagation(); // 래퍼의 메뉴닫기 onClick이 액션 실행 전에 언마운트시키지 않도록
+                startTransition(async () => {
+                  await logout();
+                });
+              }}
+              className={`${item} text-acc hover:text-acc disabled:opacity-50`}
+              role="menuitem"
+            >
+              {pending ? "로그아웃 중…" : "로그아웃"}
+            </button>
           </div>
         </div>
       )}
