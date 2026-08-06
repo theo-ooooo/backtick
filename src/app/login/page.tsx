@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth, isGithubEnabled, isDevLoginEnabled } from "@/lib/auth";
+import { currentUser, isGithubEnabled, isDevLoginEnabled } from "@/lib/auth";
 import { githubLogin, devLogin } from "@/lib/actions/auth";
 
 export const metadata: Metadata = { title: "로그인" };
 
 export default async function LoginPage() {
-  const session = await auth();
-  if (session?.user) redirect("/");
+  // JWT가 있어도 DB에 유저가 없으면(삭제·병합된 계정) 로그인 폼을 보여준다
+  const me = await currentUser();
+  if (me) redirect("/");
 
   return (
     <main className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-16">
