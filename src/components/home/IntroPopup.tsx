@@ -11,12 +11,19 @@ export function IntroPopup() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    try {
-      const hideUntil = Number(localStorage.getItem(KEY) ?? 0);
-      if (Date.now() > hideUntil) setOpen(true);
-    } catch {
-      /* ignore */
-    }
+    let alive = true;
+    queueMicrotask(() => {
+      if (!alive) return;
+      try {
+        const hideUntil = Number(localStorage.getItem(KEY) ?? 0);
+        if (Date.now() > hideUntil) setOpen(true);
+      } catch {
+        /* ignore */
+      }
+    });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   function close(days: number) {

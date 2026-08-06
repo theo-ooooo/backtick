@@ -10,5 +10,5 @@ export function useMarkdownEditor(initialContent = "") {
     setContent(e.target.value);
   }, []);
 
-  return { content, onChange, charCount: content.length, isEmpty: content.trim().length === 0 };
+  return { content, setContent, onChange, charCount: content.length, isEmpty: content.trim().length === 0 };
 }

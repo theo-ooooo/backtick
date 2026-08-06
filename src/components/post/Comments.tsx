@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { CommentView } from "@/lib/queries/comment";
 import { addComment, deleteComment } from "@/lib/actions/comment";
@@ -147,9 +148,9 @@ function CommentForm({
 
   if (!loggedIn && !parentId) {
     return (
-      <a href="/login" className="mt-4 block rounded-xl border border-dashed border-line py-4 text-center text-[13.5px] font-bold text-muted transition hover:border-acc hover:text-acc">
+      <Link href="/login" className="mt-4 block rounded-xl border border-dashed border-line py-4 text-center text-[13.5px] font-bold text-muted transition hover:border-acc hover:text-acc">
         로그인하고 댓글 쓰기
-      </a>
+      </Link>
     );
   }
 

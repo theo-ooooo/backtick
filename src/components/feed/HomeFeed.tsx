@@ -63,11 +63,18 @@ export function HomeFeed({ initialItems, tab, sort, sourceNames }: Props) {
 
   // 저장된 소스 필터 적용 (있을 때만 재조회)
   useEffect(() => {
-    const saved = loadFilter();
-    if (saved.length) {
-      setSelected(saved);
-      void fetchPage(0, saved, true);
-    }
+    let alive = true;
+    queueMicrotask(() => {
+      if (!alive) return;
+      const saved = loadFilter();
+      if (saved.length) {
+        setSelected(saved);
+        void fetchPage(0, saved, true);
+      }
+    });
+    return () => {
+      alive = false;
+    };
   }, [fetchPage]);
 
   // 무한스크롤 sentinel
