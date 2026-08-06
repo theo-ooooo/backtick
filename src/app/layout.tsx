@@ -69,8 +69,25 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </div>
         </header>
         {children}
-        <footer className="mt-auto border-t border-line py-8 text-center">
-          <span className="font-mono text-[12px] tracking-[0.14em] text-faint">BACKTICK · 개발자의 글쓰기</span>
+        <footer className="mt-auto border-t border-line py-8">
+          <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-2 px-6 text-center">
+            <span className="font-mono text-[12px] tracking-[0.14em] text-faint">BACKTICK · 개발자의 글쓰기</span>
+            <span className="text-[12.5px] font-medium text-muted">
+              © 2026 백틱 · Built by{" "}
+              <a
+                href="https://github.com/theo-ooooo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-sub hover:text-acc"
+              >
+                theo
+              </a>
+              <span className="mx-1.5 text-faint">·</span>
+              <a href="mailto:kkw.theo@gmail.com" className="font-mono text-[12px] text-muted hover:text-acc">
+                kkw.theo@gmail.com
+              </a>
+            </span>
+          </div>
         </footer>
       </body>
     </html>
