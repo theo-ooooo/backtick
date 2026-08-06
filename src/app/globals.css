@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
+/* Backtick design tokens — from the approved Claude Design draft */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f1efeb; /* warm page ground */
+  --card: #ffffff;
+  --ink: #1a1815;
+  --sub: #55504a;
+  --muted: #8a837c;
+  --faint: #b5aea6;
+  --line: #e7e3dc;
+  --acc: #e0533d; /* coral accent */
+  --acc-soft: #fcefec;
+  --code-bg: #1b1a18;
+  --code-fg: #e8e4de;
+  --code-chrome: #242220;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-sub: var(--sub);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-acc: var(--acc);
+  --color-acc-soft: var(--acc-soft);
+  --font-mono: var(--font-code), ui-monospace, "SF Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::selection {
+  background: #fbdcd5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
