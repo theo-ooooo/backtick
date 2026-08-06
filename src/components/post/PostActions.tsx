@@ -19,6 +19,7 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
   const [count, setCount] = useState(likeCount);
   const [isLiked, setIsLiked] = useState(liked);
   const [viewCount, setViewCount] = useState(views);
+  const [copied, setCopied] = useState(false);
   const [pending, startTransition] = useTransition();
 
   // 조회수 비콘 — 첫 방문은 증가(POST), 1시간 내 재방문은 조회만(GET). 응답으로 화면 즉시 갱신(ISR 캐시 무시)
@@ -62,6 +63,28 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
     });
   }
 
+  async function onShare() {
+    const url = window.location.href;
+    const title = document.title;
+    // 모바일은 네이티브 공유 시트, 데스크톱은 링크 복사
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+        return;
+      } catch {
+        /* 사용자가 취소 — 아래 복사로 넘어가지 않음 */
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* 클립보드 미지원 */
+    }
+  }
+
   return (
     <div className="mt-5 flex items-center gap-3">
       <button
@@ -75,6 +98,17 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
         }`}
       >
         {isLiked ? "♥" : "♡"} 좋아요 {count > 0 && count}
+      </button>
+      <button
+        type="button"
+        onClick={onShare}
+        className="flex items-center gap-2 rounded-full border border-line bg-white px-4.5 py-2 text-[14px] font-bold text-sub transition hover:border-acc hover:text-acc"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+          <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+        </svg>
+        {copied ? "복사됨!" : "공유"}
       </button>
       <span className="ml-auto font-mono text-[12px] text-faint">조회 {viewCount.toLocaleString()}</span>
     </div>
