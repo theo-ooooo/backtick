@@ -7,6 +7,7 @@ import { timeAgo } from "@/lib/format";
 import { dotColor } from "@/lib/colors";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
+import { SummarySheet } from "./SummarySheet";
 
 interface Props {
   item: FeedItem;
@@ -18,14 +19,15 @@ interface Props {
 export function FeedItemRow({ item, read = false, onRead }: Props) {
   const external = item.kind === "external";
   const [summary, setSummary] = useState<string | null>(null);
-  const [sumState, setSumState] = useState<"idle" | "loading" | "open" | "error">("idle");
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sumState, setSumState] = useState<"idle" | "loading" | "error">("idle");
 
-  // 수집글 전용 — 원문으로 나가기 전에 3줄 요약으로 판단. 백틱 글은 상세 패널에서.
-  function toggleSummary(e: React.MouseEvent) {
+  // 수집글 전용 — 시트를 바로 열고 요약은 뒤에서 채운다. 백틱 글은 상세 패널에서.
+  function openSummary(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (sumState === "open") return setSumState("idle");
-    if (summary) return setSumState("open");
+    setSheetOpen(true);
+    if (summary || sumState === "loading") return;
     setSumState("loading");
     fetch("/api/summary", {
       method: "POST",
@@ -36,7 +38,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
         const j = (await r.json()) as { summary?: string };
         if (r.ok && j.summary) {
           setSummary(j.summary);
-          setSumState("open");
+          setSumState("idle");
         } else {
           setSumState("error");
         }
@@ -44,6 +46,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
       .catch(() => setSumState("error"));
   }
   return (
+    <>
     <a
       href={item.url}
       target={external ? "_blank" : undefined}
@@ -82,23 +85,6 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
         {item.excerpt && (
           <p className="mt-1.5 line-clamp-2 max-w-[620px] text-[14px] leading-relaxed text-muted">{item.excerpt}</p>
         )}
-        {sumState === "open" && summary && (
-          <div className="mt-2.5 max-w-[620px] overflow-hidden rounded-xl border border-acc/20 bg-gradient-to-br from-acc-soft/70 to-acc-soft/25">
-            <div className="flex items-center px-4 pt-3">
-              <span className="font-mono text-[10.5px] font-bold tracking-[0.12em] text-acc">✨ AI 요약</span>
-              <button
-                type="button"
-                onClick={toggleSummary}
-                className="ml-auto rounded-full px-2 py-0.5 text-[11px] font-semibold text-faint transition hover:text-acc"
-              >
-                닫기
-              </button>
-            </div>
-            <p className="whitespace-pre-line px-4 pb-3.5 pt-1.5 text-[13.5px] font-medium leading-relaxed text-ink">
-              {summary}
-            </p>
-          </div>
-        )}
         <div className="mt-3 flex items-center gap-1.5">
             <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
               {item.tags.slice(0, 3).map((t) => (
@@ -110,14 +96,13 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
                 </span>
               )}
             </div>
-            {external && sumState !== "open" && (
+            {external && (
               <button
                 type="button"
-                onClick={toggleSummary}
-                disabled={sumState === "loading"}
-                className="ml-1 flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-acc/25 bg-acc-soft px-3 py-[5px] text-[12px] font-bold text-acc shadow-[0_1px_4px_rgba(224,83,61,.12)] transition hover:bg-acc hover:text-white disabled:opacity-60"
+                onClick={openSummary}
+                className="ml-1 flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-acc/25 bg-acc-soft px-3 py-[5px] text-[12px] font-bold text-acc shadow-[0_1px_4px_rgba(224,83,61,.12)] transition hover:bg-acc hover:text-white"
               >
-                {sumState === "loading" ? "요약 중…" : sumState === "error" ? "요약 불가 · 재시도" : "✨ 3줄 요약"}
+                ✨ 3줄 요약
               </button>
             )}
         </div>
@@ -142,5 +127,19 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
         )
       )}
     </a>
+    {external && (
+      <SummarySheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title={item.title}
+        source={item.source}
+        url={item.url}
+        summary={summary}
+        loading={sumState === "loading"}
+        error={sumState === "error"}
+        onRead={onRead}
+      />
+    )}
+    </>
   );
 }
