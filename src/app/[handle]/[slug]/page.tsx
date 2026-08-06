@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { getPublishedPost, hasLiked } from "@/lib/queries/post";
 import { PostActions } from "@/components/post/PostActions";
-import { Comments } from "@/components/post/Comments";
+import { CommentsSheet } from "@/components/post/CommentsSheet";
 import { getComments, countComments } from "@/lib/queries/comment";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
@@ -80,7 +80,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             loggedIn={Boolean(me)}
           />
 
-          <Comments postId={post.id} comments={comments} count={commentCount} meId={me?.id ?? null} />
+          <CommentsSheet postId={post.id} comments={comments} count={commentCount} meId={me?.id ?? null} />
         </article>
 
         <aside className="hidden w-[260px] shrink-0 lg:block">

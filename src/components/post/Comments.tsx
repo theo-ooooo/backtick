@@ -12,18 +12,21 @@ interface Props {
   comments: CommentView[];
   count: number;
   meId: string | null;
+  hideHeading?: boolean;
 }
 
 /** 댓글 섹션 — 2뎁스 고정, 답글의 답글은 "누구님에게"로 표시. */
-export function Comments({ postId, comments, count, meId }: Props) {
+export function Comments({ postId, comments, count, meId, hideHeading = false }: Props) {
   const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
 
   return (
-    <section className="mt-12">
-      <h2 className="border-b border-line pb-3 text-[16px] font-extrabold">
-        댓글 <span className="text-acc">{count}</span>
-      </h2>
+    <section className={hideHeading ? "mt-2" : "mt-12"}>
+      {!hideHeading && (
+        <h2 className="border-b border-line pb-3 text-[16px] font-extrabold">
+          댓글 <span className="text-acc">{count}</span>
+        </h2>
+      )}
 
       <CommentForm postId={postId} loggedIn={Boolean(meId)} onDone={() => router.refresh()} />
 

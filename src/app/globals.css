@@ -143,3 +143,13 @@ body {
 .hljs-number, .hljs-symbol { color: #ffc46b; }
 .hljs-built_in, .hljs-type { color: #d3b6ff; }
 .hljs-variable, .hljs-params { color: var(--code-fg); }
+
+/* bottom sheet (댓글) */
+@keyframes btSheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes btFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
