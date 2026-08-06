@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Source_Code_Pro } from "next/font/google";
+import { currentUser } from "@/lib/auth";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
     "코드를 감싸는 기호처럼, 당신의 기록을 감싸는 곳. 마크다운으로 글을 쓰고 국내 기술블로그 소식을 한곳에서 받아보세요.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const me = await currentUser();
   return (
     <html lang="ko" className={`h-full antialiased ${codeFont.variable}`}>
       <head>
@@ -52,6 +54,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               >
                 글쓰기
               </Link>
+              {me ? (
+                <Link
+                  href={me.handle ? `/@${me.handle}` : "/settings"}
+                  title={me.name ?? undefined}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-acc-soft text-[13px] font-extrabold text-acc transition hover:opacity-80"
+                >
+                  {(me.name ?? me.email ?? "?").charAt(0)}
+                </Link>
+              ) : (
+                <Link href="/login" className="text-[13.5px] font-bold text-sub transition hover:text-ink">
+                  로그인
+                </Link>
+              )}
             </div>
           </div>
         </header>

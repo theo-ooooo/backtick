@@ -33,7 +33,7 @@ function decodeEntities(s: string): string {
 }
 
 /** Strip HTML tags/entities and clamp for card excerpts. */
-function toExcerpt(html: string | undefined, max = 200): string | null {
+function toExcerpt(html: string | undefined, max = 450): string | null {
   if (!html) return null;
   const text = decodeEntities(html.replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
@@ -156,7 +156,7 @@ export async function ingestAllFeeds(): Promise<IngestResult[]> {
         const res = await prisma.externalPost.upsert({
           where: { url: it.url },
           // refresh mutable metadata on re-ingest (likes climb, tags/thumbs improve)
-          update: { likes: it.likes, tags: it.tags, thumbnail: it.thumbnail },
+          update: { likes: it.likes, tags: it.tags, thumbnail: it.thumbnail, excerpt: it.excerpt },
           create: { feedId: feed.id, ...it },
         });
         if (res.fetchedAt.getTime() > Date.now() - 5000) inserted++;

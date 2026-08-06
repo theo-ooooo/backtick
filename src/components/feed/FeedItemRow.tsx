@@ -39,7 +39,7 @@ export function FeedItemRow({ item }: { item: FeedItem }) {
           {item.title}
         </h2>
         {item.excerpt && (
-          <p className="mt-1.5 line-clamp-2 max-w-[620px] text-[14px] leading-relaxed text-muted">{item.excerpt}</p>
+          <p className="mt-1.5 line-clamp-3 max-w-[620px] text-[14px] leading-relaxed text-muted">{item.excerpt}</p>
         )}
         {(item.tags.length > 0 || item.likes != null || external) && (
           <div className="mt-3 flex items-center gap-1.5">
