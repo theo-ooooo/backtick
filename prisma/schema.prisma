@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- auth (Auth.js standard) ----------
+
+model User {
+  id        String   @id @default(cuid())
+  handle    String?  @unique // /@handle — set on first login
+  name      String?
+  email     String?  @unique
+  emailVerified DateTime?
+  image     String?
+  bio       String?
+  githubUrl String?
+  createdAt DateTime @default(now())
+
+  accounts Account[]
+  sessions Session[]
+  posts    Post[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ---------- blog ----------
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  authorId    String
+  title       String
+  slug        String
+  content     String // markdown
+  excerpt     String?
+  coverImage  String?
+  status      PostStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  author User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tags   PostTag[]
+
+  @@unique([authorId, slug])
+  @@index([status, publishedAt])
+  @@map("posts")
+}
+
+model Tag {
+  id    String    @id @default(cuid())
+  name  String    @unique
+  slug  String    @unique
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+// ---------- external feed aggregation (cold-start content) ----------
+
+model Feed {
+  id          String  @id @default(cuid())
+  name        String // e.g. "우아한형제들"
+  siteUrl     String
+  rssUrl      String  @unique
+  description String?
+  enabled     Boolean @default(true)
+
+  posts ExternalPost[]
+
+  @@map("feeds")
+}
+
+model ExternalPost {
+  id          String   @id @default(cuid())
+  feedId      String
+  title       String
+  url         String   @unique
+  excerpt     String?
+  author      String?
+  publishedAt DateTime
+  fetchedAt   DateTime @default(now())
+
+  feed Feed @relation(fields: [feedId], references: [id], onDelete: Cascade)
+
+  @@index([publishedAt])
+  @@map("external_posts")
+}
