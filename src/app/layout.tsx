@@ -5,6 +5,7 @@ import { currentUser } from "@/lib/auth";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { ProgressBar } from "@/components/layout/ProgressBar";
+import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -54,7 +55,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                   className="h-9 w-[200px] rounded-full border border-line bg-card pl-8 pr-3 text-[13px] font-medium outline-none transition placeholder:text-faint focus:w-[260px] focus:border-acc"
                 />
               </form>
-              <ButtonLink href="/write">글쓰기</ButtonLink>
+              <span className="hidden sm:block"><ButtonLink href="/write">글쓰기</ButtonLink></span>
               {me ? (
                 <UserMenu name={me.name ?? me.email ?? "?"} image={me.image} handle={me.handle} />
               ) : (
@@ -66,6 +67,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           </div>
         </header>
         {children}
+        <div className="h-[68px] sm:hidden" aria-hidden />
         <footer className="mt-auto border-t border-line py-8">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-2 px-6 text-center">
             <span className="font-mono text-[12px] tracking-[0.14em] text-faint">BACKTICK · 개발자의 글쓰기</span>
@@ -86,6 +88,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             </span>
           </div>
         </footer>
+        <MobileTabBar handle={me?.handle ?? null} loggedIn={Boolean(me)} />
       </body>
     </html>
   );

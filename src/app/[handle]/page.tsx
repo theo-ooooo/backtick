@@ -33,6 +33,18 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
           </div>
           {user.bio && <p className="mt-2 max-w-[560px] text-[14.5px] leading-relaxed text-sub">{user.bio}</p>}
           <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5">
+            {user.publicEmail && (
+              <a
+                href={`mailto:${user.publicEmail}`}
+                className="flex items-center gap-1.5 font-mono text-[12.5px] font-medium text-muted transition hover:text-acc"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                  <rect x="1.5" y="3" width="13" height="10" rx="2" />
+                  <path d="m2 4.5 6 4.5 6-4.5" />
+                </svg>
+                {user.publicEmail}
+              </a>
+            )}
             {[user.githubUrl, user.websiteUrl].filter(Boolean).map((url) => {
               const isGithub = url!.includes("github.com");
               return (

@@ -17,6 +17,8 @@ export async function saveProfile(formData: FormData) {
   const bio = String(formData.get("bio") ?? "").trim().slice(0, 180);
   const githubUrl = String(formData.get("githubUrl") ?? "").trim().slice(0, 120);
   const websiteUrl = String(formData.get("websiteUrl") ?? "").trim().slice(0, 200);
+  const publicEmail = String(formData.get("publicEmail") ?? "").trim().slice(0, 120);
+  if (publicEmail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(publicEmail)) redirect("/settings?error=email");
 
   if (!HANDLE_RE.test(handle)) redirect("/settings?error=handle");
   const taken = await prisma.user.findFirst({ where: { handle, NOT: { id: me.id } } });
@@ -30,6 +32,7 @@ export async function saveProfile(formData: FormData) {
       bio: bio || null,
       githubUrl: githubUrl || null,
       websiteUrl: websiteUrl || null,
+      publicEmail: publicEmail || null,
     },
   });
   revalidatePath("/");
