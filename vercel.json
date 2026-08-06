@@ -1,5 +1,13 @@
 {
   "regions": ["icn1"],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "backtick-xi.vercel.app" }],
+      "destination": "https://backtick.blog/$1",
+      "permanent": false
+    }
+  ],
   "crons": [
     {
       "path": "/api/ingest",
