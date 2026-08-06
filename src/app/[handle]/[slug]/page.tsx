@@ -59,7 +59,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             </Link>
             <span className="text-faint">
               · {(post.publishedAt ?? post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}
-              · 약 {readingMinutes(post.content)}분
+              · 읽는 데 약 {readingMinutes(post.content)}분
             </span>
             {mine && (
               <Link href={`/write/${post.id}`} className="ml-auto font-mono text-[12px] font-semibold text-muted hover:text-acc">
