@@ -138,7 +138,8 @@ export async function savePost(formData: FormData) {
   revalidatePath("/");
   if (publish || post.status === "PUBLISHED") {
     revalidatePath(`/@${me.handle}`);
-    redirect(`/@${me.handle}/${post.slug}`);
+    // redirect는 HTTP 헤더를 타므로 한글 슬러그는 반드시 인코딩 (ERR_INVALID_CHAR 방지)
+    redirect(`/@${me.handle}/${encodeURIComponent(post.slug)}`);
   }
   redirect(`/write/${post.id}?saved=1`);
 }
