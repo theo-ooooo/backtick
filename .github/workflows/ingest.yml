@@ -8,9 +8,18 @@ on:
 jobs:
   ingest:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Call ingest endpoint
-        run: |
-          curl -sf -X GET "https://backtick.blog/api/ingest" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            --max-time 120 | head -c 2000
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx prisma generate
+      # Vercel에서 fetch하면 우아한형제들(403)·velog(타임아웃)가 막혀서
+      # GitHub 러너에서 직접 수집해 DB에 쓴다.
+      - name: Run ingest
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx tsx scripts/ingest.ts
