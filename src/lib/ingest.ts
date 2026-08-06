@@ -9,8 +9,10 @@ type CustomItem = {
 const parser: Parser<Record<string, never>, CustomItem> = new Parser({
   timeout: 15000,
   headers: {
-    // some blogs (D2, Kurly) reject the default rss-parser UA
-    "User-Agent": "Mozilla/5.0 (compatible; BacktickBot/1.0; +https://backtick.blog)",
+    // 일부 블로그(D2, 우아한형제들 등)는 봇 UA·데이터센터 IP에 민감 — 브라우저급 헤더 사용
+    "User-Agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    "Accept-Language": "ko,en;q=0.8",
     Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
   },
   customFields: {
@@ -85,7 +87,13 @@ interface NormalizedItem {
 async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0) {
   const res = await fetch("https://v3.velog.io/graphql", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      origin: "https://velog.io",
+      referer: "https://velog.io/",
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    },
     body: JSON.stringify({
       query: `query trendingPosts($input: TrendingPostsInput!){
         trendingPosts(input:$input){ title short_description thumbnail likes tags url_slug released_at user{ username } }
