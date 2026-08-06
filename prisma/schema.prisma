@@ -79,6 +79,7 @@ model Post {
   coverImage  String?
   status      PostStatus @default(DRAFT)
   views       Int        @default(0)
+  summary     String? // AI 3줄 요약 캐시
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -190,6 +191,7 @@ model ExternalPost {
   author      String?
   thumbnail   String?
   likes       Int?
+  summary     String? // AI 3줄 요약 캐시
   tags        String[] @default([])
   publishedAt DateTime
   fetchedAt   DateTime @default(now())
