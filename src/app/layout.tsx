@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Source_Code_Pro } from "next/font/google";
 import { currentUser } from "@/lib/auth";
-import { Avatar } from "@/components/ui/Avatar";
 import { ButtonLink } from "@/components/ui/Button";
+import { UserMenu } from "@/components/layout/UserMenu";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -52,14 +52,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               </form>
               <ButtonLink href="/write">글쓰기</ButtonLink>
               {me ? (
-                <>
-                  <Link href="/posts" className="hidden text-[13.5px] font-bold text-sub transition hover:text-ink sm:block">
-                    내 글
-                  </Link>
-                  <Link href={me.handle ? `/@${me.handle}` : "/settings"} title={me.name ?? undefined} className="transition hover:opacity-80">
-                    <Avatar name={me.name ?? me.email ?? "?"} image={me.image} />
-                  </Link>
-                </>
+                <UserMenu name={me.name ?? me.email ?? "?"} image={me.image} handle={me.handle} />
               ) : (
                 <Link href="/login" className="text-[13.5px] font-bold text-sub transition hover:text-ink">
                   로그인
