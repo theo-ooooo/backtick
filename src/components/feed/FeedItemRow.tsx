@@ -23,7 +23,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
       rel={external ? "noopener noreferrer" : undefined}
       onClick={onRead}
       onAuxClick={onRead}
-      className={`group flex gap-5 py-[22px] ${read ? "opacity-[.55]" : ""}`}
+      className="group flex gap-5 py-[22px]"
     >
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex items-center gap-2 text-[12.5px]">
@@ -35,7 +35,6 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
               />
               <span className="font-mono text-[12px] font-semibold text-sub">{item.source}</span>
               <span className="text-faint">수집됨 · {timeAgo(item.publishedAt)}</span>
-            {read && <span className="rounded bg-paper px-1.5 py-0.5 font-mono text-[10.5px] font-semibold text-faint">읽음</span>}
             </>
           ) : (
             <>
@@ -45,6 +44,11 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
               <span className="font-bold text-sub">{item.author}</span>
               <span className="text-faint">· {timeAgo(item.publishedAt)}</span>
             </>
+          )}
+          {read && (
+            <span className="ml-auto flex items-center gap-1 font-mono text-[10.5px] font-semibold text-[#0ca678]">
+              ✓ 읽음
+            </span>
           )}
         </div>
         <h2 className="text-[18px] font-extrabold leading-snug tracking-[-0.02em] text-ink group-hover:text-acc">

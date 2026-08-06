@@ -15,6 +15,12 @@ function slugify(title: string): string {
   return base || "post";
 }
 
+/** 본문 첫 마크다운 이미지를 카드 썸네일로 쓴다. */
+function firstImage(md: string): string | null {
+  const m = /!\[[^\]]*\]\((https?:\/\/[^)\s]+)/.exec(md);
+  return m ? m[1] : null;
+}
+
 function toExcerpt(md: string, max = 160): string {
   return md
     .replace(/```[\s\S]*?```/g, " ")
@@ -68,6 +74,7 @@ export async function savePost(formData: FormData) {
         title,
         content,
         excerpt: toExcerpt(content),
+        coverImage: firstImage(content),
         ...(publish && post.status === "DRAFT"
           ? { status: "PUBLISHED", publishedAt: new Date() }
           : {}),
@@ -85,6 +92,7 @@ export async function savePost(formData: FormData) {
         slug,
         content,
         excerpt: toExcerpt(content),
+        coverImage: firstImage(content),
         status: publish ? "PUBLISHED" : "DRAFT",
         publishedAt: publish ? new Date() : null,
       },
