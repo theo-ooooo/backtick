@@ -1,5 +1,13 @@
 import Parser from "rss-parser";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import dns from "node:dns";
 import { prisma } from "./prisma";
+
+// v3.velog.io가 IPv6 우선 조회에서 수 초씩 지연/타임아웃 — IPv4 우선으로
+dns.setDefaultResultOrder?.("ipv4first");
+
+const execFileAsync = promisify(execFile);
 
 type CustomItem = {
   contentEncoded?: string;
@@ -83,8 +91,9 @@ interface NormalizedItem {
   publishedAt: Date;
 }
 
-/** velog's public recent-RSS is spam-ridden; use the trending GraphQL API instead. */
-async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0) {
+/** velog's public recent-RSS is spam-ridden; use the trending GraphQL API instead.
+ *  velog GraphQL은 종종 수십 초씩 느려서 타임아웃을 넉넉히 주고 1회 재시도한다. */
+async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0, retry = 1) {
   const res = await fetch("https://v3.velog.io/graphql", {
     method: "POST",
     headers: {
@@ -100,9 +109,16 @@ async function fetchVelogTrendingPage(timeframe: string, limit: number, offset =
       }`,
       variables: { input: { limit, offset, timeframe } },
     }),
-    signal: AbortSignal.timeout(25000),
+    signal: AbortSignal.timeout(55000),
+  }).catch((e: Error) => {
+    if (retry > 0) return null;
+    throw e;
   });
-  if (!res.ok) throw new Error(`velog graphql ${res.status}`);
+  if (!res) return fetchVelogTrendingPage(timeframe, limit, offset, retry - 1);
+  if (!res.ok) {
+    if (retry > 0) return fetchVelogTrendingPage(timeframe, limit, offset, retry - 1);
+    throw new Error(`velog graphql ${res.status}`);
+  }
   const json = (await res.json()) as {
     data?: {
       trendingPosts?: {
@@ -139,8 +155,21 @@ async function fetchVelogTrending(): Promise<NormalizedItem[]> {
   return [...week, ...month].filter((p) => (seen.has(p.url) ? false : (seen.add(p.url), true)));
 }
 
+/** 우아한형제들 등 일부 WAF는 Node TLS 핑거프린트를 차단(curl은 통과) — curl로 받아 파싱 */
+async function fetchRssViaCurl(rssUrl: string) {
+  const { stdout } = await execFileAsync(
+    "curl",
+    ["-sfL", "--max-time", "20", "-A", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36", rssUrl],
+    { maxBuffer: 10 * 1024 * 1024 },
+  );
+  return parser.parseString(stdout);
+}
+
 async function fetchRss(rssUrl: string): Promise<NormalizedItem[]> {
-  const parsed = await parser.parseURL(rssUrl);
+  const parsed = await parser.parseURL(rssUrl).catch(async (e: Error) => {
+    if (/403/.test(e.message)) return fetchRssViaCurl(rssUrl);
+    throw e;
+  });
   const items: NormalizedItem[] = [];
   for (const item of parsed.items ?? []) {
     const url = item.link?.trim();
@@ -162,7 +191,11 @@ async function fetchRss(rssUrl: string): Promise<NormalizedItem[]> {
 
 /** Fetch every enabled feed in parallel (serverless 시간 제한 안에 들어오도록); one failing feed never blocks the others. */
 export async function ingestAllFeeds(): Promise<IngestResult[]> {
-  const feeds = await prisma.feed.findMany({ where: { enabled: true } });
+  // INGEST_ONLY="velog,우아한형제들" — 데이터센터 IP가 막힌 소스만 로컬 등 다른 네트워크에서 골라 수집
+  const only = process.env.INGEST_ONLY?.split(",").map((s) => s.trim()).filter(Boolean);
+  const feeds = await prisma.feed.findMany({
+    where: { enabled: true, ...(only?.length ? { name: { in: only } } : {}) },
+  });
 
   return Promise.all(
     feeds.map(async (feed): Promise<IngestResult> => {
