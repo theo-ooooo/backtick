@@ -1,0 +1,16 @@
+name: hourly-ingest
+
+on:
+  schedule:
+    - cron: "10 * * * *" # 매시 10분 — Vercel Hobby 크론(일 1회) 한계 보완
+  workflow_dispatch: {}
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call ingest endpoint
+        run: |
+          curl -sf -X GET "https://backtick.blog/api/ingest" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --max-time 120 | head -c 2000
