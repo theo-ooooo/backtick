@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Source_Code_Pro } from "next/font/google";
 import { currentUser } from "@/lib/auth";
+import { Avatar } from "@/components/ui/Avatar";
+import { ButtonLink } from "@/components/ui/Button";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -48,23 +50,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                   className="h-9 w-[200px] rounded-full border border-line bg-card pl-8 pr-3 text-[13px] font-medium outline-none transition placeholder:text-faint focus:w-[260px] focus:border-acc"
                 />
               </form>
-              <Link
-                href="/write"
-                className="rounded-full bg-ink px-4.5 py-2 text-[13.5px] font-bold text-white transition hover:opacity-85"
-              >
-                글쓰기
-              </Link>
+              <ButtonLink href="/write">글쓰기</ButtonLink>
               {me ? (
                 <>
                   <Link href="/posts" className="hidden text-[13.5px] font-bold text-sub transition hover:text-ink sm:block">
                     내 글
                   </Link>
-                  <Link
-                    href={me.handle ? `/@${me.handle}` : "/settings"}
-                    title={me.name ?? undefined}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-acc-soft text-[13px] font-extrabold text-acc transition hover:opacity-80"
-                  >
-                    {(me.name ?? me.email ?? "?").charAt(0)}
+                  <Link href={me.handle ? `/@${me.handle}` : "/settings"} title={me.name ?? undefined} className="transition hover:opacity-80">
+                    <Avatar name={me.name ?? me.email ?? "?"} image={me.image} />
                   </Link>
                 </>
               ) : (

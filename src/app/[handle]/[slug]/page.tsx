@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
+import { Avatar } from "@/components/ui/Avatar";
+import { AuthorCard } from "@/components/post/AuthorCard";
 
 export const revalidate = 300;
 
@@ -57,9 +59,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
           )}
           <h1 className="text-[32px] font-extrabold leading-[1.3] tracking-[-0.03em]">{post.title}</h1>
           <div className="mt-4 flex items-center gap-2.5 border-b border-line pb-6 text-[13px]">
-            <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-acc-soft text-[11px] font-extrabold text-acc">
-              {(author.name ?? author.handle ?? "?").charAt(0)}
-            </span>
+            <Avatar name={author.name ?? author.handle ?? "?"} image={author.image} size="sm" />
             <Link href={`/@${author.handle}`} className="font-bold text-sub hover:text-acc">
               {author.name ?? author.handle}
             </Link>
@@ -80,20 +80,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
         </article>
 
         <aside className="hidden w-[260px] shrink-0 lg:block">
-          <div className="sticky top-[84px] rounded-2xl border border-line p-5">
-            <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-paper text-[20px] font-extrabold text-sub">
-              {(author.name ?? author.handle ?? "?").charAt(0)}
-            </span>
-            <div className="mt-3 text-[15.5px] font-extrabold">{author.name ?? author.handle}</div>
-            <div className="font-mono text-[12px] text-muted">@{author.handle}</div>
-            {author.bio && <p className="mt-2.5 text-[13px] leading-relaxed text-muted">{author.bio}</p>}
-            <Link
-              href={`/@${author.handle}`}
-              className="mt-4 block rounded-xl bg-ink px-4 py-2.5 text-center text-[13px] font-bold text-white transition hover:opacity-85"
-            >
-              글 더 보기
-            </Link>
-          </div>
+          <AuthorCard author={author} />
         </aside>
       </div>
     </main>

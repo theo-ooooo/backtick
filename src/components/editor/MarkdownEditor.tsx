@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Markdown } from "@/components/markdown/Markdown";
+import { Button } from "@/components/ui/Button";
 
 interface Props {
   postId?: string;
@@ -29,20 +30,8 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         )}
         {error === "title" && <span className="text-[12px] font-bold text-acc">제목을 입력해주세요</span>}
         <div className="ml-auto flex items-center gap-2">
-          <button
-            name="action"
-            value="draft"
-            className="rounded-full border border-line bg-white px-4 py-1.5 text-[13px] font-bold text-sub transition hover:border-ink hover:text-ink"
-          >
-            임시저장
-          </button>
-          <button
-            name="action"
-            value="publish"
-            className="rounded-full bg-acc px-4.5 py-1.5 text-[13px] font-bold text-white transition hover:opacity-90"
-          >
-            발행하기
-          </button>
+          <Button name="action" value="draft" variant="outline" size="sm">임시저장</Button>
+          <Button name="action" value="publish" variant="accent" size="sm">발행하기</Button>
         </div>
       </div>
 

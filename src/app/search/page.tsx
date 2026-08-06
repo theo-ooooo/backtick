@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import type { FeedItem } from "@/lib/feed";
+import { toFeedItem, toExternalFeedItem, type FeedItem } from "@/lib/feed";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
 
 export const metadata: Metadata = { title: "검색" };
@@ -26,40 +26,7 @@ async function search(q: string): Promise<FeedItem[]> {
     }),
   ]);
 
-  const items: FeedItem[] = [
-    ...posts.map(
-      (p): FeedItem => ({
-        kind: "native",
-        title: p.title,
-        url: `/@${p.author.handle}/${p.slug}`,
-        excerpt: p.excerpt,
-        author: p.author.name ?? p.author.handle,
-        authorHandle: p.author.handle,
-        authorImage: p.author.image,
-        source: null,
-        thumbnail: p.coverImage,
-        likes: null,
-        tags: p.tags.map((t) => t.tag.name),
-        publishedAt: p.publishedAt ?? p.createdAt,
-      }),
-    ),
-    ...externals.map(
-      (e): FeedItem => ({
-        kind: "external",
-        title: e.title,
-        url: e.url,
-        excerpt: e.excerpt,
-        author: e.author,
-        authorHandle: null,
-        authorImage: null,
-        source: e.feed.name,
-        thumbnail: e.thumbnail,
-        likes: e.likes,
-        tags: e.tags,
-        publishedAt: e.publishedAt,
-      }),
-    ),
-  ];
+  const items: FeedItem[] = [...posts.map(toFeedItem), ...externals.map(toExternalFeedItem)];
   return items.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 }
 

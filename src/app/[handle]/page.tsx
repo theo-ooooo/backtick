@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { TagChip } from "@/components/ui/TagChip";
+import { Avatar } from "@/components/ui/Avatar";
 
 export const revalidate = 300;
 
@@ -40,9 +41,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10">
       <header className="flex items-start gap-6 border-b border-line pb-8">
-        <span className="flex h-[84px] w-[84px] shrink-0 items-center justify-center rounded-full bg-paper text-[30px] font-extrabold text-sub">
-          {(user.name ?? user.handle).charAt(0)}
-        </span>
+        <Avatar name={user.name ?? user.handle} image={user.image} size="xl" tone="neutral" />
         <div className="min-w-0 flex-1 pt-1">
           <div className="flex flex-wrap items-baseline gap-2">
             <h1 className="text-[24px] font-extrabold tracking-[-0.03em]">{user.name ?? user.handle}</h1>

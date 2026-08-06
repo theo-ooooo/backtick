@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Field, Input, Textarea, Label } from "@/components/ui/Field";
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = { title: "설정" };
 
@@ -41,29 +44,21 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
         핸들을 설정하면 <span className="font-mono">/@핸들</span> 블로그가 열려요.
       </p>
 
-      {saved && (
-        <div className="mt-5 rounded-xl bg-[#e7f6ee] px-4 py-3 text-[13.5px] font-bold text-[#177245]">
-          저장했어요
-        </div>
-      )}
-      {error && (
-        <div className="mt-5 rounded-xl bg-acc-soft px-4 py-3 text-[13.5px] font-bold text-acc">
-          {error === "taken" ? "이미 사용 중인 핸들이에요" : "핸들은 영문 소문자·숫자·하이픈 3~20자예요"}
-        </div>
-      )}
+      <div className="mt-5 space-y-2">
+        {saved && <Alert tone="success">저장했어요</Alert>}
+        {error && (
+          <Alert tone="error">
+            {error === "taken" ? "이미 사용 중인 핸들이에요" : "핸들은 영문 소문자·숫자·하이픈 3~20자예요"}
+          </Alert>
+        )}
+      </div>
 
       <form action={saveProfile} className="mt-7 space-y-6">
+        <Field label="이름">
+          <Input name="name" defaultValue={user.name ?? ""} maxLength={40} />
+        </Field>
         <div>
-          <label className="mb-2 block text-[13px] font-bold text-sub">이름</label>
-          <input
-            name="name"
-            defaultValue={user.name ?? ""}
-            maxLength={40}
-            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] font-medium outline-none focus:border-acc"
-          />
-        </div>
-        <div>
-          <label className="mb-2 block text-[13px] font-bold text-sub">핸들</label>
+          <Label>핸들</Label>
           <div className="flex items-stretch overflow-hidden rounded-xl border border-line focus-within:border-acc">
             <span className="flex items-center bg-paper px-3.5 font-mono text-[13px] text-muted">backtick.blog/@</span>
             <input
@@ -76,29 +71,14 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
             />
           </div>
         </div>
-        <div>
-          <label className="mb-2 block text-[13px] font-bold text-sub">소개</label>
-          <textarea
-            name="bio"
-            defaultValue={user.bio ?? ""}
-            rows={3}
-            maxLength={180}
-            className="w-full resize-none rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium leading-relaxed outline-none focus:border-acc"
-          />
-        </div>
-        <div>
-          <label className="mb-2 block text-[13px] font-bold text-sub">GitHub</label>
-          <input
-            name="githubUrl"
-            defaultValue={user.githubUrl ?? ""}
-            placeholder="github.com/username"
-            className="w-full rounded-xl border border-line bg-white px-4 py-3 font-mono text-[13.5px] font-medium outline-none focus:border-acc"
-          />
-        </div>
+        <Field label="소개">
+          <Textarea name="bio" defaultValue={user.bio ?? ""} rows={3} maxLength={180} />
+        </Field>
+        <Field label="GitHub">
+          <Input name="githubUrl" defaultValue={user.githubUrl ?? ""} placeholder="github.com/username" className="font-mono text-[13.5px]" />
+        </Field>
         <div className="flex gap-2.5 pt-1">
-          <button className="rounded-xl bg-ink px-6 py-3 text-[14px] font-bold text-white transition hover:opacity-85">
-            저장
-          </button>
+          <Button className="rounded-xl px-6 py-3 text-[14px]">저장</Button>
         </div>
       </form>
     </main>

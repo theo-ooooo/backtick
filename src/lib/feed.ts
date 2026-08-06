@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 
 /** One unified card shape for the home feed (native posts + external posts). */
@@ -17,6 +18,44 @@ export interface FeedItem {
 }
 
 export type FeedTab = "all" | "backtick" | "tech";
+
+type PostWithRels = Prisma.PostGetPayload<{ include: { author: true; tags: { include: { tag: true } } } }>;
+type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ include: { feed: true } }>;
+
+/** shared row mappers — feed/search/tag pages all produce the same card shape */
+export function toFeedItem(p: PostWithRels): FeedItem {
+  return {
+    kind: "native",
+    title: p.title,
+    url: `/@${p.author.handle}/${p.slug}`,
+    excerpt: p.excerpt,
+    author: p.author.name ?? p.author.handle,
+    authorHandle: p.author.handle,
+    authorImage: p.author.image,
+    source: null,
+    thumbnail: p.coverImage,
+    likes: null,
+    tags: p.tags.map((t) => t.tag.name),
+    publishedAt: p.publishedAt ?? p.createdAt,
+  };
+}
+
+export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
+  return {
+    kind: "external",
+    title: e.title,
+    url: e.url,
+    excerpt: e.excerpt,
+    author: e.author,
+    authorHandle: null,
+    authorImage: null,
+    source: e.feed.name,
+    thumbnail: e.thumbnail,
+    likes: e.likes,
+    tags: e.tags,
+    publishedAt: e.publishedAt,
+  };
+}
 
 export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
   const wantNative = tab === "all" || tab === "backtick";
@@ -40,35 +79,8 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
       : Promise.resolve([]),
   ]);
 
-  const native: FeedItem[] = posts.map((p) => ({
-    kind: "native",
-    title: p.title,
-    url: `/@${p.author.handle}/${p.slug}`,
-    excerpt: p.excerpt,
-    author: p.author.name ?? p.author.handle,
-    authorHandle: p.author.handle,
-    authorImage: p.author.image,
-    source: null,
-    thumbnail: p.coverImage,
-    likes: null,
-    tags: p.tags.map((t) => t.tag.name),
-    publishedAt: p.publishedAt ?? p.createdAt,
-  }));
-
-  const external: FeedItem[] = externals.map((e) => ({
-    kind: "external",
-    title: e.title,
-    url: e.url,
-    excerpt: e.excerpt,
-    author: e.author,
-    authorHandle: null,
-    authorImage: null,
-    source: e.feed.name,
-    thumbnail: e.thumbnail,
-    likes: e.likes,
-    tags: e.tags,
-    publishedAt: e.publishedAt,
-  }));
+  const native: FeedItem[] = posts.map(toFeedItem);
+  const external: FeedItem[] = externals.map(toExternalFeedItem);
 
   // cap per external source so a chatty feed (e.g. GeekNews) can't flood the page
   const PER_SOURCE_CAP = 6;

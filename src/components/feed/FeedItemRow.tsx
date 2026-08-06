@@ -3,6 +3,7 @@ import type { FeedItem } from "@/lib/feed";
 import { timeAgo } from "@/lib/format";
 import { dotColor } from "@/lib/colors";
 import { TagChip } from "@/components/ui/TagChip";
+import { Avatar } from "@/components/ui/Avatar";
 
 /** One row in the unified feed — native posts and collected external posts share this. */
 export function FeedItemRow({ item }: { item: FeedItem }) {
