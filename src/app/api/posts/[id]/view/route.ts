@@ -1,16 +1,27 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-/** 조회수 비콘 — 클라이언트가 글 진입 시 1회 호출(로컬 중복 방지는 클라 담당). */
-export async function POST(_req: Request, ctx: { params: Promise<{ id: string }> }) {
+type Ctx = { params: Promise<{ id: string }> };
+
+/** 조회수 비콘 — 방문 시 1회 증가시키고 현재 값을 돌려준다(화면 실시간 반영용). */
+export async function POST(_req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
   try {
-    await prisma.post.update({
+    const post = await prisma.post.update({
       where: { id },
       data: { views: { increment: 1 } },
+      select: { views: true },
     });
+    return NextResponse.json({ ok: true, views: post.views });
   } catch {
-    // 없는 글이어도 조용히 — 비콘은 실패해도 UX에 영향 없음
+    return NextResponse.json({ ok: false }, { status: 404 });
   }
-  return NextResponse.json({ ok: true });
+}
+
+/** 증가 없이 현재 조회수만 (1시간 중복 방지에 걸린 재방문용). */
+export async function GET(_req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const post = await prisma.post.findUnique({ where: { id }, select: { views: true } });
+  if (!post) return NextResponse.json({ ok: false }, { status: 404 });
+  return NextResponse.json({ ok: true, views: post.views });
 }

@@ -24,6 +24,7 @@ model User {
   sessions Session[]
   posts    Post[]
   likes    PostLike[]
+  comments Comment[]
 
   @@map("users")
 }
@@ -79,13 +80,33 @@ model Post {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  author User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  tags   PostTag[]
-  likes  PostLike[]
+  author   User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  tags     PostTag[]
+  likes    PostLike[]
+  comments Comment[]
 
   @@unique([authorId, slug])
   @@index([status, publishedAt])
   @@map("posts")
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  postId      String
+  authorId    String
+  parentId    String? // 스레드 루트(최상위 댓글) — 답글의 답글도 같은 루트에 붙는다
+  replyToName String? // "누구님에게" 표시용 (답글의 답글일 때)
+  content     String
+  createdAt   DateTime  @default(now())
+  deletedAt   DateTime? // soft delete — "삭제된 댓글이에요"
+
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent  Comment?  @relation("Thread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("Thread")
+
+  @@index([postId, createdAt])
+  @@map("comments")
 }
 
 model PostLike {

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { getPublishedPost, hasLiked } from "@/lib/queries/post";
 import { PostActions } from "@/components/post/PostActions";
+import { Comments } from "@/components/post/Comments";
+import { getComments, countComments } from "@/lib/queries/comment";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
@@ -32,7 +34,11 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
   if (!post) notFound();
   const author = post.author;
   const mine = me?.id === author.id;
-  const liked = await hasLiked(post.id, me?.id);
+  const [liked, comments, commentCount] = await Promise.all([
+    hasLiked(post.id, me?.id),
+    getComments(post.id),
+    countComments(post.id),
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-[1100px] px-6 py-10">
@@ -53,7 +59,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             </Link>
             <span className="text-faint">
               · {(post.publishedAt ?? post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}
-              · {readingMinutes(post.content)}분 읽기
+              · 약 {readingMinutes(post.content)}분
             </span>
             {mine && (
               <Link href={`/write/${post.id}`} className="ml-auto font-mono text-[12px] font-semibold text-muted hover:text-acc">
@@ -73,6 +79,8 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
             liked={liked}
             loggedIn={Boolean(me)}
           />
+
+          <Comments postId={post.id} comments={comments} count={commentCount} meId={me?.id ?? null} />
         </article>
 
         <aside className="hidden w-[260px] shrink-0 lg:block">

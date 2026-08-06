@@ -18,20 +18,28 @@ const VIEW_TTL = 60 * 60 * 1000; // 같은 글 1시간 중복 방지
 export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props) {
   const [count, setCount] = useState(likeCount);
   const [isLiked, setIsLiked] = useState(liked);
+  const [viewCount, setViewCount] = useState(views);
   const [pending, startTransition] = useTransition();
 
-  // 조회수 비콘 (localStorage로 1시간 중복 방지)
+  // 조회수 비콘 — 첫 방문은 증가(POST), 1시간 내 재방문은 조회만(GET). 응답으로 화면 즉시 갱신(ISR 캐시 무시)
   useEffect(() => {
+    let dedup = false;
     try {
       const map = JSON.parse(localStorage.getItem(VIEW_KEY) ?? "{}") as Record<string, number>;
-      const last = map[postId] ?? 0;
-      if (Date.now() - last < VIEW_TTL) return;
-      map[postId] = Date.now();
-      localStorage.setItem(VIEW_KEY, JSON.stringify(map));
+      dedup = Date.now() - (map[postId] ?? 0) < VIEW_TTL;
+      if (!dedup) {
+        map[postId] = Date.now();
+        localStorage.setItem(VIEW_KEY, JSON.stringify(map));
+      }
     } catch {
       /* private 모드 등 — 그냥 집계 */
     }
-    void fetch(`/api/posts/${postId}/view`, { method: "POST" });
+    void fetch(`/api/posts/${postId}/view`, { method: dedup ? "GET" : "POST" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (j?.views != null) setViewCount(j.views);
+      })
+      .catch(() => {});
   }, [postId]);
 
   function onLike() {
@@ -68,7 +76,7 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
       >
         {isLiked ? "♥" : "♡"} 좋아요 {count > 0 && count}
       </button>
-      <span className="ml-auto font-mono text-[12px] text-faint">조회 {views.toLocaleString()}</span>
+      <span className="ml-auto font-mono text-[12px] text-faint">조회 {viewCount.toLocaleString()}</span>
     </div>
   );
 }
