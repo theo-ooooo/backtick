@@ -92,3 +92,18 @@ export async function getWriterStats(userId: string): Promise<WriterStats> {
     posts: postStats,
   };
 }
+
+/** 블로그 프로필용 — 일별 작성 수만 가볍게 (최근 371일, KST). */
+export async function getWritingDays(userId: string): Promise<DayCount[]> {
+  const since = new Date(Date.now() - 371 * 24 * 60 * 60 * 1000);
+  const posts = await prisma.post.findMany({
+    where: { authorId: userId, createdAt: { gte: since } },
+    select: { createdAt: true },
+  });
+  const byDay = new Map<string, number>();
+  for (const p of posts) {
+    const key = kstDateKey(p.createdAt);
+    byDay.set(key, (byDay.get(key) ?? 0) + 1);
+  }
+  return [...byDay.entries()].map(([date, count]) => ({ date, count }));
+}

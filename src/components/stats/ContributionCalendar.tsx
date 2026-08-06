@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { DayCount } from "@/lib/queries/stats";
 
 const LEVELS = ["bg-paper", "bg-acc/25", "bg-acc/50", "bg-acc/75", "bg-acc"];
@@ -15,33 +18,34 @@ function kstKey(d: Date): string {
   return d.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 }
 
-/** 깃헙 스타일 글쓰기 잔디 — 최근 53주, 일요일 시작 열 단위. 서버 렌더. */
+interface Tip {
+  x: number;
+  y: number;
+  text: string;
+}
+
+/** 깃헙 스타일 글쓰기 잔디 — 최근 53주, 컨테이너 폭에 맞춰 늘어나고 호버 시 개수 툴팁. */
 export function ContributionCalendar({ days }: { days: DayCount[] }) {
   const byDay = new Map(days.map((d) => [d.date, d.count]));
+  const [tip, setTip] = useState<Tip | null>(null);
 
-  // 오늘이 속한 주의 토요일까지 53주 그리드
   const end = new Date();
   const endDow = end.getDay();
-  const weeks: { date: string; count: number; future: boolean }[][] = [];
   const start = new Date(end);
   start.setDate(end.getDate() - (52 * 7 + endDow)); // 53주 전 일요일
 
+  const weeks: { date: string; count: number; future: boolean }[][] = [];
   const cursor = new Date(start);
   for (let w = 0; w < 53; w++) {
     const col: { date: string; count: number; future: boolean }[] = [];
     for (let d = 0; d < 7; d++) {
-      const key = kstKey(cursor);
-      col.push({
-        date: key,
-        count: byDay.get(key) ?? 0,
-        future: cursor > end,
-      });
+      col.push({ date: kstKey(cursor), count: byDay.get(kstKey(cursor)) ?? 0, future: cursor > end });
       cursor.setDate(cursor.getDate() + 1);
     }
     weeks.push(col);
   }
 
-  // 월 라벨 — 각 열 첫날이 새 달로 바뀌는 지점
+  // 월 라벨 — 열 첫날 기준으로 달이 바뀌는 지점
   const labels: { col: number; text: string }[] = [];
   let prevMonth = -1;
   weeks.forEach((col, i) => {
@@ -52,35 +56,45 @@ export function ContributionCalendar({ days }: { days: DayCount[] }) {
     }
   });
 
+  function showTip(e: React.MouseEvent<HTMLSpanElement>, date: string, count: number) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const [, m, d] = date.split("-");
+    setTip({
+      x: r.left + r.width / 2,
+      y: r.top - 8,
+      text: `${Number(m)}월 ${Number(d)}일 · ${count > 0 ? `글 ${count}개` : "글 없음"}`,
+    });
+  }
+
   return (
     <div className="overflow-x-auto">
-      <div className="min-w-[720px]">
+      <div className="min-w-[600px]">
         <div className="relative mb-1.5 h-4 font-mono text-[10px] text-faint">
           {labels.map((l, i) =>
-            // 너무 촘촘한 첫 라벨은 생략
             i === 0 && labels.length > 1 && labels[1].col - l.col < 3 ? null : (
-              <span key={l.col} className="absolute" style={{ left: `${l.col * 13}px` }}>
+              <span key={l.col} className="absolute" style={{ left: `${(l.col / 53) * 100}%` }}>
                 {l.text}
               </span>
             ),
           )}
         </div>
-        <div className="flex gap-[3px]">
-          {weeks.map((col, i) => (
-            <div key={i} className="flex flex-col gap-[3px]">
-              {col.map((day) =>
+        <div className="grid w-full grid-flow-col grid-rows-7 gap-[3px]" style={{ gridTemplateColumns: "repeat(53, minmax(0, 1fr))" }}>
+          {weeks.flat().length > 0 &&
+            weeks.map((col, w) =>
+              col.map((day, d) =>
                 day.future ? (
-                  <span key={day.date} className="h-[10px] w-[10px]" />
+                  <span key={day.date} style={{ gridColumn: w + 1, gridRow: d + 1 }} />
                 ) : (
                   <span
                     key={day.date}
-                    title={`${day.date} · 글 ${day.count}개`}
-                    className={`h-[10px] w-[10px] rounded-[3px] ${LEVELS[level(day.count)]} ${day.count === 0 ? "border border-line/70" : ""}`}
+                    style={{ gridColumn: w + 1, gridRow: d + 1 }}
+                    onMouseEnter={(e) => showTip(e, day.date, day.count)}
+                    onMouseLeave={() => setTip(null)}
+                    className={`aspect-square w-full rounded-[3px] ${LEVELS[level(day.count)]} ${day.count === 0 ? "border border-line/70" : ""}`}
                   />
                 ),
-              )}
-            </div>
-          ))}
+              ),
+            )}
         </div>
         <div className="mt-2.5 flex items-center justify-end gap-1.5 font-mono text-[10px] text-faint">
           적게
@@ -90,6 +104,15 @@ export function ContributionCalendar({ days }: { days: DayCount[] }) {
           많이
         </div>
       </div>
+
+      {tip && (
+        <div
+          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 font-mono text-[11px] font-semibold text-white shadow-lg"
+          style={{ left: tip.x, top: tip.y }}
+        >
+          {tip.text}
+        </div>
+      )}
     </div>
   );
 }

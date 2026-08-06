@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getUserWithPosts } from "@/lib/queries/user";
+import { getWritingDays } from "@/lib/queries/stats";
+import { ContributionCalendar } from "@/components/stats/ContributionCalendar";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -21,6 +23,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
   const { handle } = await props.params;
   const user = await getUserWithPosts(handle);
   if (!user || !user.handle) notFound();
+  const days = await getWritingDays(user.id);
 
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10">
@@ -72,6 +75,13 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
           </div>
         </div>
       </header>
+
+      <section className="mt-7 rounded-2xl border border-line bg-white p-5 sm:p-6">
+        <h2 className="mb-4 text-[14px] font-extrabold">
+          글쓰기 잔디 <span className="ml-1 font-mono text-[11.5px] font-semibold text-faint">최근 1년</span>
+        </h2>
+        <ContributionCalendar days={days} />
+      </section>
 
       <div className="mt-2 border-b border-line pb-3 pt-4 text-[14px] font-bold">
         글 <span className="text-acc">{user.posts.length}</span>
