@@ -103,38 +103,6 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
       {postId && <input type="hidden" name="id" value={postId} />}
       <div className="flex items-center gap-3 border-b border-line px-6 py-3">
         <span className="font-mono text-[11px] text-faint">MARKDOWN</span>
-        <span className="mx-1 h-4 w-px bg-line" aria-hidden />
-        <button
-          type="button"
-          disabled={aiBusy !== null || !isEmpty}
-          onClick={() => aiWrite("draft")}
-          title={!isEmpty ? "본문이 비어 있을 때 사용할 수 있어요" : undefined}
-          className="flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[12px] font-semibold text-sub transition hover:border-acc hover:text-acc disabled:opacity-35 disabled:hover:border-line disabled:hover:text-sub"
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
-          </svg>
-          {aiBusy === "draft" ? "생성 중…" : "AI 초안"}
-        </button>
-        <button
-          type="button"
-          disabled={aiBusy !== null || isEmpty}
-          onClick={() => aiWrite("continue")}
-          className="flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[12px] font-semibold text-sub transition hover:border-acc hover:text-acc disabled:opacity-35 disabled:hover:border-line disabled:hover:text-sub"
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-          {aiBusy === "continue" ? "생성 중…" : "이어쓰기"}
-        </button>
-        <button
-          type="button"
-          disabled={isEmpty}
-          onClick={() => setResetOpen(true)}
-          className="rounded-full px-2.5 py-1 text-[12px] font-semibold text-faint transition hover:text-acc disabled:opacity-35"
-        >
-          초기화
-        </button>
         {aiError && <span className="text-[12px] font-semibold text-acc">{aiError}</span>}
         {saved && (
           <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#177245]">
@@ -199,6 +167,49 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           ) : (
             <p className="text-[13.5px] text-faint">왼쪽에 쓰면 여기에 미리보기가 떠요</p>
           )}
+        </div>
+      </div>
+
+      {/* 하단 플로팅 AI 바 */}
+      <div
+        className="fixed inset-x-0 z-30 flex justify-center"
+        style={{ bottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
+      >
+        <div className="flex items-center gap-1 rounded-full border border-black/[.06] bg-white/90 px-2 py-1.5 shadow-[0_10px_34px_rgba(26,24,21,.16),0_2px_8px_rgba(26,24,21,.08)] backdrop-blur-xl">
+          <button
+            type="button"
+            disabled={aiBusy !== null || !isEmpty}
+            onClick={() => aiWrite("draft")}
+            title="빈 본문에서 제목으로 글 뼈대를 생성해요"
+            className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-bold text-sub transition hover:bg-acc-soft hover:text-acc disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-sub"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+            </svg>
+            {aiBusy === "draft" ? "생성 중…" : "AI 초안"}
+          </button>
+          <span className="h-4 w-px bg-line" aria-hidden />
+          <button
+            type="button"
+            disabled={aiBusy !== null || isEmpty}
+            onClick={() => aiWrite("continue")}
+            title="지금까지 쓴 흐름을 이어 다음 문단을 생성해요"
+            className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] font-bold text-sub transition hover:bg-acc-soft hover:text-acc disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-sub"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+            {aiBusy === "continue" ? "생성 중…" : "이어쓰기"}
+          </button>
+          <span className="h-4 w-px bg-line" aria-hidden />
+          <button
+            type="button"
+            disabled={isEmpty}
+            onClick={() => setResetOpen(true)}
+            className="rounded-full px-3 py-2 text-[13px] font-semibold text-faint transition hover:text-acc disabled:opacity-35"
+          >
+            초기화
+          </button>
         </div>
       </div>
 
