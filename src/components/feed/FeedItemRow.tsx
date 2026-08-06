@@ -110,6 +110,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
             >
               {sumState === "loading" ? "요약 중…" : sumState === "error" ? "요약 불가" : sumState === "open" ? "닫기" : "✨ AI 요약"}
             </button>
+        </div>
       </div>
       {item.thumbnail ? (
         <div className="h-[64px] w-[92px] shrink-0 self-center overflow-hidden rounded-lg border border-line bg-paper sm:h-[76px] sm:w-[116px]">
