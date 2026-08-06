@@ -94,12 +94,15 @@ export async function getFeed(
   const native: FeedItem[] = posts.map(toFeedItem);
   const external: FeedItem[] = externals.map(toExternalFeedItem);
 
-  // cap per external source so a chatty feed (e.g. GeekNews) can't flood — 페이지가 깊어질수록 상한도 함께 확장
+  // cap per external source so a chatty feed (e.g. GeekNews) can't flood — 페이지가 깊어질수록 상한도 함께 확장.
+  // 사용자가 소스를 직접 골랐다면(필터) 그 소스를 다 보겠다는 뜻이므로 캡을 적용하지 않는다.
+  const skipCap = Boolean(sources?.length);
   const PER_SOURCE_CAP = 6 * (page + 1);
   const seen = new Map<string, number>();
   const capped = external
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
     .filter((e) => {
+      if (skipCap) return true;
       const n = (seen.get(e.source!) ?? 0) + 1;
       seen.set(e.source!, n);
       return n <= PER_SOURCE_CAP;
