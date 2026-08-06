@@ -55,13 +55,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 글쓰기
               </Link>
               {me ? (
-                <Link
-                  href={me.handle ? `/@${me.handle}` : "/settings"}
-                  title={me.name ?? undefined}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-acc-soft text-[13px] font-extrabold text-acc transition hover:opacity-80"
-                >
-                  {(me.name ?? me.email ?? "?").charAt(0)}
-                </Link>
+                <>
+                  <Link href="/posts" className="hidden text-[13.5px] font-bold text-sub transition hover:text-ink sm:block">
+                    내 글
+                  </Link>
+                  <Link
+                    href={me.handle ? `/@${me.handle}` : "/settings"}
+                    title={me.name ?? undefined}
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-acc-soft text-[13px] font-extrabold text-acc transition hover:opacity-80"
+                  >
+                    {(me.name ?? me.email ?? "?").charAt(0)}
+                  </Link>
+                </>
               ) : (
                 <Link href="/login" className="text-[13.5px] font-bold text-sub transition hover:text-ink">
                   로그인

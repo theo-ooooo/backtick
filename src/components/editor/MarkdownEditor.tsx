@@ -8,11 +8,13 @@ interface Props {
   defaultTitle?: string;
   defaultContent?: string;
   defaultTags?: string;
+  saved?: boolean; // just returned from a draft save
+  error?: string;
   action: (formData: FormData) => Promise<void>;
 }
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
-export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, action }: Props) {
+export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, saved, error, action }: Props) {
   const [content, setContent] = useState(defaultContent ?? "");
 
   return (
@@ -20,6 +22,12 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
       {postId && <input type="hidden" name="id" value={postId} />}
       <div className="flex items-center gap-3 border-b border-line px-6 py-3">
         <span className="font-mono text-[11px] text-faint">MARKDOWN</span>
+        {saved && (
+          <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#177245]">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#28c840]" /> 임시저장됨 — 내 글에서 이어서 쓸 수 있어요
+          </span>
+        )}
+        {error === "title" && <span className="text-[12px] font-bold text-acc">제목을 입력해주세요</span>}
         <div className="ml-auto flex items-center gap-2">
           <button
             name="action"
