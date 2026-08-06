@@ -23,6 +23,7 @@ model User {
   accounts Account[]
   sessions Session[]
   posts    Post[]
+  likes    PostLike[]
 
   @@map("users")
 }
@@ -73,16 +74,30 @@ model Post {
   excerpt     String?
   coverImage  String?
   status      PostStatus @default(DRAFT)
+  views       Int        @default(0)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  author User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   tags   PostTag[]
+  likes  PostLike[]
 
   @@unique([authorId, slug])
   @@index([status, publishedAt])
   @@map("posts")
+}
+
+model PostLike {
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@map("post_likes")
 }
 
 model Tag {

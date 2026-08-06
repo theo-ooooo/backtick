@@ -19,7 +19,7 @@ export async function searchAll(q: string, take = 30): Promise<FeedItem[]> {
       },
       orderBy: { publishedAt: "desc" },
       take,
-      include: { author: true, tags: { include: { tag: true } } },
+      include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
     }),
   ]);
   return [...posts.map(toFeedItem), ...externals.map(toExternalFeedItem)].sort(

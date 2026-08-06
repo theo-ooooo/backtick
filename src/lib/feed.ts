@@ -20,7 +20,9 @@ export interface FeedItem {
 export type FeedTab = "all" | "backtick" | "tech";
 export type FeedSort = "latest" | "popular";
 
-type PostWithRels = Prisma.PostGetPayload<{ include: { author: true; tags: { include: { tag: true } } } }>;
+type PostWithRels = Prisma.PostGetPayload<{
+  include: { author: true; tags: { include: { tag: true } }; _count: { select: { likes: true } } };
+}>;
 type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ include: { feed: true } }>;
 
 /** shared row mappers — feed/search/tag pages all produce the same card shape */
@@ -35,7 +37,7 @@ export function toFeedItem(p: PostWithRels): FeedItem {
     authorImage: p.author.image,
     source: null,
     thumbnail: p.coverImage,
-    likes: null,
+    likes: p._count.likes > 0 ? p._count.likes : null,
     tags: p.tags.map((t) => t.tag.name),
     publishedAt: p.publishedAt ?? p.createdAt,
   };
@@ -68,7 +70,7 @@ export async function getFeed(tab: FeedTab, sort: FeedSort = "latest", take = 40
           where: { status: "PUBLISHED" },
           orderBy: { publishedAt: "desc" },
           take,
-          include: { author: true, tags: { include: { tag: true } } },
+          include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
         })
       : Promise.resolve([]),
     wantExternal

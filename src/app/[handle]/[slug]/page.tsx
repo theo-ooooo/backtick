@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
-import { getPublishedPost } from "@/lib/queries/post";
+import { getPublishedPost, hasLiked } from "@/lib/queries/post";
+import { PostActions } from "@/components/post/PostActions";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
@@ -31,6 +32,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
   if (!post) notFound();
   const author = post.author;
   const mine = me?.id === author.id;
+  const liked = await hasLiked(post.id, me?.id);
 
   return (
     <main className="mx-auto w-full max-w-[1100px] px-6 py-10">
@@ -63,6 +65,14 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
           <div className="pt-7">
             <Markdown content={post.content} />
           </div>
+
+          <PostActions
+            postId={post.id}
+            views={post.views}
+            likeCount={post._count.likes}
+            liked={liked}
+            loggedIn={Boolean(me)}
+          />
         </article>
 
         <aside className="hidden w-[260px] shrink-0 lg:block">

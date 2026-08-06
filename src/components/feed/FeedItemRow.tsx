@@ -23,7 +23,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
       rel={external ? "noopener noreferrer" : undefined}
       onClick={onRead}
       onAuxClick={onRead}
-      className="group flex gap-5 py-[22px]"
+      className={`group flex gap-5 py-[22px] ${read ? "opacity-60" : ""}`}
     >
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex items-center gap-2 text-[12.5px]">
@@ -38,9 +38,7 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
             </>
           ) : (
             <>
-              <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-acc-soft text-[10.5px] font-extrabold text-acc">
-                {(item.author ?? "?").charAt(0)}
-              </span>
+              <Avatar name={item.author ?? "?"} image={item.authorImage} size="sm" />
               <span className="font-bold text-sub">{item.author}</span>
               <span className="text-faint">· {timeAgo(item.publishedAt)}</span>
             </>

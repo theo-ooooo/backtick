@@ -51,6 +51,24 @@ async function upsertTags(postId: string, raw: string) {
   }
 }
 
+/** 좋아요 토글 — 로그인 유저만. 결과 상태를 돌려준다. */
+export async function toggleLike(postId: string): Promise<{ liked: boolean; count: number } | { error: string }> {
+  const me = await currentUser();
+  if (!me) return { error: "로그인이 필요해요" };
+
+  const existing = await prisma.postLike.findUnique({
+    where: { postId_userId: { postId, userId: me.id } },
+  });
+  if (existing) {
+    await prisma.postLike.delete({ where: { postId_userId: { postId, userId: me.id } } });
+  } else {
+    await prisma.postLike.create({ data: { postId, userId: me.id } });
+  }
+  const count = await prisma.postLike.count({ where: { postId } });
+  revalidatePath("/");
+  return { liked: !existing, count };
+}
+
 /** Save (draft) or publish a post. Shared by /write and /write/[id]. */
 export async function savePost(formData: FormData) {
   const me = await currentUser();
