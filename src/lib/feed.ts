@@ -18,6 +18,7 @@ export interface FeedItem {
 }
 
 export type FeedTab = "all" | "backtick" | "tech";
+export type FeedSort = "latest" | "popular";
 
 type PostWithRels = Prisma.PostGetPayload<{ include: { author: true; tags: { include: { tag: true } } } }>;
 type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ include: { feed: true } }>;
@@ -57,7 +58,7 @@ export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
   };
 }
 
-export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
+export async function getFeed(tab: FeedTab, sort: FeedSort = "latest", take = 40): Promise<FeedItem[]> {
   const wantNative = tab === "all" || tab === "backtick";
   const wantExternal = tab === "all" || tab === "tech";
 
@@ -93,9 +94,16 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
       return n <= PER_SOURCE_CAP;
     });
 
-  return [...native, ...capped]
-    .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
-    .slice(0, take);
+  const merged = [...native, ...capped];
+  if (sort === "popular") {
+    // 좋아요 많은 순 (없으면 0), 동률이면 최신순
+    merged.sort(
+      (a, b) => (b.likes ?? 0) - (a.likes ?? 0) || b.publishedAt.getTime() - a.publishedAt.getTime(),
+    );
+  } else {
+    merged.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+  }
+  return merged.slice(0, take);
 }
 
 export interface TrendingTag {

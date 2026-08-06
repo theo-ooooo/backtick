@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getFeed, getTrendingTags, type FeedTab } from "@/lib/feed";
+import { getFeed, getTrendingTags, type FeedTab, type FeedSort } from "@/lib/feed";
+import { SortSelect } from "@/components/feed/SortSelect";
 import { getEnabledFeeds } from "@/lib/queries/source";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
 import { Panel } from "@/components/ui/Panel";
@@ -13,10 +14,11 @@ const TABS: { key: FeedTab; label: string }[] = [
 ];
 
 export default async function Home(props: PageProps<"/">) {
-  const { tab: rawTab } = await props.searchParams;
+  const { tab: rawTab, sort: rawSort } = await props.searchParams;
   const tab: FeedTab = rawTab === "backtick" || rawTab === "tech" ? rawTab : "all";
+  const sort: FeedSort = rawSort === "popular" ? "popular" : "latest";
   const [items, feeds, trending] = await Promise.all([
-    getFeed(tab),
+    getFeed(tab, sort),
     getEnabledFeeds(),
     getTrendingTags(6),
   ]);
@@ -30,7 +32,7 @@ export default async function Home(props: PageProps<"/">) {
               {TABS.map((t) => (
                 <Link
                   key={t.key}
-                  href={t.key === "all" ? "/" : `/?tab=${t.key}`}
+                  href={`/?${new URLSearchParams({ ...(t.key !== "all" ? { tab: t.key } : {}), ...(sort !== "latest" ? { sort } : {}) }).toString()}`}
                   className={`px-4 py-3.5 text-[14.5px] font-bold tracking-tight ${
                     tab === t.key ? "-mb-px border-b-2 border-ink text-ink" : "text-muted hover:text-sub"
                   }`}
@@ -39,7 +41,7 @@ export default async function Home(props: PageProps<"/">) {
                 </Link>
               ))}
             </div>
-            <span className="ml-auto text-[12.5px] font-semibold text-faint">최신순 ▾</span>
+            <SortSelect current={sort} />
           </div>
 
           <ul className="divide-y divide-line/70">
