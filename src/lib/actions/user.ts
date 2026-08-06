@@ -24,6 +24,14 @@ export async function saveProfile(formData: FormData) {
   const taken = await prisma.user.findFirst({ where: { handle, NOT: { id: me.id } } });
   if (taken) redirect("/settings?error=taken");
 
+  // 닉네임 유니크 (대소문자 무시)
+  if (name) {
+    const nickTaken = await prisma.user.findFirst({
+      where: { name: { equals: name, mode: "insensitive" }, NOT: { id: me.id } },
+    });
+    if (nickTaken) redirect("/settings?error=nick");
+  }
+
   await prisma.user.update({
     where: { id: me.id },
     data: {

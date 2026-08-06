@@ -26,7 +26,7 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
         {saved && <Alert tone="success">저장했어요</Alert>}
         {error && (
           <Alert tone="error">
-            {error === "taken" ? "이미 사용 중인 핸들이에요" : error === "email" ? "이메일 형식을 확인해주세요" : "핸들은 영문 소문자·숫자·하이픈 3~20자예요"}
+            {error === "taken" ? "이미 사용 중인 핸들이에요" : error === "email" ? "이메일 형식을 확인해주세요" : error === "nick" ? "이미 사용 중인 닉네임이에요" : "핸들은 영문 소문자·숫자·하이픈 3~20자예요"}
           </Alert>
         )}
       </div>
@@ -36,8 +36,8 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
       </div>
 
       <form action={saveProfile} className="mt-7 space-y-6">
-        <Field label="이름">
-          <Input name="name" defaultValue={user.name ?? ""} maxLength={40} />
+        <Field label="닉네임">
+          <Input name="name" defaultValue={user.name ?? ""} maxLength={40} required placeholder="다른 사람과 겹치지 않는 닉네임" />
         </Field>
         <div>
           <Label>핸들</Label>
