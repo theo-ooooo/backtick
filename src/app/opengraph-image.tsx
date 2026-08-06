@@ -9,7 +9,7 @@ const fontPromise = fetch(
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/public/static/Pretendard-Bold.otf",
 ).then((r) => r.arrayBuffer());
 
-/** 링크 공유 썸네일 (OG/트위터 카드) — 코드블록 카드 브랜드. */
+/** 링크 공유 썸네일 — 파비콘과 동일한 미니멀 브랜드 (다크 + 코랄 백틱 획). */
 export default async function OgImage() {
   const pretendard = await fontPromise;
 
@@ -20,87 +20,19 @@ export default async function OgImage() {
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f4f2ee",
+          background: "#1a1815",
           fontFamily: "Pretendard",
         }}
       >
-        {/* 코드블록 카드 */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: 1040,
-            height: 480,
-            background: "#1b1a18",
-            borderRadius: 28,
-            boxShadow: "0 24px 60px rgba(26,24,21,.35)",
-          }}
-        >
-          {/* mac chrome */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              height: 64,
-              padding: "0 32px",
-              background: "#242220",
-              borderTopLeftRadius: 28,
-              borderTopRightRadius: 28,
-            }}
-          >
-            <div style={{ width: 16, height: 16, borderRadius: 8, background: "#ff5f57" }} />
-            <div style={{ width: 16, height: 16, borderRadius: 8, background: "#febc2e" }} />
-            <div style={{ width: 16, height: 16, borderRadius: 8, background: "#28c840" }} />
-            <div style={{ display: "flex", marginLeft: 20, fontSize: 22, color: "#8a837c" }}>backtick.blog</div>
-          </div>
-
-          {/* 본문 */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              justifyContent: "center",
-              padding: "0 72px",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-              <div style={{ display: "flex", fontSize: 120, color: "#e0533d", marginTop: -20 }}>`</div>
-              <div style={{ display: "flex", fontSize: 96, color: "#ffffff", letterSpacing: -4 }}>백틱</div>
-            </div>
-            <div style={{ display: "flex", fontSize: 34, color: "#b5aea6", marginTop: 8 }}>
-              코드를 감싸는 기호처럼, 당신의 기록을 감싸는 곳
-            </div>
-            <div style={{ display: "flex", marginTop: 40, gap: 12 }}>
-              <div
-                style={{
-                  display: "flex",
-                  padding: "10px 24px",
-                  borderRadius: 999,
-                  background: "#e0533d",
-                  color: "#ffffff",
-                  fontSize: 24,
-                }}
-              >
-                개발자의 글쓰기
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  padding: "10px 24px",
-                  borderRadius: 999,
-                  background: "#2a2825",
-                  color: "#b5aea6",
-                  fontSize: 24,
-                }}
-              >
-                기술블로그 큐레이션
-              </div>
-            </div>
-          </div>
+        {/* 파비콘의 백틱 획 그대로, 크게 */}
+        <svg width="300" height="300" viewBox="0 0 64 64" fill="none">
+          <line x1="25" y1="16" x2="39" y2="38" stroke="#e0533d" strokeWidth="11" strokeLinecap="round" />
+        </svg>
+        <div style={{ display: "flex", fontSize: 44, color: "#ffffff", letterSpacing: -1, marginTop: -10 }}>
+          backtick.blog
         </div>
       </div>
     ),
