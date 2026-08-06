@@ -1,0 +1,20 @@
+# 백틱 (Backtick)
+
+> 한국 개발자를 위한 마크다운 블로그 플랫폼 + 기술블로그 큐레이션. 직접 글을 쓰고(velog 스타일), velog 트렌딩과 카카오·토스·당근·라인·쿠팡·우아한형제들 등 기업 기술블로그 새 글을 한 피드에서 AI 요약과 함께 받아본다.
+
+- 사이트: https://backtick.blog
+- 최신 글 RSS: https://backtick.blog/rss.xml
+- 사이트맵: https://backtick.blog/sitemap.xml
+
+## 주요 페이지
+
+- [홈 피드](https://backtick.blog): 백틱 글 + 수집된 기술블로그 글 통합 피드 (최신/트렌딩 정렬, 출처 필터)
+- [수집 출처](https://backtick.blog/sources): 큐레이션 중인 기술블로그 목록
+- 글 URL 형식: https://backtick.blog/@핸들/슬러그
+- 블로그 URL 형식: https://backtick.blog/@핸들
+
+## 특징
+
+- 마크다운 에디터 + AI 초안/이어쓰기/자동 추천 (gpt 기반)
+- 피드 카드마다 AI 3줄 요약 제공
+- GitHub 로그인, 댓글(멘션), 좋아요, 조회수

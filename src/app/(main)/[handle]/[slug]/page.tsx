@@ -17,10 +17,22 @@ export async function generateMetadata(props: PageProps<"/[handle]/[slug]">): Pr
   const { handle, slug } = await props.params;
   const post = await getPublishedPost(handle, slug);
   if (!post) return {};
+  const canonical = `https://backtick.blog/@${post.author.handle}/${encodeURIComponent(post.slug)}`;
   return {
     title: post.title,
     description: post.excerpt ?? undefined,
-    openGraph: { title: post.title, description: post.excerpt ?? undefined, type: "article" },
+    alternates: { canonical },
+    authors: [{ name: post.author.name ?? post.author.handle ?? undefined, url: `https://backtick.blog/@${post.author.handle}` }],
+    keywords: post.tags.map((t) => t.tag.name),
+    openGraph: {
+      title: post.title,
+      description: post.excerpt ?? undefined,
+      type: "article",
+      url: canonical,
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: [`https://backtick.blog/@${post.author.handle}`],
+    },
   };
 }
 
@@ -40,8 +52,28 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
     countComments(post.id),
   ]);
 
+  // 검색엔진·AI 크롤러용 구조화 데이터 (AEO)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt ?? undefined,
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: {
+      "@type": "Person",
+      name: author.name ?? author.handle,
+      url: `https://backtick.blog/@${author.handle}`,
+    },
+    publisher: { "@type": "Organization", name: "백틱", url: "https://backtick.blog" },
+    mainEntityOfPage: `https://backtick.blog/@${author.handle}/${encodeURIComponent(post.slug)}`,
+    keywords: post.tags.map((t) => t.tag.name).join(", ") || undefined,
+    inLanguage: "ko",
+  };
+
   return (
     <main className="mx-auto w-full max-w-[1100px] px-6 py-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="flex gap-10">
         <article className="min-w-0 max-w-[720px] flex-1">
           {post.tags.length > 0 && (

@@ -39,3 +39,20 @@ export async function getMyPost(userId: string, postId: string) {
     include: { tags: { include: { tag: true } } },
   });
 }
+
+/** 사이트맵/RSS용 — 발행글 전체의 경로 재료만 가볍게. */
+export async function getPublishedForIndex(take = 500) {
+  return prisma.post.findMany({
+    where: { status: "PUBLISHED", author: { handle: { not: null } } },
+    orderBy: { publishedAt: "desc" },
+    take,
+    select: {
+      slug: true,
+      title: true,
+      excerpt: true,
+      publishedAt: true,
+      updatedAt: true,
+      author: { select: { handle: true, name: true } },
+    },
+  });
+}
