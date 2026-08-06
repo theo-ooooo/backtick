@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getFeed, getTrendingTags, type FeedTab } from "@/lib/feed";
-import { prisma } from "@/lib/prisma";
+import { getEnabledFeeds } from "@/lib/queries/source";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
 import { Panel } from "@/components/ui/Panel";
 
@@ -17,7 +17,7 @@ export default async function Home(props: PageProps<"/">) {
   const tab: FeedTab = rawTab === "backtick" || rawTab === "tech" ? rawTab : "all";
   const [items, feeds, trending] = await Promise.all([
     getFeed(tab),
-    prisma.feed.findMany({ where: { enabled: true }, orderBy: { name: "asc" } }),
+    getEnabledFeeds(),
     getTrendingTags(6),
   ]);
 

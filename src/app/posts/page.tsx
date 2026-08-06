@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getMyPosts } from "@/lib/queries/post";
 import { PostRow } from "@/components/post/PostRow";
 
 export const metadata: Metadata = { title: "내 글" };
@@ -10,10 +10,7 @@ export default async function MyPostsPage() {
   const me = await currentUser();
   if (!me) redirect("/login");
 
-  const posts = await prisma.post.findMany({
-    where: { authorId: me.id },
-    orderBy: { updatedAt: "desc" },
-  });
+  const posts = await getMyPosts(me.id);
   const sections = [
     { label: "임시저장", posts: posts.filter((p) => p.status === "DRAFT"), empty: "임시저장한 글이 없어요" },
     { label: "발행됨", posts: posts.filter((p) => p.status === "PUBLISHED"), empty: "발행한 글이 없어요" },

@@ -1,41 +1,18 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { currentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { saveProfile } from "@/lib/actions/user";
 import { Field, Input, Textarea, Label } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = { title: "설정" };
 
-const HANDLE_RE = /^[a-z0-9-]{3,20}$/;
 
 export default async function SettingsPage(props: PageProps<"/settings">) {
   const user = await currentUser();
   if (!user) redirect("/login");
   const { saved, error } = await props.searchParams;
-
-  async function saveProfile(formData: FormData) {
-    "use server";
-    const me = await currentUser();
-    if (!me) redirect("/login");
-    const handle = String(formData.get("handle") ?? "").trim().toLowerCase();
-    const name = String(formData.get("name") ?? "").trim().slice(0, 40);
-    const bio = String(formData.get("bio") ?? "").trim().slice(0, 180);
-    const githubUrl = String(formData.get("githubUrl") ?? "").trim().slice(0, 120);
-
-    if (!HANDLE_RE.test(handle)) redirect("/settings?error=handle");
-    const taken = await prisma.user.findFirst({ where: { handle, NOT: { id: me.id } } });
-    if (taken) redirect("/settings?error=taken");
-
-    await prisma.user.update({
-      where: { id: me.id },
-      data: { handle, name: name || me.name, bio: bio || null, githubUrl: githubUrl || null },
-    });
-    revalidatePath("/");
-    redirect("/settings?saved=1");
-  }
 
   return (
     <main className="mx-auto w-full max-w-[640px] px-6 py-10">

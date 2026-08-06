@@ -1,26 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth, signIn, isGithubEnabled, isDevLoginEnabled } from "@/lib/auth";
+import { auth, isGithubEnabled, isDevLoginEnabled } from "@/lib/auth";
+import { githubLogin, devLogin } from "@/lib/actions/auth";
 
 export const metadata: Metadata = { title: "로그인" };
 
 export default async function LoginPage() {
   const session = await auth();
   if (session?.user) redirect("/");
-
-  async function githubLogin() {
-    "use server";
-    await signIn("github", { redirectTo: "/settings" });
-  }
-
-  async function devLogin(formData: FormData) {
-    "use server";
-    await signIn("dev", {
-      email: String(formData.get("email") ?? ""),
-      name: String(formData.get("name") ?? ""),
-      redirectTo: "/settings",
-    });
-  }
 
   return (
     <main className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center px-6 py-16">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getMyPost } from "@/lib/queries/post";
 import { savePost } from "@/lib/actions/post";
 import { MarkdownEditor } from "@/components/editor/MarkdownEditor";
 
@@ -12,10 +12,7 @@ export default async function EditPage(props: PageProps<"/write/[id]">) {
   if (!me) redirect("/login");
   const { id } = await props.params;
   const { saved, error } = await props.searchParams;
-  const post = await prisma.post.findFirst({
-    where: { id, authorId: me.id },
-    include: { tags: { include: { tag: true } } },
-  });
+  const post = await getMyPost(me.id, id);
   if (!post) notFound();
 
   return (

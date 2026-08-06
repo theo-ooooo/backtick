@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
-import { toFeedItem, toExternalFeedItem, type FeedItem } from "@/lib/feed";
+import { getTagFeed } from "@/lib/queries/tag";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
 
 export const revalidate = 600;
@@ -14,24 +13,7 @@ export default async function TagPage(props: PageProps<"/tags/[tag]">) {
   const { tag: raw } = await props.params;
   const tag = decodeURIComponent(raw).toLowerCase();
 
-  const [externals, posts] = await Promise.all([
-    prisma.externalPost.findMany({
-      where: { tags: { has: tag } },
-      orderBy: { publishedAt: "desc" },
-      take: 40,
-      include: { feed: true },
-    }),
-    prisma.post.findMany({
-      where: { status: "PUBLISHED", tags: { some: { tag: { name: tag } } } },
-      orderBy: { publishedAt: "desc" },
-      take: 40,
-      include: { author: true, tags: { include: { tag: true } } },
-    }),
-  ]);
-
-  const items: FeedItem[] = [...posts.map(toFeedItem), ...externals.map(toExternalFeedItem)].sort(
-    (a, b) => b.publishedAt.getTime() - a.publishedAt.getTime(),
-  );
+  const items = await getTagFeed(tag);
 
   return (
     <main className="mx-auto w-full max-w-[860px] px-6 py-10">

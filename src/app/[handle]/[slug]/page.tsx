@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
+import { getPublishedPost } from "@/lib/queries/post";
 import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
@@ -10,23 +10,9 @@ import { AuthorCard } from "@/components/post/AuthorCard";
 
 export const revalidate = 300;
 
-async function getPost(handleParam: string, slugParam: string) {
-  const decoded = decodeURIComponent(handleParam);
-  if (!decoded.startsWith("@")) return null;
-  const handle = decoded.slice(1).toLowerCase();
-  const slug = decodeURIComponent(slugParam);
-  const author = await prisma.user.findUnique({ where: { handle } });
-  if (!author) return null;
-  const post = await prisma.post.findFirst({
-    where: { authorId: author.id, slug, status: "PUBLISHED" },
-    include: { author: true, tags: { include: { tag: true } } },
-  });
-  return post;
-}
-
 export async function generateMetadata(props: PageProps<"/[handle]/[slug]">): Promise<Metadata> {
   const { handle, slug } = await props.params;
-  const post = await getPost(handle, slug);
+  const post = await getPublishedPost(handle, slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -41,7 +27,7 @@ function readingMinutes(md: string): number {
 
 export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
   const { handle, slug } = await props.params;
-  const [post, me] = await Promise.all([getPost(handle, slug), currentUser()]);
+  const [post, me] = await Promise.all([getPublishedPost(handle, slug), currentUser()]);
   if (!post) notFound();
   const author = post.author;
   const mine = me?.id === author.id;

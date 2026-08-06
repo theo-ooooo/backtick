@@ -1,31 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getUserWithPosts } from "@/lib/queries/user";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
 
 export const revalidate = 300;
 
-async function getUser(handleParam: string) {
-  const decoded = decodeURIComponent(handleParam);
-  if (!decoded.startsWith("@")) return null;
-  const handle = decoded.slice(1).toLowerCase();
-  return prisma.user.findUnique({
-    where: { handle },
-    include: {
-      posts: {
-        where: { status: "PUBLISHED" },
-        orderBy: { publishedAt: "desc" },
-        include: { tags: { include: { tag: true } } },
-      },
-    },
-  });
-}
-
 export async function generateMetadata(props: PageProps<"/[handle]">): Promise<Metadata> {
   const { handle } = await props.params;
-  const user = await getUser(handle);
+  const user = await getUserWithPosts(handle);
   if (!user) return {};
   return {
     title: `${user.name ?? user.handle} (@${user.handle})`,
@@ -35,7 +19,7 @@ export async function generateMetadata(props: PageProps<"/[handle]">): Promise<M
 
 export default async function BlogHome(props: PageProps<"/[handle]">) {
   const { handle } = await props.params;
-  const user = await getUser(handle);
+  const user = await getUserWithPosts(handle);
   if (!user || !user.handle) notFound();
 
   return (

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { getTrendingTags } from "@/lib/feed";
+import { getAllTags } from "@/lib/queries/tag";
 
 export const revalidate = 600;
 
@@ -9,28 +9,6 @@ export const metadata: Metadata = {
   title: "태그",
   description: "수집 글과 백틱 글에 붙은 태그를 둘러보세요.",
 };
-
-/** every tag with usage count (external + native combined) */
-async function getAllTags(): Promise<{ name: string; count: number }[]> {
-  const [externalRows, nativeRows] = await Promise.all([
-    prisma.$queryRaw<{ name: string; count: bigint }[]>`
-      SELECT unnest(tags) AS name, count(*) AS count
-      FROM external_posts GROUP BY 1
-    `,
-    prisma.$queryRaw<{ name: string; count: bigint }[]>`
-      SELECT t.name AS name, count(*) AS count
-      FROM post_tags pt JOIN tags t ON t.id = pt."tagId"
-      GROUP BY 1
-    `,
-  ]);
-  const merged = new Map<string, number>();
-  for (const r of [...externalRows, ...nativeRows]) {
-    merged.set(r.name, (merged.get(r.name) ?? 0) + Number(r.count));
-  }
-  return [...merged.entries()]
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-}
 
 export default async function TagsPage() {
   const [trending, all] = await Promise.all([getTrendingTags(4), getAllTags()]);

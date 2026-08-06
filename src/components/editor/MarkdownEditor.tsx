@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Markdown } from "@/components/markdown/Markdown";
+import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
 import { Button } from "@/components/ui/Button";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
 export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, saved, error, action }: Props) {
-  const [content, setContent] = useState(defaultContent ?? "");
+  const { content, onChange, isEmpty } = useMarkdownEditor(defaultContent ?? "");
 
   return (
     <form action={action} className="flex min-h-0 flex-1 flex-col">
@@ -55,13 +55,13 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         <textarea
           name="content"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={onChange}
           placeholder={"## 마크다운으로 작성하세요\n\n```ts\nconst hello = 'backtick';\n```"}
           className="h-full min-h-[540px] w-full resize-none bg-white px-6 py-5 font-mono text-[13.5px] leading-relaxed outline-none placeholder:text-faint"
         />
         <div className="hidden overflow-y-auto px-6 py-5 md:block">
           <div className="mb-3 font-mono text-[10.5px] tracking-[0.14em] text-faint">PREVIEW</div>
-          {content ? (
+          {!isEmpty ? (
             <Markdown content={content} />
           ) : (
             <p className="text-[13.5px] text-faint">왼쪽에 쓰면 여기에 미리보기가 떠요</p>

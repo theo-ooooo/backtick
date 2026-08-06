@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { getSourcesWithStats } from "@/lib/queries/source";
 import { logoColor } from "@/lib/colors";
 import { timeAgo, toDomain } from "@/lib/format";
 
@@ -11,14 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SourcesPage() {
-  const feeds = await prisma.feed.findMany({
-    where: { enabled: true },
-    orderBy: { name: "asc" },
-    include: {
-      posts: { orderBy: { fetchedAt: "desc" }, take: 1, select: { fetchedAt: true } },
-      _count: { select: { posts: true } },
-    },
-  });
+  const feeds = await getSourcesWithStats();
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-6 py-10">
