@@ -40,3 +40,106 @@ body {
     "Apple SD Gothic Neo", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ---------- article prose (post pages + editor preview) ---------- */
+.bt-prose {
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: var(--sub);
+  word-break: break-word;
+}
+.bt-prose h1,
+.bt-prose h2,
+.bt-prose h3 {
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 2em 0 0.6em;
+  line-height: 1.4;
+}
+.bt-prose h1 { font-size: 1.55em; }
+.bt-prose h2 { font-size: 1.3em; }
+.bt-prose h3 { font-size: 1.12em; }
+.bt-prose h1:first-child,
+.bt-prose h2:first-child,
+.bt-prose h3:first-child { margin-top: 0.3em; }
+.bt-prose p { margin: 1em 0; }
+.bt-prose a { color: var(--acc); font-weight: 600; }
+.bt-prose a:hover { text-decoration: underline; }
+.bt-prose strong { color: var(--ink); font-weight: 800; }
+.bt-prose ul, .bt-prose ol { padding-left: 1.4em; margin: 1em 0; }
+.bt-prose li { margin: 0.35em 0; }
+.bt-prose img { max-width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+.bt-prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.2em 0; }
+.bt-prose blockquote {
+  margin: 1.4em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  border-left: 3px solid var(--acc);
+  color: var(--sub);
+  background: var(--acc-soft);
+  border-radius: 0 10px 10px 0;
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+  padding-right: 1em;
+}
+.bt-prose blockquote p { margin: 0; }
+.bt-prose table { width: 100%; border-collapse: collapse; margin: 1.4em 0; font-size: 0.92em; }
+.bt-prose th, .bt-prose td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; }
+.bt-prose th { background: var(--paper); color: var(--ink); font-weight: 700; }
+
+/* inline code — coral on soft */
+.bt-prose code {
+  font-family: var(--font-code), ui-monospace, monospace;
+  font-size: 0.86em;
+  background: var(--acc-soft);
+  color: var(--acc);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* fenced block — dark terminal card with mac chrome (design signature) */
+.bt-prose pre {
+  position: relative;
+  background: var(--code-bg);
+  border-radius: 14px;
+  padding: 44px 20px 18px;
+  margin: 1.5em 0;
+  overflow-x: auto;
+}
+.bt-prose pre::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: var(--code-chrome);
+  border-radius: 14px 14px 0 0;
+}
+.bt-prose pre::after {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: 14px 0 0 #febc2e, 28px 0 0 #28c840;
+}
+.bt-prose pre code {
+  background: transparent;
+  color: var(--code-fg);
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* minimal hljs palette tuned to the dark card */
+.hljs-keyword, .hljs-selector-tag, .hljs-literal { color: #ff8f7e; }
+.hljs-string, .hljs-attr, .hljs-template-string { color: #b8d977; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: #8ecbff; }
+.hljs-comment, .hljs-quote { color: #7d776f; font-style: italic; }
+.hljs-number, .hljs-symbol { color: #ffc46b; }
+.hljs-built_in, .hljs-type { color: #d3b6ff; }
+.hljs-variable, .hljs-params { color: var(--code-fg); }
