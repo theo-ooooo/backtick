@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Post } from "@prisma/client";
 import { timeAgo } from "@/lib/format";
+import { DeletePostButton } from "./DeletePostButton";
 
 /** 내 글 목록 한 줄 — 임시저장(이어서 쓰기)과 발행됨(보기/수정) 겸용. */
 export function PostRow({ post, handle }: { post: Post; handle: string | null }) {
@@ -23,6 +24,7 @@ export function PostRow({ post, handle }: { post: Post; handle: string | null })
       >
         {draft ? "이어서 쓰기 →" : "수정"}
       </Link>
+      <DeletePostButton postId={post.id} title={post.title} />
     </div>
   );
 }

@@ -51,6 +51,18 @@ async function upsertTags(postId: string, raw: string) {
   }
 }
 
+/** 글 삭제 — 본인 글만. 태그연결·좋아요·댓글은 FK cascade로 함께 정리된다. */
+export async function deletePost(postId: string): Promise<{ ok: boolean; error?: string }> {
+  const me = await currentUser();
+  if (!me) return { ok: false, error: "로그인이 필요해요" };
+  const post = await prisma.post.findFirst({ where: { id: postId, authorId: me.id } });
+  if (!post) return { ok: false, error: "글을 찾을 수 없어요" };
+  await prisma.post.delete({ where: { id: postId } });
+  revalidatePath("/");
+  if (me.handle) revalidatePath(`/@${me.handle}`);
+  return { ok: true };
+}
+
 /** 좋아요 토글 — 로그인 유저만. 결과 상태를 돌려준다. */
 export async function toggleLike(postId: string): Promise<{ liked: boolean; count: number } | { error: string }> {
   const me = await currentUser();
