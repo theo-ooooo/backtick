@@ -66,24 +66,31 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
       {postId && <input type="hidden" name="id" value={postId} />}
       <div className="flex items-center gap-3 border-b border-line px-6 py-3">
         <span className="font-mono text-[11px] text-faint">MARKDOWN</span>
+        <span className="mx-1 h-4 w-px bg-line" aria-hidden />
         <button
           type="button"
           disabled={aiBusy !== null || !isEmpty}
           onClick={() => aiWrite("draft")}
           title={!isEmpty ? "본문이 비어 있을 때 사용할 수 있어요" : undefined}
-          className="rounded-full bg-acc-soft px-3 py-1 text-[12px] font-bold text-acc transition hover:bg-acc hover:text-white disabled:opacity-40 disabled:hover:bg-acc-soft disabled:hover:text-acc"
+          className="flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[12px] font-semibold text-sub transition hover:border-acc hover:text-acc disabled:opacity-35 disabled:hover:border-line disabled:hover:text-sub"
         >
-          {aiBusy === "draft" ? "초안 생성 중…" : "✨ AI 초안"}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" />
+          </svg>
+          {aiBusy === "draft" ? "생성 중…" : "AI 초안"}
         </button>
         <button
           type="button"
           disabled={aiBusy !== null || isEmpty}
           onClick={() => aiWrite("continue")}
-          className="rounded-full bg-acc-soft px-3 py-1 text-[12px] font-bold text-acc transition hover:bg-acc hover:text-white disabled:opacity-40 disabled:hover:bg-acc-soft disabled:hover:text-acc"
+          className="flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[12px] font-semibold text-sub transition hover:border-acc hover:text-acc disabled:opacity-35 disabled:hover:border-line disabled:hover:text-sub"
         >
-          {aiBusy === "continue" ? "이어쓰는 중…" : "✍️ 이어쓰기"}
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e0533d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+          </svg>
+          {aiBusy === "continue" ? "생성 중…" : "이어쓰기"}
         </button>
-        {aiError && <span className="text-[12px] font-bold text-acc">{aiError}</span>}
+        {aiError && <span className="text-[12px] font-semibold text-acc">{aiError}</span>}
         {saved && (
           <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#177245]">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#28c840]" /> 임시저장됨 — 내 글에서 이어서 쓸 수 있어요
