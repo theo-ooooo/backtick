@@ -28,3 +28,22 @@ export async function saveProfile(formData: FormData) {
   revalidatePath("/");
   redirect("/settings?saved=1");
 }
+
+const DATA_URL_RE = /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/;
+const MAX_DATA_URL = 400_000; // ~300KB binary — 256px 아바타면 충분
+
+/** 프로필 이미지 저장 — 클라이언트에서 리사이즈된 data URL을 받는다. null이면 기본 이미지로. */
+export async function updateAvatar(dataUrl: string | null): Promise<{ ok: boolean; error?: string }> {
+  const me = await currentUser();
+  if (!me) return { ok: false, error: "로그인이 필요해요" };
+
+  if (dataUrl !== null) {
+    if (!DATA_URL_RE.test(dataUrl)) return { ok: false, error: "지원하지 않는 이미지 형식이에요" };
+    if (dataUrl.length > MAX_DATA_URL) return { ok: false, error: "이미지가 너무 커요" };
+  }
+
+  await prisma.user.update({ where: { id: me.id }, data: { image: dataUrl } });
+  revalidatePath("/");
+  revalidatePath("/settings");
+  return { ok: true };
+}

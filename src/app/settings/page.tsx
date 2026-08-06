@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { saveProfile } from "@/lib/actions/user";
+import { AvatarUploader } from "@/components/settings/AvatarUploader";
 import { Field, Input, Textarea, Label } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
@@ -28,6 +29,10 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
             {error === "taken" ? "이미 사용 중인 핸들이에요" : "핸들은 영문 소문자·숫자·하이픈 3~20자예요"}
           </Alert>
         )}
+      </div>
+
+      <div className="mt-7 border-b border-line pb-7">
+        <AvatarUploader name={user.name ?? user.email ?? "?"} image={user.image} />
       </div>
 
       <form action={saveProfile} className="mt-7 space-y-6">
