@@ -59,16 +59,22 @@ export function IntroPopup() {
         <div className="px-7 py-6">
           <ul className="space-y-3 text-[13.5px] font-medium leading-relaxed text-sub">
             <li className="flex gap-2.5">
-              <span className="font-mono font-bold text-acc">01</span>
-              토스·카카오·우아한형제들 등 <b className="text-ink">기술블로그 글을 한곳에서</b> 모아 봐요
+              <span className="shrink-0 font-mono font-bold text-acc">01</span>
+              <span>
+                토스·카카오·우아한형제들 등 <b className="text-ink">기술블로그 글을 한곳에서</b> 모아 봐요
+              </span>
             </li>
             <li className="flex gap-2.5">
-              <span className="font-mono font-bold text-acc">02</span>
-              GitHub 로그인 한 번이면 <b className="text-ink">내 블로그</b>가 생겨요 (backtick.blog/@핸들)
+              <span className="shrink-0 font-mono font-bold text-acc">02</span>
+              <span>
+                GitHub 로그인 한 번이면 <b className="text-ink">내 블로그</b>가 생겨요
+              </span>
             </li>
             <li className="flex gap-2.5">
-              <span className="font-mono font-bold text-acc">03</span>
-              마크다운 에디터와 <b className="text-ink">다크 코드블록</b>으로 기술 글쓰기에 최적화
+              <span className="shrink-0 font-mono font-bold text-acc">03</span>
+              <span>
+                마크다운 에디터와 <b className="text-ink">다크 코드블록</b>으로 기술 글쓰기에 최적화
+              </span>
             </li>
           </ul>
 
