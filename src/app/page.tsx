@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getFeed, type FeedTab } from "@/lib/feed";
+import { getFeed, getTrendingTags, type FeedTab } from "@/lib/feed";
 import { prisma } from "@/lib/prisma";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
 import { Panel } from "@/components/ui/Panel";
@@ -15,9 +15,10 @@ const TABS: { key: FeedTab; label: string }[] = [
 export default async function Home(props: PageProps<"/">) {
   const { tab: rawTab } = await props.searchParams;
   const tab: FeedTab = rawTab === "backtick" || rawTab === "tech" ? rawTab : "all";
-  const [items, feeds] = await Promise.all([
+  const [items, feeds, trending] = await Promise.all([
     getFeed(tab),
     prisma.feed.findMany({ where: { enabled: true }, orderBy: { name: "asc" } }),
+    getTrendingTags(6),
   ]);
 
   return (
@@ -52,6 +53,26 @@ export default async function Home(props: PageProps<"/">) {
         </Panel>
 
         <aside className="hidden w-[280px] shrink-0 lg:block">
+          {trending.length > 0 && (
+            <Panel className="mb-4 p-5">
+              <div className="mb-3 flex items-baseline justify-between">
+                <span className="font-mono text-[11px] font-semibold tracking-[0.14em] text-muted">트렌딩 태그</span>
+                <span className="font-mono text-[10px] text-faint">30d</span>
+              </div>
+              <ol className="space-y-2.5">
+                {trending.map((t, i) => (
+                  <li key={t.name} className="flex items-baseline gap-2.5">
+                    <span className="font-mono text-[11px] font-semibold text-acc">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="truncate font-mono text-[13px] font-semibold text-ink">{t.name}</span>
+                    <span className="ml-auto font-mono text-[11px] text-faint">{t.count}</span>
+                  </li>
+                ))}
+              </ol>
+            </Panel>
+          )}
+
           <Panel className="p-5">
             <div className="mb-4 font-mono text-[11px] font-semibold tracking-[0.14em] text-muted">
               수집 중인 기술블로그

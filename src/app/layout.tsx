@@ -37,6 +37,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Link href="/sources" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">기업 블로그</Link>
             </nav>
             <div className="ml-auto flex items-center gap-3">
+              <form action="/search" className="relative hidden md:block">
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-faint">⌕</span>
+                <input
+                  name="q"
+                  placeholder="검색"
+                  autoComplete="off"
+                  className="h-9 w-[200px] rounded-full border border-line bg-card pl-8 pr-3 text-[13px] font-medium outline-none transition placeholder:text-faint focus:w-[260px] focus:border-acc"
+                />
+              </form>
               <Link
                 href="/write"
                 className="rounded-full bg-ink px-4.5 py-2 text-[13.5px] font-bold text-white transition hover:opacity-85"
