@@ -10,6 +10,9 @@ export interface FeedItem {
   authorHandle: string | null; // native only
   authorImage: string | null; // native only
   source: string | null; // external only — e.g. "토스"
+  thumbnail: string | null;
+  likes: number | null;
+  tags: string[];
   publishedAt: Date;
 }
 
@@ -25,7 +28,7 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
           where: { status: "PUBLISHED" },
           orderBy: { publishedAt: "desc" },
           take,
-          include: { author: true },
+          include: { author: true, tags: { include: { tag: true } } },
         })
       : Promise.resolve([]),
     wantExternal
@@ -46,6 +49,9 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
     authorHandle: p.author.handle,
     authorImage: p.author.image,
     source: null,
+    thumbnail: p.coverImage,
+    likes: null,
+    tags: p.tags.map((t) => t.tag.name),
     publishedAt: p.publishedAt ?? p.createdAt,
   }));
 
@@ -58,6 +64,9 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
     authorHandle: null,
     authorImage: null,
     source: e.feed.name,
+    thumbnail: e.thumbnail,
+    likes: e.likes,
+    tags: e.tags,
     publishedAt: e.publishedAt,
   }));
 
@@ -75,4 +84,22 @@ export async function getFeed(tab: FeedTab, take = 40): Promise<FeedItem[]> {
   return [...native, ...capped]
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
     .slice(0, take);
+}
+
+export interface TrendingTag {
+  name: string;
+  count: number;
+}
+
+/** Most-used tags across recently collected posts — the sidebar's numbered list. */
+export async function getTrendingTags(limit = 6): Promise<TrendingTag[]> {
+  const rows = await prisma.$queryRaw<{ name: string; count: bigint }[]>`
+    SELECT unnest(tags) AS name, count(*) AS count
+    FROM external_posts
+    WHERE "publishedAt" > now() - interval '30 days'
+    GROUP BY 1 HAVING count(*) >= 2
+    ORDER BY count DESC, name ASC
+    LIMIT ${limit}
+  `;
+  return rows.map((r) => ({ name: r.name, count: Number(r.count) }));
 }
