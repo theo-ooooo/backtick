@@ -88,19 +88,21 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
           </div>
         )}
         <div className="mt-3 flex items-center gap-1.5">
-            {item.tags.slice(0, 3).map((t) => (
-              <TagChip key={t} name={t} />
-            ))}
-            {item.likes != null && item.likes > 0 && (
-              <span className="ml-1 flex items-center gap-1 text-[12px] font-semibold text-faint">
-                <span className="text-acc">♡</span> {item.likes}
-              </span>
-            )}
+            <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
+              {item.tags.slice(0, 3).map((t) => (
+                <TagChip key={t} name={t} />
+              ))}
+              {item.likes != null && item.likes > 0 && (
+                <span className="ml-1 flex shrink-0 items-center gap-1 text-[12px] font-semibold text-faint">
+                  <span className="text-acc">♡</span> {item.likes}
+                </span>
+              )}
+            </div>
             <button
               type="button"
               onClick={toggleSummary}
               disabled={sumState === "loading"}
-              className={`ml-auto flex items-center gap-1 rounded-full px-2.5 py-[4px] text-[11.5px] font-bold transition ${
+              className={`ml-auto flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-[4px] text-[11.5px] font-bold transition ${
                 sumState === "open"
                   ? "bg-acc text-white"
                   : sumState === "error"

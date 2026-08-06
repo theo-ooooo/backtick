@@ -10,6 +10,7 @@ import { Markdown } from "@/components/markdown/Markdown";
 import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
 import { AuthorCard } from "@/components/post/AuthorCard";
+import { PostSummary } from "@/components/post/PostSummary";
 
 export const revalidate = 300;
 
@@ -99,6 +100,8 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
               </Link>
             )}
           </div>
+
+          <PostSummary url={`/@${author.handle}/${encodeURIComponent(post.slug)}`} initial={post.summary} />
 
           <PostActions
             postId={post.id}
