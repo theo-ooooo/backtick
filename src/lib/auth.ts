@@ -38,6 +38,9 @@ const config: NextAuthConfig = {
   callbacks: {
     jwt({ token, user }) {
       if (user?.id) token.uid = user.id;
+      // 아바타가 data URL(수십 KB)일 수 있어 JWT에 넣으면 쿠키 헤더가 한도를 초과한다(494).
+      // 프로필 정보는 항상 DB(currentUser)에서 읽으므로 토큰은 uid만 최소로 유지.
+      delete token.picture;
       return token;
     },
     session({ session, token }) {
