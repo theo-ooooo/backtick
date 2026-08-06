@@ -36,9 +36,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <ProgressBar />
         <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur">
           <div className="mx-auto flex h-[60px] w-full max-w-[1200px] items-center gap-7 px-6">
-            <Link href="/" className="flex items-baseline gap-[3px]">
-              <span className="font-mono text-[22px] font-semibold leading-none text-acc">`</span>
-              <span className="text-[19px] font-extrabold leading-none tracking-[-0.035em]">백틱</span>
+            <Link href="/" aria-label="백틱 홈" className="flex items-center">
+              <span className="font-mono text-[30px] font-semibold leading-none text-acc transition hover:opacity-75">`</span>
             </Link>
             <nav className="hidden items-center gap-1 text-[14px] font-semibold text-sub sm:flex">
               <Link href="/" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">피드</Link>
