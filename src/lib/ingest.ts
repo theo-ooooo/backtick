@@ -82,7 +82,7 @@ interface NormalizedItem {
 }
 
 /** velog's public recent-RSS is spam-ridden; use the trending GraphQL API instead. */
-async function fetchVelogTrending(): Promise<NormalizedItem[]> {
+async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0) {
   const res = await fetch("https://v3.velog.io/graphql", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -90,7 +90,7 @@ async function fetchVelogTrending(): Promise<NormalizedItem[]> {
       query: `query trendingPosts($input: TrendingPostsInput!){
         trendingPosts(input:$input){ title short_description thumbnail likes tags url_slug released_at user{ username } }
       }`,
-      variables: { input: { limit: 30, offset: 0, timeframe: "week" } },
+      variables: { input: { limit, offset, timeframe } },
     }),
     signal: AbortSignal.timeout(15000),
   });
@@ -119,6 +119,16 @@ async function fetchVelogTrending(): Promise<NormalizedItem[]> {
     tags: (p.tags ?? []).map((t) => t.toLowerCase()).slice(0, 4),
     publishedAt: new Date(p.released_at),
   }));
+}
+
+/** 주간 트렌딩 + 월간 트렌딩을 합쳐 폭넓게 수집 (url 기준 중복 제거는 upsert가 처리). */
+async function fetchVelogTrending(): Promise<NormalizedItem[]> {
+  const [week, month] = await Promise.all([
+    fetchVelogTrendingPage("week", 50),
+    fetchVelogTrendingPage("month", 100),
+  ]);
+  const seen = new Set<string>();
+  return [...week, ...month].filter((p) => (seen.has(p.url) ? false : (seen.add(p.url), true)));
 }
 
 async function fetchRss(rssUrl: string): Promise<NormalizedItem[]> {

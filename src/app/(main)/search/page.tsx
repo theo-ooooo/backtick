@@ -11,6 +11,17 @@ export default async function SearchPage(props: PageProps<"/search">) {
 
   return (
     <main className="mx-auto w-full max-w-[860px] px-6 py-8">
+      <form action="/search" className="relative mb-6">
+        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-faint">⌕</span>
+        <input
+          name="q"
+          defaultValue={q}
+          placeholder="제목·내용 검색"
+          autoComplete="off"
+          autoFocus={!q}
+          className="h-12 w-full rounded-2xl border border-line bg-white pl-11 pr-4 text-[15px] font-medium outline-none placeholder:text-faint focus:border-acc"
+        />
+      </form>
       <section>
         {q ? (
           <>
