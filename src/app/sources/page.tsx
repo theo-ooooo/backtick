@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { Panel } from "@/components/ui/Panel";
 import { logoColor } from "@/lib/colors";
 import { timeAgo, toDomain } from "@/lib/format";
 
@@ -23,7 +22,7 @@ export default async function SourcesPage() {
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-6 py-10">
-      <Panel className="p-8">
+      <section>
         <h1 className="text-[26px] font-extrabold tracking-[-0.03em]">기업 기술블로그</h1>
         <p className="mt-2 max-w-[560px] text-[14.5px] leading-relaxed text-muted">
           국내 {feeds.length}개 기업·플랫폼의 기술블로그를 RSS로 수집합니다. 원문 링크로 연결되며, 피드에는 출처
@@ -73,7 +72,7 @@ export default async function SourcesPage() {
             </p>
           </div>
         </div>
-      </Panel>
+      </section>
     </main>
   );
 }

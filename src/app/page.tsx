@@ -24,7 +24,7 @@ export default async function Home(props: PageProps<"/">) {
   return (
     <main className="mx-auto w-full max-w-[1200px] px-6 py-8">
       <div className="flex gap-8">
-        <Panel className="min-w-0 flex-1 px-7 pb-6 pt-2">
+        <section className="min-w-0 flex-1">
           <div className="flex items-center border-b border-line">
             <div className="flex">
               {TABS.map((t) => (
@@ -50,7 +50,7 @@ export default async function Home(props: PageProps<"/">) {
             ))}
             {items.length === 0 && <li className="py-24 text-center text-sm text-faint">아직 글이 없어요</li>}
           </ul>
-        </Panel>
+        </section>
 
         <aside className="hidden w-[280px] shrink-0 lg:block">
           {trending.length > 0 && (

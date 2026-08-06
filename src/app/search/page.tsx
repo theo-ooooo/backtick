@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import type { FeedItem } from "@/lib/feed";
 import { FeedItemRow } from "@/components/feed/FeedItemRow";
-import { Panel } from "@/components/ui/Panel";
 
 export const metadata: Metadata = { title: "검색" };
 
@@ -71,7 +70,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
 
   return (
     <main className="mx-auto w-full max-w-[860px] px-6 py-8">
-      <Panel className="px-7 py-6">
+      <section>
         {q ? (
           <>
             <div className="border-b border-line pb-4 text-[15px]">
@@ -92,7 +91,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
         ) : (
           <div className="py-20 text-center text-sm text-faint">검색어를 입력해주세요</div>
         )}
-      </Panel>
+      </section>
     </main>
   );
 }

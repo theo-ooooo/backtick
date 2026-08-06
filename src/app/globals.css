@@ -2,7 +2,7 @@
 
 /* Backtick design tokens — from the approved Claude Design draft */
 :root {
-  --paper: #f1efeb; /* warm page ground */
+  --paper: #f4f2ee; /* warm fill for chips/wells (page itself is white) */
   --card: #ffffff;
   --ink: #1a1815;
   --sub: #55504a;
@@ -34,7 +34,7 @@
 }
 
 body {
-  background: var(--paper);
+  background: #ffffff;
   color: var(--ink);
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Segoe UI", Roboto, sans-serif;
