@@ -46,7 +46,7 @@ export default async function Home(props: PageProps<"/">) {
             <SortSelect current={sort} />
           </div>
 
-          <HomeFeed initialItems={items} tab={tab} sort={sort} sourceNames={feeds.map((f) => f.name)} />
+          <HomeFeed key={`${tab}-${sort}`} initialItems={items} tab={tab} sort={sort} sourceNames={feeds.map((f) => f.name)} />
         </section>
 
         <aside className="hidden w-[280px] shrink-0 lg:block">

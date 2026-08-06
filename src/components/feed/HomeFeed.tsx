@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FeedItem, FeedTab, FeedSort } from "@/lib/feed";
 import { FeedList } from "./FeedList";
 import { Spinner } from "@/components/ui/Spinner";
+import { logoColor } from "@/lib/colors";
 
 interface Props {
   initialItems: FeedItem[];
@@ -99,7 +100,7 @@ export function HomeFeed({ initialItems, tab, sort, sourceNames }: Props) {
   return (
     <>
       {showFilter && (
-        <div className="flex flex-wrap gap-1.5 border-b border-line/70 py-3">
+        <div className="scrollbar-none -mx-1 flex gap-1 overflow-x-auto border-b border-line/70 px-1 py-3.5">
           <button
             type="button"
             onClick={() => {
@@ -111,24 +112,44 @@ export function HomeFeed({ initialItems, tab, sort, sourceNames }: Props) {
               }
               void fetchPage(0, [], true);
             }}
-            className={`rounded-full px-3 py-1 font-mono text-[12px] font-semibold transition ${
-              selected.length === 0 ? "bg-ink text-white" : "border border-line text-sub hover:border-ink"
-            }`}
+            className="flex w-[64px] shrink-0 flex-col items-center gap-1.5"
           >
-            전체
-          </button>
-          {sourceNames.map((name) => (
-            <button
-              key={name}
-              type="button"
-              onClick={() => toggleSource(name)}
-              className={`rounded-full px-3 py-1 font-mono text-[12px] font-semibold transition ${
-                selected.includes(name) ? "bg-acc text-white" : "border border-line text-sub hover:border-acc hover:text-acc"
+            <span
+              className={`flex h-[46px] w-[46px] items-center justify-center rounded-full font-mono text-[19px] font-semibold transition ${
+                selected.length === 0
+                  ? "bg-ink text-acc ring-2 ring-ink ring-offset-2"
+                  : "bg-paper text-sub opacity-80"
               }`}
             >
-              {name}
-            </button>
-          ))}
+              `
+            </span>
+            <span className={`text-[11px] font-bold ${selected.length === 0 ? "text-ink" : "text-muted"}`}>전체</span>
+          </button>
+          {sourceNames.map((name) => {
+            const on = selected.includes(name);
+            return (
+              <button key={name} type="button" onClick={() => toggleSource(name)} className="flex w-[64px] shrink-0 flex-col items-center gap-1.5">
+                <span className="relative flex">
+                  <span
+                    className={`flex h-[46px] w-[46px] items-center justify-center rounded-full text-[17px] font-extrabold text-white transition ${
+                      on ? "ring-2 ring-acc ring-offset-2" : selected.length > 0 ? "opacity-35" : ""
+                    }`}
+                    style={{ background: logoColor(name) }}
+                  >
+                    {name.charAt(0)}
+                  </span>
+                  {on && (
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-[17px] w-[17px] items-center justify-center rounded-full bg-acc text-[10px] font-bold text-white ring-2 ring-white">
+                      ✓
+                    </span>
+                  )}
+                </span>
+                <span className={`max-w-[64px] truncate text-[11px] font-bold ${on ? "text-acc" : "text-muted"}`}>
+                  {name}
+                </span>
+              </button>
+            );
+          })}
         </div>
       )}
 
