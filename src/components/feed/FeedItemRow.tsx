@@ -91,33 +91,27 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
             {item.tags.slice(0, 3).map((t) => (
               <TagChip key={t} name={t} />
             ))}
-            <button
-              type="button"
-              onClick={toggleSummary}
-              disabled={sumState === "loading"}
-              className={`rounded-md border px-2 py-[3px] font-mono text-[11.5px] font-medium transition ${
-                sumState === "open"
-                  ? "border-acc bg-acc-soft text-acc"
-                  : sumState === "error"
-                    ? "border-line text-faint"
-                    : "border-line bg-paper/70 text-sub hover:border-acc hover:text-acc"
-              }`}
-            >
-              {sumState === "loading" ? "요약 중…" : sumState === "error" ? "요약 불가" : sumState === "open" ? "요약 닫기" : "✨ AI 요약"}
-            </button>
             {item.likes != null && item.likes > 0 && (
               <span className="ml-1 flex items-center gap-1 text-[12px] font-semibold text-faint">
                 <span className="text-acc">♡</span> {item.likes}
               </span>
             )}
-            {external && (
-              <span className="ml-auto font-mono text-[11px] text-faint opacity-0 transition group-hover:opacity-100">
-                원문 ↗
-              </span>
-            )}
-          </div>
+            <button
+              type="button"
+              onClick={toggleSummary}
+              disabled={sumState === "loading"}
+              className={`ml-auto flex items-center gap-1 rounded-full px-2.5 py-[4px] text-[11.5px] font-bold transition ${
+                sumState === "open"
+                  ? "bg-acc text-white"
+                  : sumState === "error"
+                    ? "bg-paper text-faint"
+                    : "bg-acc-soft text-acc hover:bg-acc hover:text-white"
+              }`}
+            >
+              {sumState === "loading" ? "요약 중…" : sumState === "error" ? "요약 불가" : sumState === "open" ? "닫기" : "✨ AI 요약"}
+            </button>
       </div>
-      {item.thumbnail && (
+      {item.thumbnail ? (
         <div className="h-[64px] w-[92px] shrink-0 self-center overflow-hidden rounded-lg border border-line bg-paper sm:h-[76px] sm:w-[116px]">
           <img
             src={item.thumbnail}
@@ -126,6 +120,15 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
             className="h-full w-full object-cover transition group-hover:scale-[1.03]"
           />
         </div>
+      ) : (
+        !external && (
+          <div className="flex h-[64px] w-[92px] shrink-0 flex-col justify-between self-center overflow-hidden rounded-lg bg-[#1a1815] p-2 sm:h-[76px] sm:w-[116px]">
+            <span className="font-mono text-[15px] leading-none text-acc">`</span>
+            <span className="line-clamp-2 text-[8.5px] font-bold leading-tight text-white/85 sm:text-[9.5px]">
+              {item.title}
+            </span>
+          </div>
+        )
       )}
     </a>
   );

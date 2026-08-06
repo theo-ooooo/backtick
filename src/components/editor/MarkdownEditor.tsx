@@ -2,6 +2,7 @@
 
 import { Markdown } from "@/components/markdown/Markdown";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
+import { CoverPicker } from "./CoverPicker";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
 
@@ -10,6 +11,7 @@ interface Props {
   defaultTitle?: string;
   defaultContent?: string;
   defaultTags?: string;
+  defaultCover?: string | null;
   saved?: boolean; // just returned from a draft save
   error?: string;
   action: (formData: FormData) => Promise<void>;
@@ -30,7 +32,7 @@ function SubmitButtons() {
 }
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
-export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, saved, error, action }: Props) {
+export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, defaultCover, saved, error, action }: Props) {
   const { content, onChange, isEmpty } = useMarkdownEditor(defaultContent ?? "");
 
   return (
@@ -63,6 +65,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           placeholder="태그를 입력하세요 (쉼표로 구분, 최대 5개)"
           className="w-full bg-transparent font-mono text-[13px] font-medium outline-none placeholder:text-faint"
         />
+        <CoverPicker defaultCover={defaultCover} />
       </div>
 
       <div className="mt-4 grid min-h-[540px] flex-1 grid-cols-1 divide-line border-t border-line md:grid-cols-2 md:divide-x">

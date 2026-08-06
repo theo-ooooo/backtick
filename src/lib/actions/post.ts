@@ -91,6 +91,11 @@ export async function savePost(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim().slice(0, 150);
   const content = String(formData.get("content") ?? "");
   const tagsRaw = String(formData.get("tags") ?? "");
+  const rawCover = String(formData.get("coverImage") ?? "").trim();
+  const coverValid =
+    (/^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(rawCover) && rawCover.length <= 400_000) ||
+    /^https:\/\/.+/.test(rawCover);
+  const uploadedCover = coverValid ? rawCover : null;
   const publish = formData.get("action") === "publish";
   if (!title) redirect(id ? `/write/${id}?error=title` : "/write?error=title");
 
@@ -104,7 +109,7 @@ export async function savePost(formData: FormData) {
         title,
         content,
         excerpt: toExcerpt(content),
-        coverImage: firstImage(content),
+        coverImage: uploadedCover ?? firstImage(content),
         ...(publish && post.status === "DRAFT"
           ? { status: "PUBLISHED", publishedAt: new Date() }
           : {}),
@@ -122,7 +127,7 @@ export async function savePost(formData: FormData) {
         slug,
         content,
         excerpt: toExcerpt(content),
-        coverImage: firstImage(content),
+        coverImage: uploadedCover ?? firstImage(content),
         status: publish ? "PUBLISHED" : "DRAFT",
         publishedAt: publish ? new Date() : null,
       },
