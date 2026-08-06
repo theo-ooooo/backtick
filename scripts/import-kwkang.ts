@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const DIR = `${process.env.HOME}/Workspace/kwkang.log/contents/articles/ai`;
+const ROOT = `${process.env.HOME}/Workspace/kwkang.log/contents/articles`;
 const AUTHOR = "cmshb81jb0000js04j1k45zpk";
 
 function parseFrontmatter(raw: string): { meta: Record<string, string>; body: string } {
@@ -24,9 +24,10 @@ const firstImage = (md: string) => /!\[[^\]]*\]\((https?:\/\/[^)\s]+)/.exec(md)?
 
 async function main() {
 let inserted = 0, skipped = 0;
-for (const file of readdirSync(DIR).filter((f) => f.endsWith(".md"))) {
+for (const category of readdirSync(ROOT)) {
+for (const file of readdirSync(join(ROOT, category)).filter((f) => f.endsWith(".md"))) {
   const slug = file.replace(/\.md$/, "");
-  const { meta, body } = parseFrontmatter(readFileSync(join(DIR, file), "utf-8"));
+  const { meta, body } = parseFrontmatter(readFileSync(join(ROOT, category, file), "utf-8"));
   const exists = await prisma.post.findFirst({ where: { authorId: AUTHOR, slug } });
   if (exists) { skipped++; continue; }
 
@@ -44,7 +45,7 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".md"))) {
       createdAt: publishedAt,
     },
   });
-  const tags = (meta.tag ?? "").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean).slice(0, 5);
+  const tags = [...new Set([...(meta.tag ?? "").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean), category.toLowerCase()])].slice(0, 5);
   for (const name of tags) {
     const tag = await prisma.tag.upsert({
       where: { name },
@@ -54,7 +55,7 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".md"))) {
     await prisma.postTag.create({ data: { postId: post.id, tagId: tag.id } });
   }
   inserted++;
-  console.log("+", meta.title);
+}
 }
 console.log(`done: ${inserted} inserted, ${skipped} skipped`);
 await prisma.$disconnect();
