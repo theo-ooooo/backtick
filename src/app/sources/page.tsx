@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getSourcesWithStats } from "@/lib/queries/source";
+import { currentUser } from "@/lib/auth";
+import { RequestFeedCard } from "@/components/sources/RequestFeedCard";
 import { logoColor } from "@/lib/colors";
 import { timeAgo, toDomain } from "@/lib/format";
 
@@ -11,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SourcesPage() {
-  const feeds = await getSourcesWithStats();
+  const [feeds, me] = await Promise.all([getSourcesWithStats(), currentUser()]);
 
   return (
     <main className="mx-auto w-full max-w-[1200px] px-6 py-10">
@@ -55,15 +57,7 @@ export default async function SourcesPage() {
             </a>
           ))}
 
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-faint/60 p-5 text-center">
-            <span className="font-mono text-[18px] text-faint">`</span>
-            <div className="mt-1 text-[14px] font-bold text-sub">블로그 추가 요청</div>
-            <p className="mt-1 text-[12.5px] leading-relaxed text-muted">
-              수집되었으면 하는 기술블로그의
-              <br />
-              RSS 주소를 알려주세요.
-            </p>
-          </div>
+          <RequestFeedCard loggedIn={Boolean(me)} />
         </div>
       </section>
     </main>

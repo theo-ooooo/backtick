@@ -123,6 +123,17 @@ model ReadItem {
   @@map("read_items")
 }
 
+// 기술블로그 추가 요청 — 어드민(DB)에서 확인 후 수동 등록
+model FeedRequest {
+  id          String   @id @default(cuid())
+  name        String
+  url         String
+  requesterId String?
+  createdAt   DateTime @default(now())
+
+  @@map("feed_requests")
+}
+
 model PostLike {
   postId    String
   userId    String
