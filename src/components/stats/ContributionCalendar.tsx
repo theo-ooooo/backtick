@@ -72,7 +72,12 @@ export function ContributionCalendar({ days }: { days: DayCount[] }) {
         <div className="relative mb-1.5 h-4 font-mono text-[10px] text-faint">
           {labels.map((l, i) =>
             i === 0 && labels.length > 1 && labels[1].col - l.col < 3 ? null : (
-              <span key={l.col} className="absolute" style={{ left: `${(l.col / 53) * 100}%` }}>
+              <span
+                key={l.col}
+                className="absolute whitespace-nowrap"
+                // 끝자락 라벨은 잘리지 않게 오른쪽 기준으로 붙인다
+                style={l.col / 53 > 0.93 ? { right: 0 } : { left: `${(l.col / 53) * 100}%` }}
+              >
                 {l.text}
               </span>
             ),
