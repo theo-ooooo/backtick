@@ -142,29 +142,29 @@ async function fetchRss(rssUrl: string): Promise<NormalizedItem[]> {
   return items;
 }
 
-/** Fetch every enabled feed; one failing feed never blocks the others. */
+/** Fetch every enabled feed in parallel (serverless 시간 제한 안에 들어오도록); one failing feed never blocks the others. */
 export async function ingestAllFeeds(): Promise<IngestResult[]> {
   const feeds = await prisma.feed.findMany({ where: { enabled: true } });
-  const results: IngestResult[] = [];
 
-  for (const feed of feeds) {
-    try {
-      const items =
-        feed.rssUrl === "velog:trending" ? await fetchVelogTrending() : await fetchRss(feed.rssUrl);
-      let inserted = 0;
-      for (const it of items) {
-        const res = await prisma.externalPost.upsert({
-          where: { url: it.url },
-          // refresh mutable metadata on re-ingest (likes climb, tags/thumbs improve)
-          update: { likes: it.likes, tags: it.tags, thumbnail: it.thumbnail, excerpt: it.excerpt },
-          create: { feedId: feed.id, ...it },
-        });
-        if (res.fetchedAt.getTime() > Date.now() - 5000) inserted++;
+  return Promise.all(
+    feeds.map(async (feed): Promise<IngestResult> => {
+      try {
+        const items =
+          feed.rssUrl === "velog:trending" ? await fetchVelogTrending() : await fetchRss(feed.rssUrl);
+        let inserted = 0;
+        for (const it of items) {
+          const res = await prisma.externalPost.upsert({
+            where: { url: it.url },
+            // refresh mutable metadata on re-ingest (likes climb, tags/thumbs improve)
+            update: { likes: it.likes, tags: it.tags, thumbnail: it.thumbnail, excerpt: it.excerpt },
+            create: { feedId: feed.id, ...it },
+          });
+          if (res.fetchedAt.getTime() > Date.now() - 5000) inserted++;
+        }
+        return { feed: feed.name, fetched: items.length, inserted };
+      } catch (e) {
+        return { feed: feed.name, fetched: 0, inserted: 0, error: e instanceof Error ? e.message : String(e) };
       }
-      results.push({ feed: feed.name, fetched: items.length, inserted });
-    } catch (e) {
-      results.push({ feed: feed.name, fetched: 0, inserted: 0, error: e instanceof Error ? e.message : String(e) });
-    }
-  }
-  return results;
+    }),
+  );
 }
