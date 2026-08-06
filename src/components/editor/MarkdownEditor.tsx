@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Markdown } from "@/components/markdown/Markdown";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
 import { CoverPicker } from "./CoverPicker";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
 
@@ -39,6 +40,42 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
   const titleRef = useRef<HTMLInputElement>(null);
   const [aiBusy, setAiBusy] = useState<"draft" | "continue" | null>(null);
   const [aiError, setAiError] = useState("");
+  const [resetOpen, setResetOpen] = useState(false);
+  const [suggestion, setSuggestion] = useState("");
+  const suggestBusyRef = useRef(false);
+  const lastSuggestLenRef = useRef(0);
+
+  // 쓰다 멈추면(2.5초) 이어질 문장 자동 추천 — 직전 추천 이후 60자 이상 늘었을 때만
+  useEffect(() => {
+    if (!content.trim() || content.length < 120) return;
+    if (Math.abs(content.length - lastSuggestLenRef.current) < 60) return;
+    const timer = setTimeout(async () => {
+      const title = titleRef.current?.value.trim();
+      if (!title || suggestBusyRef.current) return;
+      suggestBusyRef.current = true;
+      lastSuggestLenRef.current = content.length;
+      try {
+        const res = await fetch("/api/ai/write", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ mode: "suggest", title, content }),
+        });
+        const j = (await res.json()) as { text?: string };
+        if (res.ok && j.text) setSuggestion(j.text.trim());
+      } catch {
+        /* 추천 실패는 조용히 */
+      } finally {
+        suggestBusyRef.current = false;
+      }
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [content]);
+
+  function applySuggestion() {
+    if (!suggestion) return;
+    setContent(`${content.trimEnd()} ${suggestion}`);
+    setSuggestion("");
+  }
 
   async function aiWrite(mode: "draft" | "continue") {
     const title = titleRef.current?.value.trim();
@@ -90,6 +127,14 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           </svg>
           {aiBusy === "continue" ? "생성 중…" : "이어쓰기"}
         </button>
+        <button
+          type="button"
+          disabled={isEmpty}
+          onClick={() => setResetOpen(true)}
+          className="rounded-full px-2.5 py-1 text-[12px] font-semibold text-faint transition hover:text-acc disabled:opacity-35"
+        >
+          초기화
+        </button>
         {aiError && <span className="text-[12px] font-semibold text-acc">{aiError}</span>}
         {saved && (
           <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#177245]">
@@ -120,11 +165,30 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         <CoverPicker defaultCover={defaultCover} />
       </div>
 
+      {suggestion && (
+        <div className="mx-6 mt-3 flex items-start gap-2.5 rounded-xl border border-acc/30 bg-acc-soft/50 px-4 py-3">
+          <span className="mt-0.5 font-mono text-[12px] font-bold text-acc">💡</span>
+          <p className="min-w-0 flex-1 text-[13.5px] font-medium leading-relaxed text-ink">{suggestion}</p>
+          <button type="button" onClick={applySuggestion} className="shrink-0 rounded-full bg-acc px-3 py-1 text-[12px] font-bold text-white transition hover:opacity-90">
+            적용 (Tab)
+          </button>
+          <button type="button" onClick={() => setSuggestion("")} className="shrink-0 rounded-full px-2 py-1 text-[12px] font-semibold text-faint transition hover:text-sub">
+            무시
+          </button>
+        </div>
+      )}
+
       <div className="mt-4 grid min-h-[540px] flex-1 grid-cols-1 divide-line border-t border-line md:grid-cols-2 md:divide-x">
         <textarea
           name="content"
           value={content}
           onChange={onChange}
+          onKeyDown={(e) => {
+            if (e.key === "Tab" && suggestion) {
+              e.preventDefault();
+              applySuggestion();
+            }
+          }}
           placeholder={"## 마크다운으로 작성하세요\n\n```ts\nconst hello = 'backtick';\n```"}
           className="h-full min-h-[540px] w-full resize-none bg-white px-6 py-5 font-mono text-[13.5px] leading-relaxed outline-none placeholder:text-faint"
         />
@@ -137,6 +201,20 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={resetOpen}
+        title="본문을 초기화할까요?"
+        message="지금까지 쓴 내용이 모두 지워져요. 되돌릴 수 없어요."
+        confirmLabel="초기화"
+        danger
+        onClose={() => setResetOpen(false)}
+        onConfirm={() => {
+          setContent("");
+          setSuggestion("");
+          setResetOpen(false);
+        }}
+      />
     </form>
   );
 }

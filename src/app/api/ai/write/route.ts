@@ -24,7 +24,9 @@ export async function POST(req: Request) {
   if (!title?.trim()) return NextResponse.json({ error: "제목을 먼저 입력해주세요" }, { status: 400 });
 
   const user =
-    mode === "continue"
+    mode === "suggest"
+      ? `제목: ${title}\n\n쓰는 중인 글:\n${(content ?? "").slice(-3000)}\n\n마지막 문장에 자연스럽게 이어질 다음 문장 1~2개만 써줘. 새 섹션 제목 없이 본문 문장만. 80자 이내.`
+      : mode === "continue"
       ? `제목: ${title}\n\n지금까지 쓴 글:\n${(content ?? "").slice(-6000)}\n\n위 글에 자연스럽게 이어질 다음 내용을 1~2개 문단(필요하면 섹션 제목 포함)으로 써줘. 지금까지의 문체와 흐름을 유지하고, 이미 한 말은 반복하지 마.`
       : `제목: ${title}\n\n이 제목으로 개발 블로그 글의 초안을 써줘. 구성: 도입 1문단 → ## 섹션 2~3개(각 2~3문단, 어울리면 코드 예시) → 마무리 1문단. 전체 1000자 내외. 글쓴이가 살을 붙일 수 있는 뼈대로.`;
 
@@ -33,7 +35,7 @@ export async function POST(req: Request) {
     headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: "gpt-4o-mini",
-      max_tokens: 1200,
+      max_tokens: mode === "suggest" ? 150 : 1200,
       temperature: 0.6,
       messages: [
         { role: "system", content: SYSTEM },
