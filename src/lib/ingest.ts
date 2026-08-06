@@ -92,7 +92,7 @@ async function fetchVelogTrendingPage(timeframe: string, limit: number, offset =
       }`,
       variables: { input: { limit, offset, timeframe } },
     }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(25000),
   });
   if (!res.ok) throw new Error(`velog graphql ${res.status}`);
   const json = (await res.json()) as {
@@ -125,7 +125,7 @@ async function fetchVelogTrendingPage(timeframe: string, limit: number, offset =
 async function fetchVelogTrending(): Promise<NormalizedItem[]> {
   const [week, month] = await Promise.all([
     fetchVelogTrendingPage("week", 50),
-    fetchVelogTrendingPage("month", 100),
+    fetchVelogTrendingPage("month", 50),
   ]);
   const seen = new Set<string>();
   return [...week, ...month].filter((p) => (seen.has(p.url) ? false : (seen.add(p.url), true)));
