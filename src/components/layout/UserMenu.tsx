@@ -59,6 +59,9 @@ export function UserMenu({ name, image, handle }: Props) {
             <Link href="/posts" className={item} role="menuitem">
               내 글
             </Link>
+            <Link href="/stats" className={item} role="menuitem">
+              내 통계
+            </Link>
             <Link href="/settings" className={item} role="menuitem">
               설정
             </Link>
