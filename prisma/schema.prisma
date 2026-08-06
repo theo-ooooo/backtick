@@ -126,6 +126,9 @@ model ExternalPost {
   url         String   @unique
   excerpt     String?
   author      String?
+  thumbnail   String?
+  likes       Int?
+  tags        String[] @default([])
   publishedAt DateTime
   fetchedAt   DateTime @default(now())
 

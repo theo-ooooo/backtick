@@ -1,12 +1,23 @@
 import Parser from "rss-parser";
 import { prisma } from "./prisma";
 
-const parser = new Parser({
+type CustomItem = {
+  contentEncoded?: string;
+  mediaContent?: { $?: { url?: string } } | { $?: { url?: string } }[];
+};
+
+const parser: Parser<Record<string, never>, CustomItem> = new Parser({
   timeout: 15000,
   headers: {
     // some blogs (D2, Kurly) reject the default rss-parser UA
     "User-Agent": "Mozilla/5.0 (compatible; BacktickBot/1.0; +https://backtick.blog)",
     Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+  },
+  customFields: {
+    item: [
+      ["content:encoded", "contentEncoded"],
+      ["media:content", "mediaContent"],
+    ],
   },
 });
 
@@ -30,6 +41,28 @@ function toExcerpt(html: string | undefined, max = 200): string | null {
   return text ? text.slice(0, max) : null;
 }
 
+/** Normalize RSS categories into a few short tags. */
+function toTags(categories: unknown): string[] {
+  if (!Array.isArray(categories)) return [];
+  return categories
+    .map((c) => (typeof c === "string" ? c : typeof c === "object" && c ? String((c as { _?: string })._ ?? "") : ""))
+    .map((t) => decodeEntities(t).trim().toLowerCase())
+    .filter((t) => t && t.length <= 24 && !/^(기타|일반|블로그|uncategorized)$/i.test(t))
+    .slice(0, 4);
+}
+
+/** Best-effort thumbnail: enclosure → media:content → first <img> in content. */
+function toThumbnail(item: Parser.Item & CustomItem): string | null {
+  const enc = item.enclosure?.url;
+  if (enc && /^https?:\/\//.test(enc)) return enc;
+  const media = Array.isArray(item.mediaContent) ? item.mediaContent[0] : item.mediaContent;
+  const mediaUrl = media?.$?.url;
+  if (mediaUrl && /^https?:\/\//.test(mediaUrl)) return mediaUrl;
+  const html = item.contentEncoded ?? item.content ?? "";
+  const m = /<img[^>]+src=["'](https?:\/\/[^"']+)["']/i.exec(html);
+  return m ? m[1] : null;
+}
+
 export interface IngestResult {
   feed: string;
   fetched: number;
@@ -37,23 +70,25 @@ export interface IngestResult {
   error?: string;
 }
 
-interface RssLikeItem {
-  title?: string;
-  link?: string;
-  isoDate?: string;
-  contentSnippet?: string;
-  content?: string;
-  creator?: string;
+interface NormalizedItem {
+  title: string;
+  url: string;
+  excerpt: string | null;
+  author: string | null;
+  thumbnail: string | null;
+  likes: number | null;
+  tags: string[];
+  publishedAt: Date;
 }
 
 /** velog's public recent-RSS is spam-ridden; use the trending GraphQL API instead. */
-async function fetchVelogTrending(): Promise<RssLikeItem[]> {
+async function fetchVelogTrending(): Promise<NormalizedItem[]> {
   const res = await fetch("https://v3.velog.io/graphql", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       query: `query trendingPosts($input: TrendingPostsInput!){
-        trendingPosts(input:$input){ title short_description url_slug released_at user{ username } }
+        trendingPosts(input:$input){ title short_description thumbnail likes tags url_slug released_at user{ username } }
       }`,
       variables: { input: { limit: 30, offset: 0, timeframe: "week" } },
     }),
@@ -65,6 +100,9 @@ async function fetchVelogTrending(): Promise<RssLikeItem[]> {
       trendingPosts?: {
         title: string;
         short_description?: string;
+        thumbnail?: string;
+        likes?: number;
+        tags?: string[];
         url_slug: string;
         released_at: string;
         user: { username: string };
@@ -72,12 +110,36 @@ async function fetchVelogTrending(): Promise<RssLikeItem[]> {
     };
   };
   return (json.data?.trendingPosts ?? []).map((p) => ({
-    title: p.title,
-    link: `https://velog.io/@${p.user.username}/${encodeURIComponent(p.url_slug)}`,
-    isoDate: p.released_at,
-    contentSnippet: p.short_description,
-    creator: p.user.username,
+    title: p.title.trim(),
+    url: `https://velog.io/@${p.user.username}/${encodeURIComponent(p.url_slug)}`,
+    excerpt: toExcerpt(p.short_description),
+    author: p.user.username,
+    thumbnail: p.thumbnail ?? null,
+    likes: p.likes ?? null,
+    tags: (p.tags ?? []).map((t) => t.toLowerCase()).slice(0, 4),
+    publishedAt: new Date(p.released_at),
   }));
+}
+
+async function fetchRss(rssUrl: string): Promise<NormalizedItem[]> {
+  const parsed = await parser.parseURL(rssUrl);
+  const items: NormalizedItem[] = [];
+  for (const item of parsed.items ?? []) {
+    const url = item.link?.trim();
+    const title = item.title?.trim();
+    if (!url || !title) continue;
+    items.push({
+      title: decodeEntities(title).slice(0, 300),
+      url,
+      excerpt: toExcerpt(item.contentSnippet ?? item.content),
+      author: item.creator?.trim()?.slice(0, 100) ?? null,
+      thumbnail: toThumbnail(item),
+      likes: null,
+      tags: toTags(item.categories),
+      publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
+    });
+  }
+  return items;
 }
 
 /** Fetch every enabled feed; one failing feed never blocks the others. */
@@ -87,27 +149,15 @@ export async function ingestAllFeeds(): Promise<IngestResult[]> {
 
   for (const feed of feeds) {
     try {
-      const items: RssLikeItem[] =
-        feed.rssUrl === "velog:trending"
-          ? await fetchVelogTrending()
-          : (await parser.parseURL(feed.rssUrl)).items ?? [];
+      const items =
+        feed.rssUrl === "velog:trending" ? await fetchVelogTrending() : await fetchRss(feed.rssUrl);
       let inserted = 0;
-      for (const item of items) {
-        const url = item.link?.trim();
-        const title = item.title?.trim();
-        if (!url || !title) continue;
-        const publishedAt = item.isoDate ? new Date(item.isoDate) : new Date();
+      for (const it of items) {
         const res = await prisma.externalPost.upsert({
-          where: { url },
-          update: {}, // keep first ingest; external posts rarely change
-          create: {
-            feedId: feed.id,
-            title: decodeEntities(title).slice(0, 300),
-            url,
-            excerpt: toExcerpt(item.contentSnippet ?? item.content),
-            author: item.creator?.trim()?.slice(0, 100) ?? null,
-            publishedAt,
-          },
+          where: { url: it.url },
+          // refresh mutable metadata on re-ingest (likes climb, tags/thumbs improve)
+          update: { likes: it.likes, tags: it.tags, thumbnail: it.thumbnail },
+          create: { feedId: feed.id, ...it },
         });
         if (res.fetchedAt.getTime() > Date.now() - 5000) inserted++;
       }
