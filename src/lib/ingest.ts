@@ -33,7 +33,7 @@ function decodeEntities(s: string): string {
 }
 
 /** Strip HTML tags/entities and clamp for card excerpts. */
-function toExcerpt(html: string | undefined, max = 450): string | null {
+function toExcerpt(html: string | undefined, max = 200): string | null {
   if (!html) return null;
   const text = decodeEntities(html.replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
