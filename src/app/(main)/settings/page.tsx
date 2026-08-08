@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { saveProfile } from "@/lib/actions/user";
 import { AvatarUploader } from "@/components/settings/AvatarUploader";
+import { HandleField } from "@/components/settings/HandleField";
+import { DeleteAccount } from "@/components/settings/DeleteAccount";
+import { prisma } from "@/lib/prisma";
 import { Field, Input, Textarea, Label } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
@@ -14,6 +17,7 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
   const user = await currentUser();
   if (!user) redirect("/login");
   const { saved, error } = await props.searchParams;
+  const postCount = await prisma.post.count({ where: { authorId: user.id } });
 
   return (
     <main className="mx-auto w-full max-w-[640px] px-6 py-10">
@@ -41,17 +45,7 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
         </Field>
         <div>
           <Label>핸들</Label>
-          <div className="flex items-stretch overflow-hidden rounded-xl border border-line focus-within:border-acc">
-            <span className="flex items-center bg-paper px-3.5 font-mono text-[13px] text-muted">backtick.blog/@</span>
-            <input
-              name="handle"
-              defaultValue={user.handle ?? ""}
-              required
-              pattern="[a-z0-9-]{3,20}"
-              placeholder="handle"
-              className="w-full bg-white px-3 py-3 font-mono text-[14.5px] font-medium outline-none"
-            />
-          </div>
+          <HandleField defaultValue={user.handle ?? ""} />
         </div>
         <Field label="소개">
           <Textarea name="bio" defaultValue={user.bio ?? ""} rows={3} maxLength={180} />
@@ -69,6 +63,8 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
           <Button className="rounded-xl px-6 py-3 text-[14px]">저장</Button>
         </div>
       </form>
+
+      <DeleteAccount postCount={postCount} />
     </main>
   );
 }

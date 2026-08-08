@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { currentUser } from "@/lib/auth";
+import { currentUser, signOut } from "@/lib/auth";
 
 const HANDLE_RE = /^[a-z0-9-]{3,20}$/;
 
@@ -64,4 +64,13 @@ export async function updateAvatar(dataUrl: string | null): Promise<{ ok: boolea
   revalidatePath("/");
   revalidatePath("/settings");
   return { ok: true };
+}
+
+/** 회원 탈퇴 — 계정 삭제(글·댓글·좋아요는 FK cascade) 후 로그아웃. */
+export async function deleteAccount() {
+  const me = await currentUser();
+  if (!me) redirect("/login");
+  await prisma.user.delete({ where: { id: me.id } });
+  revalidatePath("/");
+  await signOut({ redirectTo: "/" });
 }
