@@ -8,75 +8,48 @@ const INITIAL: AuthFormState = { error: "" };
 const inputCls =
   "w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc";
 
-const DOMAINS = ["gmail.com", "naver.com", "kakao.com", "daum.net", "outlook.com"];
+const DOMAINS = ["gmail.com", "naver.com", "kakao.com", "daum.net", "outlook.com", "icloud.com"];
 
-/** 이메일 입력 — 아이디 + 도메인 선택(직접 입력 지원). 합쳐진 값은 hidden input으로 제출. */
+/** 이메일 입력 — 단일 필드 + @ 뒤 도메인 자동완성 칩 (요즘 방식). */
 function EmailInput() {
-  const [local, setLocal] = useState("");
-  const [domain, setDomain] = useState(DOMAINS[0]);
-  const [custom, setCustom] = useState(false);
-  const email = local && domain ? `${local}@${domain}` : "";
+  const [email, setEmail] = useState("");
+
+  const at = email.indexOf("@");
+  const typed = at >= 0 ? email.slice(at + 1) : null;
+  // @를 쳤고 아직 도메인이 완성 전이면 이어질 후보를 보여준다
+  const suggestions =
+    typed !== null && !DOMAINS.includes(typed)
+      ? DOMAINS.filter((d) => d.startsWith(typed)).slice(0, 4)
+      : [];
 
   return (
     <div>
-      <input type="hidden" name="email" value={email} />
-      <div className="flex items-center gap-1.5">
-        <input
-          value={local}
-          required
-          placeholder="이메일 아이디"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          onChange={(e) => setLocal(e.target.value.replace(/[@\s]/g, ""))}
-          className={inputCls}
-        />
-        <span className="shrink-0 font-mono text-[14px] text-muted">@</span>
-        {custom ? (
-          <input
-            value={domain}
-            required
-            placeholder="도메인 직접 입력"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            onChange={(e) => setDomain(e.target.value.replace(/[@\s]/g, "").toLowerCase())}
-            className={inputCls}
-            autoFocus
-          />
-        ) : (
-          <select
-            value={domain}
-            onChange={(e) => {
-              if (e.target.value === "__custom") {
-                setCustom(true);
-                setDomain("");
-              } else {
-                setDomain(e.target.value);
-              }
-            }}
-            className="w-full appearance-none rounded-xl border border-line bg-white px-3.5 py-3 text-[14px] font-medium outline-none focus:border-acc"
-          >
-            {DOMAINS.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-            <option value="__custom">직접 입력</option>
-          </select>
-        )}
-      </div>
-      {custom && (
-        <button
-          type="button"
-          onClick={() => {
-            setCustom(false);
-            setDomain(DOMAINS[0]);
-          }}
-          className="mt-1 px-1 text-[12px] font-semibold text-faint hover:text-acc"
-        >
-          ← 목록에서 선택
-        </button>
+      <input
+        name="email"
+        type="email"
+        value={email}
+        required
+        placeholder="이메일"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        onChange={(e) => setEmail(e.target.value.replace(/\s/g, ""))}
+        className={inputCls}
+      />
+      {suggestions.length > 0 && (
+        <div className="mt-1.5 flex flex-wrap gap-1.5">
+          {suggestions.map((d) => (
+            <button
+              key={d}
+              type="button"
+              onClick={() => setEmail(email.slice(0, at + 1) + d)}
+              className="rounded-full border border-line bg-white px-3 py-1.5 font-mono text-[12.5px] font-semibold text-sub transition hover:border-acc hover:text-acc"
+            >
+              {email.slice(0, at + 1)}
+              <span className="text-acc">{d}</span>
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
