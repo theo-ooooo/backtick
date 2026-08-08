@@ -2,11 +2,10 @@ import NextAuth, { type NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
 const githubEnabled = Boolean(process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET);
-// dev-only quick login so the editor is testable before GitHub OAuth keys exist
-const devLoginEnabled = process.env.NODE_ENV !== "production" || process.env.ALLOW_DEV_LOGIN === "1";
 
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -14,26 +13,21 @@ const config: NextAuthConfig = {
   pages: { signIn: "/login" },
   providers: [
     ...(githubEnabled ? [GitHub] : []),
-    ...(devLoginEnabled
-      ? [
-          Credentials({
-            id: "dev",
-            name: "개발용 로그인",
-            credentials: { email: { label: "이메일" }, name: { label: "이름" } },
-            async authorize(credentials) {
-              const email = String(credentials?.email ?? "").trim().toLowerCase();
-              const name = String(credentials?.name ?? "").trim() || email.split("@")[0];
-              if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return null;
-              const user = await prisma.user.upsert({
-                where: { email },
-                update: {},
-                create: { email, name },
-              });
-              return { id: user.id, email: user.email, name: user.name, image: user.image };
-            },
-          }),
-        ]
-      : []),
+    Credentials({
+      id: "password",
+      name: "이메일 로그인",
+      credentials: { email: {}, password: {} },
+      async authorize(credentials) {
+        const email = String(credentials?.email ?? "").trim().toLowerCase();
+        const password = String(credentials?.password ?? "");
+        if (!email || !password) return null;
+        const user = await prisma.user.findUnique({ where: { email } });
+        // 계정이 없거나 비밀번호 미설정(GitHub 전용 계정) — 동일한 실패로 응답해 계정 존재를 노출하지 않는다
+        if (!user?.passwordHash) return null;
+        const ok = await bcrypt.compare(password, user.passwordHash);
+        return ok ? { id: user.id, email: user.email, name: user.name, image: user.image } : null;
+      },
+    }),
   ],
   callbacks: {
     jwt({ token, user }) {
@@ -53,7 +47,6 @@ const config: NextAuthConfig = {
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
 
 export const isGithubEnabled = githubEnabled;
-export const isDevLoginEnabled = devLoginEnabled;
 
 /** Current user's DB row (or null) — includes handle for gating the editor. */
 export async function currentUser() {

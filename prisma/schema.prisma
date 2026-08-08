@@ -12,6 +12,7 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   handle    String?  @unique // /@handle — set on first login
+  passwordHash String? // 이메일+비밀번호 로그인용 (bcrypt)
   name      String?
   email     String?  @unique
   emailVerified DateTime?

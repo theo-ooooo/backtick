@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { currentUser, isGithubEnabled, isDevLoginEnabled } from "@/lib/auth";
-import { githubLogin, devLogin } from "@/lib/actions/auth";
+import { currentUser, isGithubEnabled } from "@/lib/auth";
+import { githubLogin } from "@/lib/actions/auth";
+import { EmailAuthForm } from "@/components/auth/EmailAuthForm";
 
 export const metadata: Metadata = { title: "로그인" };
 
@@ -40,30 +41,10 @@ export default async function LoginPage() {
           </div>
         )}
 
-        {isDevLoginEnabled && (
-          <>
-            <div className="flex items-center gap-3 py-1 text-[11.5px] font-semibold text-faint">
-              <span className="h-px flex-1 bg-line" /> 또는 <span className="h-px flex-1 bg-line" />
-            </div>
-            <form action={devLogin} className="space-y-2.5">
-              <input
-                name="name"
-                placeholder="이름"
-                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc"
-              />
-              <input
-                name="email"
-                type="email"
-                required
-                placeholder="이메일"
-                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc"
-              />
-              <button className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-bold text-ink transition hover:border-ink">
-                이메일로 계속하기
-              </button>
-            </form>
-          </>
-        )}
+        <div className="flex items-center gap-3 py-1 text-[11.5px] font-semibold text-faint">
+          <span className="h-px flex-1 bg-line" /> 또는 <span className="h-px flex-1 bg-line" />
+        </div>
+        <EmailAuthForm />
       </div>
 
       <div className="mt-8 text-center">
