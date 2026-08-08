@@ -73,6 +73,15 @@ function toThumbnail(item: Parser.Item & CustomItem): string | null {
   return m ? m[1] : null;
 }
 
+/** 스팸 수집 차단 — 광고 키워드·국제전화 패턴, velog 트렌딩은 한글 없는 글을 걸러낸다. */
+function looksSpam(item: { title: string; excerpt: string | null }, feedName: string): boolean {
+  const text = `${item.title} ${item.excerpt ?? ""}`;
+  if (/(escorts?|call ?girls?|casino|betting|viagra|buy .{0,30}accounts?|verified sellers?|출장안마|출장마사지|텔레그램 ?@)/i.test(text)) return true;
+  if (/\+\d{2,3}[ -]?\d{3,4}[ -]?\d{6,}/.test(text)) return true;
+  if (feedName === "velog" && !/[가-힣]/.test(text)) return true;
+  return false;
+}
+
 export interface IngestResult {
   feed: string;
   fetched: number;
@@ -200,8 +209,9 @@ export async function ingestAllFeeds(): Promise<IngestResult[]> {
   return Promise.all(
     feeds.map(async (feed): Promise<IngestResult> => {
       try {
-        const items =
+        const fetched =
           feed.rssUrl === "velog:trending" ? await fetchVelogTrending() : await fetchRss(feed.rssUrl);
+        const items = fetched.filter((it) => !looksSpam(it, feed.name));
         let inserted = 0;
         for (const it of items) {
           const res = await prisma.externalPost.upsert({
