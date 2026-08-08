@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { toFeedItem, toExternalFeedItem, type FeedItem } from "@/lib/feed";
+import { toFeedItem, toExternalFeedItem, type FeedItem, feedPostSelect, feedExternalSelect } from "@/lib/feed";
 
 /** 제목·본문 통합 검색 (백틱 글 + 수집 글, 최신순). */
 export async function searchAll(q: string, take = 30): Promise<FeedItem[]> {
@@ -10,7 +10,7 @@ export async function searchAll(q: string, take = 30): Promise<FeedItem[]> {
       },
       orderBy: { publishedAt: "desc" },
       take,
-      include: { feed: true },
+      select: feedExternalSelect,
     }),
     prisma.post.findMany({
       where: {
@@ -19,7 +19,7 @@ export async function searchAll(q: string, take = 30): Promise<FeedItem[]> {
       },
       orderBy: { publishedAt: "desc" },
       take,
-      include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
+      select: feedPostSelect,
     }),
   ]);
   return [...posts.map(toFeedItem), ...externals.map(toExternalFeedItem)].sort(

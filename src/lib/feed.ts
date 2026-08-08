@@ -20,10 +20,33 @@ export interface FeedItem {
 export type FeedTab = "all" | "backtick" | "tech";
 export type FeedSort = "latest" | "popular";
 
-type PostWithRels = Prisma.PostGetPayload<{
-  include: { author: true; tags: { include: { tag: true } }; _count: { select: { likes: true } } };
-}>;
-type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ include: { feed: true } }>;
+// 카드에 필요한 필드만 — content(본문) 제외가 Supabase 이그레스 절감의 핵심
+export const feedPostSelect = {
+  slug: true,
+  title: true,
+  excerpt: true,
+  coverImage: true,
+  publishedAt: true,
+  createdAt: true,
+  author: { select: { handle: true, name: true, image: true } },
+  tags: { select: { tag: { select: { name: true } } } },
+  _count: { select: { likes: true } },
+} satisfies Prisma.PostSelect;
+
+export const feedExternalSelect = {
+  title: true,
+  url: true,
+  excerpt: true,
+  author: true,
+  thumbnail: true,
+  likes: true,
+  tags: true,
+  publishedAt: true,
+  feed: { select: { name: true } },
+} satisfies Prisma.ExternalPostSelect;
+
+type PostWithRels = Prisma.PostGetPayload<{ select: typeof feedPostSelect }>;
+type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ select: typeof feedExternalSelect }>;
 
 /** shared row mappers — feed/search/tag pages all produce the same card shape */
 export function toFeedItem(p: PostWithRels): FeedItem {
@@ -78,7 +101,7 @@ export async function getFeed(
           where: { status: "PUBLISHED" },
           orderBy: { publishedAt: "desc" },
           take: window,
-          include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
+          select: feedPostSelect,
         })
       : Promise.resolve([]),
     wantExternal
@@ -86,7 +109,7 @@ export async function getFeed(
           where: sources?.length ? { feed: { name: { in: sources } } } : undefined,
           orderBy: { publishedAt: "desc" },
           take: window,
-          include: { feed: true },
+          select: feedExternalSelect,
         })
       : Promise.resolve([]),
   ]);

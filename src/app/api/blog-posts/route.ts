@@ -11,7 +11,8 @@ export async function GET(req: Request) {
   const posts = await getBlogPostsPage(handle, page);
   if (!posts) return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  return NextResponse.json({
+  return NextResponse.json(
+    {
     items: posts.map((p) => ({
       id: p.id,
       slug: p.slug,
@@ -20,5 +21,7 @@ export async function GET(req: Request) {
       date: (p.publishedAt ?? p.createdAt).toISOString(),
       tags: p.tags.map((t) => t.tag.name),
     })),
-  });
+    },
+    { headers: { "cache-control": "public, s-maxage=60, stale-while-revalidate=300" } },
+  );
 }

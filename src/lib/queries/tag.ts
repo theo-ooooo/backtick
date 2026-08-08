@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { toFeedItem, toExternalFeedItem, type FeedItem } from "@/lib/feed";
+import { toFeedItem, toExternalFeedItem, type FeedItem, feedPostSelect, feedExternalSelect } from "@/lib/feed";
 
 /** 전체 태그 + 사용 횟수 (수집 글 + 백틱 글 합산). */
 export async function getAllTags(): Promise<{ name: string; count: number }[]> {
@@ -30,13 +30,13 @@ export async function getTagFeed(tag: string, take = 40): Promise<FeedItem[]> {
       where: { tags: { has: tag } },
       orderBy: { publishedAt: "desc" },
       take,
-      include: { feed: true },
+      select: feedExternalSelect,
     }),
     prisma.post.findMany({
       where: { status: "PUBLISHED", tags: { some: { tag: { name: tag } } } },
       orderBy: { publishedAt: "desc" },
       take,
-      include: { author: true, tags: { include: { tag: true } }, _count: { select: { likes: true } } },
+      select: feedPostSelect,
     }),
   ]);
   return [...posts.map(toFeedItem), ...externals.map(toExternalFeedItem)].sort(

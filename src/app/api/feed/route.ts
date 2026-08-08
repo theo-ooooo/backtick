@@ -11,5 +11,9 @@ export async function GET(req: Request) {
   const sources = url.searchParams.get("sources")?.split(",").map((s) => s.trim()).filter(Boolean);
 
   const items = await getFeed(tab, sort, page, 20, sources);
-  return NextResponse.json({ items });
+  // 공개 데이터 — CDN이 60초 캐시하고 5분간은 낡은 응답을 즉시 주며 갱신 (DB 이그레스 절감)
+  return NextResponse.json(
+    { items },
+    { headers: { "cache-control": "public, s-maxage=60, stale-while-revalidate=300" } },
+  );
 }
