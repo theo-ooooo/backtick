@@ -14,7 +14,7 @@ model User {
   handle    String?  @unique // /@handle — set on first login
   passwordHash String? // 이메일+비밀번호 로그인용 (bcrypt)
   name      String?
-  email     String?  @unique
+  email     String? // 프로바이더별 계정 분리 정책 — 같은 이메일이 여러 계정에 있을 수 있다
   emailVerified DateTime?
   image     String?
   bio        String?

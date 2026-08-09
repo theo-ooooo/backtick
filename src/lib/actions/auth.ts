@@ -48,11 +48,9 @@ export async function signup(_prev: AuthFormState, formData: FormData): Promise<
   if (!EMAIL_RE.test(email)) return { error: "이메일 형식을 확인해주세요" };
   if (password.length < 8) return { error: "비밀번호는 8자 이상이어야 해요" };
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    // GitHub로 가입된 이메일에 무검증으로 비밀번호를 붙이면 계정 탈취 통로가 된다 — 거부
-    return { error: "이미 가입된 이메일이에요. GitHub 로그인 또는 기존 방법을 이용해주세요" };
-  }
+  // 프로바이더별 계정 분리 정책 — 소셜 계정과 이메일이 겹쳐도 무관, 비밀번호 계정끼리만 중복 검사
+  const existing = await prisma.user.findFirst({ where: { email, passwordHash: { not: null } } });
+  if (existing) return { error: "이미 가입된 이메일이에요" };
 
   const dupName = await prisma.user.findFirst({ where: { name } });
   if (dupName) return { error: "이미 사용 중인 닉네임이에요" };

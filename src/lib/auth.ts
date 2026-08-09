@@ -9,14 +9,20 @@ import { prisma } from "./prisma";
 const githubEnabled = Boolean(process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET);
 const googleEnabled = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
+// 프로바이더가 다르면 같은 이메일이어도 별도 계정 — 이메일로 기존 유저를 찾지 않는다.
+// 로그인 식별은 accounts(provider, providerAccountId)로만 한다.
+const adapter = {
+  ...PrismaAdapter(prisma),
+  getUserByEmail: async () => null,
+};
+
 const config: NextAuthConfig = {
-  adapter: PrismaAdapter(prisma),
+  adapter,
   session: { strategy: "jwt" }, // jwt so the Credentials provider works alongside the adapter
   pages: { signIn: "/login" },
   providers: [
     ...(githubEnabled ? [GitHub] : []),
-    // Google은 이메일 검증을 보장하므로 같은 이메일의 기존 계정(GitHub 가입)에 자동 연결해도 안전
-    ...(googleEnabled ? [Google({ allowDangerousEmailAccountLinking: true })] : []),
+    ...(googleEnabled ? [Google] : []),
     Credentials({
       id: "password",
       name: "이메일 로그인",
@@ -25,8 +31,8 @@ const config: NextAuthConfig = {
         const email = String(credentials?.email ?? "").trim().toLowerCase();
         const password = String(credentials?.password ?? "");
         if (!email || !password) return null;
-        const user = await prisma.user.findUnique({ where: { email } });
-        // 계정이 없거나 비밀번호 미설정(GitHub 전용 계정) — 동일한 실패로 응답해 계정 존재를 노출하지 않는다
+        // 이메일 유니크가 아니므로 비밀번호 계정만 대상으로 조회
+        const user = await prisma.user.findFirst({ where: { email, passwordHash: { not: null } } });
         if (!user?.passwordHash) return null;
         const ok = await bcrypt.compare(password, user.passwordHash);
         return ok ? { id: user.id, email: user.email, name: user.name, image: user.image } : null;
