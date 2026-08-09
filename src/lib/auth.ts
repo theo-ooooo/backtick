@@ -11,9 +11,18 @@ const googleEnabled = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOO
 
 // 프로바이더가 다르면 같은 이메일이어도 별도 계정 — 이메일로 기존 유저를 찾지 않는다.
 // 로그인 식별은 accounts(provider, providerAccountId)로만 한다.
+const baseAdapter = PrismaAdapter(prisma);
 const adapter = {
-  ...PrismaAdapter(prisma),
+  ...baseAdapter,
   getUserByEmail: async () => null,
+  // 소셜 프로필 이름이 기존 닉네임과 겹치면 접미사를 붙여 유니크하게 만든다
+  createUser: async (data: Parameters<NonNullable<typeof baseAdapter.createUser>>[0]) => {
+    let name = (data.name ?? data.email?.split("@")[0] ?? "user").trim().slice(0, 32) || "user";
+    if (await prisma.user.findFirst({ where: { name } })) {
+      name = `${name}-${Math.random().toString(36).slice(2, 6)}`;
+    }
+    return baseAdapter.createUser!({ ...data, name });
+  },
 };
 
 const config: NextAuthConfig = {
