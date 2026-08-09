@@ -27,3 +27,8 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
         run: npx tsx scripts/weekly-trends.ts
+      - name: Cleanup orphan images
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          UPLOAD_SECRET: ${{ secrets.UPLOAD_SECRET }}
+        run: npx tsx scripts/cleanup-orphan-images.ts

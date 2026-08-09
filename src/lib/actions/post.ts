@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage, adoptInlineImages } from "@/lib/storage";
 import { notify } from "@/lib/notify";
 
 function slugify(title: string): string {
@@ -138,6 +138,12 @@ export async function savePost(formData: FormData) {
         publishedAt: publish ? new Date() : null,
       },
     });
+  }
+
+  // 유저 폴더에 임시로 올라간 본문 이미지를 글 폴더로 입양 (이 경로는 리다이렉트→리로드라 URL 교체 안전)
+  const adopted = await adoptInlineImages(post.content, me.id, post.id);
+  if (adopted !== post.content) {
+    post = await prisma.post.update({ where: { id: post.id }, data: { content: adopted } });
   }
 
   // 새 커버(data URL)는 이제 id가 있으니 posts/{id}/ 경로로 Storage 업로드 → URL 저장
