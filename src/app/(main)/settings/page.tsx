@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { saveProfile } from "@/lib/actions/user";
 import { AvatarUploader } from "@/components/settings/AvatarUploader";
 import { HandleField } from "@/components/settings/HandleField";
+import { NicknameField } from "@/components/settings/NicknameField";
 import { DeleteAccount } from "@/components/settings/DeleteAccount";
 import { prisma } from "@/lib/prisma";
 import { Field, Input, Textarea, Label } from "@/components/ui/Field";
@@ -40,9 +41,10 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
       </div>
 
       <form action={saveProfile} className="mt-7 space-y-6">
-        <Field label="닉네임">
-          <Input name="name" defaultValue={user.name ?? ""} maxLength={40} required placeholder="다른 사람과 겹치지 않는 닉네임" />
-        </Field>
+        <div>
+          <Label>닉네임</Label>
+          <NicknameField defaultValue={user.name ?? ""} />
+        </div>
         <div>
           <Label>핸들</Label>
           <HandleField defaultValue={user.handle ?? ""} />
