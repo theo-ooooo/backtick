@@ -193,7 +193,7 @@ function CommentForm({
           type="button"
           onClick={submit}
           disabled={pending || !value.trim()}
-          className={`${onCancel ? "" : "ml-auto"} rounded-full bg-ink px-4.5 py-1.5 text-[13px] font-bold text-white transition hover:opacity-85 disabled:opacity-40`}
+          className={`${onCancel ? "" : "ml-auto"} rounded-full bg-ink px-4.5 py-1.5 text-[13px] font-bold text-bg transition hover:opacity-85 disabled:opacity-40`}
         >
           {parentId ? "답글 등록" : "등록"}
         </button>

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
 import { uploadImage } from "@/lib/storage";
+import { notify } from "@/lib/notify";
 
 function slugify(title: string): string {
   const base = title
@@ -76,6 +77,8 @@ export async function toggleLike(postId: string): Promise<{ liked: boolean; coun
     await prisma.postLike.delete({ where: { postId_userId: { postId, userId: me.id } } });
   } else {
     await prisma.postLike.create({ data: { postId, userId: me.id } });
+    const post = await prisma.post.findUnique({ where: { id: postId }, select: { authorId: true } });
+    if (post) await notify({ userId: post.authorId, actorId: me.id, type: "like", postId });
   }
   const count = await prisma.postLike.count({ where: { postId } });
   revalidatePath("/");

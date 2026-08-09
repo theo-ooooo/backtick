@@ -112,7 +112,7 @@ export function ContributionCalendar({ days }: { days: DayCount[] }) {
 
       {tip && (
         <div
-          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 font-mono text-[11px] font-semibold text-white shadow-lg"
+          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 font-mono text-[11px] font-semibold text-bg shadow-lg"
           style={{ left: tip.x, top: tip.y }}
         >
           {tip.text}

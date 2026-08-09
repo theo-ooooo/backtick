@@ -88,7 +88,7 @@ export function IntroPopup() {
           <Link
             href="/login"
             onClick={() => close(7)}
-            className="mt-6 block rounded-xl bg-ink py-3 text-center text-[14.5px] font-bold text-white transition hover:opacity-85"
+            className="mt-6 block rounded-xl bg-ink py-3 text-center text-[14.5px] font-bold text-bg transition hover:opacity-85"
           >
             시작하기
           </Link>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
+import { notify } from "@/lib/notify";
 
 async function revalidatePost(postId: string) {
   const post = await prisma.post.findUnique({
@@ -44,6 +45,17 @@ export async function addComment(input: {
   await prisma.comment.create({
     data: { postId: input.postId, authorId: me.id, parentId: rootId, replyToName, content },
   });
+
+  // 알림 — 글 작성자에게, 답글이면 대상 댓글 작성자에게도
+  const post = await prisma.post.findUnique({ where: { id: input.postId }, select: { authorId: true } });
+  if (post) await notify({ userId: post.authorId, actorId: me.id, type: "comment", postId: input.postId });
+  if (input.parentId) {
+    const target = await prisma.comment.findUnique({ where: { id: input.parentId }, select: { authorId: true } });
+    if (target && target.authorId !== post?.authorId) {
+      await notify({ userId: target.authorId, actorId: me.id, type: "reply", postId: input.postId });
+    }
+  }
+
   await revalidatePost(input.postId);
   return { ok: true };
 }

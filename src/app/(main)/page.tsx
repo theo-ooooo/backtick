@@ -98,7 +98,7 @@ export default async function Home(props: PageProps<"/">) {
             </p>
             <Link
               href="/write"
-              className="mt-3 inline-block rounded-full bg-ink px-4 py-1.5 text-[12.5px] font-bold text-white transition hover:opacity-85"
+              className="mt-3 inline-block rounded-full bg-ink px-4 py-1.5 text-[12.5px] font-bold text-bg transition hover:opacity-85"
             >
               첫 글 쓰기
             </Link>
