@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { currentUser, isGithubEnabled } from "@/lib/auth";
-import { githubLogin } from "@/lib/actions/auth";
+import { currentUser, isGithubEnabled, isGoogleEnabled } from "@/lib/auth";
+import { githubLogin, googleLogin } from "@/lib/actions/auth";
 import { EmailAuthForm } from "@/components/auth/EmailAuthForm";
 
 export const metadata: Metadata = { title: "로그인" };
@@ -39,6 +39,20 @@ export default async function LoginPage() {
           <div className="rounded-xl border border-dashed border-line px-4 py-3.5 text-center text-[13px] font-medium text-faint">
             GitHub 로그인은 준비 중이에요
           </div>
+        )}
+
+        {isGoogleEnabled && (
+          <form action={googleLogin}>
+            <button className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-white px-4 py-3.5 text-[15px] font-bold text-ink transition hover:border-ink">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
+                <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l-.02.15 3.5 2.7.24.03c2.2-2.05 3.5-5.05 3.5-8.6" />
+                <path fill="#34A853" d="M12 24c3.2 0 5.9-1.06 7.9-2.9l-3.76-2.9c-1 .7-2.36 1.2-4.14 1.2-3.16 0-5.84-2.08-6.8-4.96l-.14.01-3.64 2.8-.05.14C3.35 21.3 7.36 24 12 24" />
+                <path fill="#FBBC05" d="M5.2 14.44a7.4 7.4 0 0 1-.4-2.36c0-.82.15-1.62.4-2.36l-.01-.16-3.68-2.85-.12.06A11.96 11.96 0 0 0 .1 12.1c0 1.94.47 3.77 1.29 5.4l3.8-3.05" />
+                <path fill="#EB4335" d="M12 4.76c2.24 0 3.75.97 4.62 1.78l3.37-3.3C17.9 1.24 15.2 0 12 0 7.36 0 3.35 2.67 1.4 6.56l3.8 2.96C6.16 6.84 8.84 4.76 12 4.76" />
+              </svg>
+              Google로 계속하기
+            </button>
+          </form>
         )}
 
         <div className="flex items-center gap-3 py-1 text-[11.5px] font-semibold text-faint">

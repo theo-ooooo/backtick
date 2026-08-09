@@ -1,11 +1,13 @@
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
 const githubEnabled = Boolean(process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET);
+const googleEnabled = Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
 const config: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -13,6 +15,7 @@ const config: NextAuthConfig = {
   pages: { signIn: "/login" },
   providers: [
     ...(githubEnabled ? [GitHub] : []),
+    ...(googleEnabled ? [Google] : []),
     Credentials({
       id: "password",
       name: "이메일 로그인",
@@ -47,6 +50,7 @@ const config: NextAuthConfig = {
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
 
 export const isGithubEnabled = githubEnabled;
+export const isGoogleEnabled = googleEnabled;
 
 /** Current user's DB row (or null) — includes handle for gating the editor. */
 export async function currentUser() {
