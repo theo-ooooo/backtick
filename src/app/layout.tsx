@@ -36,8 +36,14 @@ const siteJsonLd = {
 /** 루트 레이아웃 — 공통 셸만. 화면 구성은 (main)/(editor) 라우트 그룹 레이아웃이 담당. */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`h-full antialiased ${codeFont.variable}`}>
+    <html lang="ko" suppressHydrationWarning className={`h-full antialiased ${codeFont.variable}`}>
       <head>
+        <script
+          // 페인트 전에 저장된 테마 적용 (다크모드 깜빡임 방지)
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("bt-theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}`,
+          }}
+        />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"

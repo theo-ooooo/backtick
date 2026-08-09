@@ -59,7 +59,7 @@ export function MobileTabBar({ handle, loggedIn }: Props) {
 
   return (
     <nav className="fixed inset-x-0 z-40 flex justify-center sm:hidden" style={{ bottom: "calc(env(safe-area-inset-bottom) + 14px)" }}>
-      <div className="flex items-center gap-0.5 rounded-full border border-black/[.06] bg-white/85 px-2 py-1.5 shadow-[0_10px_34px_rgba(26,24,21,.18),0_2px_8px_rgba(26,24,21,.08)] backdrop-blur-xl">
+      <div className="flex items-center gap-0.5 rounded-full border border-black/[.06] bg-card/85 px-2 py-1.5 shadow-[0_10px_34px_rgba(26,24,21,.18),0_2px_8px_rgba(26,24,21,.08)] backdrop-blur-xl">
         {items.map((t) =>
           t.key === "write" ? (
             <Link key="write" href="/write" aria-label="글쓰기" className="mx-1">

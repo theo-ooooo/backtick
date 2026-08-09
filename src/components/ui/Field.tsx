@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 
 const CONTROL =
-  "w-full rounded-xl border border-line bg-white text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc";
+  "w-full rounded-xl border border-line bg-card text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc";
 
 export function Label({ children }: { children: ReactNode }) {
   return <label className="mb-2 block text-[13px] font-bold text-sub">{children}</label>;

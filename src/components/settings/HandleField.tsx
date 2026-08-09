@@ -59,7 +59,7 @@ export function HandleField({ defaultValue }: { defaultValue: string }) {
                 .slice(0, 20),
             )
           }
-          className="w-full bg-white px-3 py-3 font-mono text-[14.5px] font-medium outline-none"
+          className="w-full bg-card px-3 py-3 font-mono text-[14.5px] font-medium outline-none"
         />
         <span className="flex w-9 items-center justify-center text-[15px]">
           {status === "checking" && (

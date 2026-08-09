@@ -5,7 +5,7 @@ import { BackButton } from "@/components/layout/BackButton";
 export default function EditorLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-line bg-card/90 backdrop-blur">
         <div className="mx-auto flex h-[52px] w-full max-w-[1200px] items-center gap-3 px-4">
           <BackButton />
           <Link href="/" aria-label="백틱 홈" className="flex items-center">

@@ -180,7 +180,7 @@ function CommentForm({
         rows={2}
         maxLength={1000}
         autoFocus={autoFocus}
-        className="w-full resize-none rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium leading-relaxed outline-none placeholder:text-faint focus:border-acc"
+        className="w-full resize-none rounded-xl border border-line bg-card px-4 py-3 text-[14.5px] font-medium leading-relaxed outline-none placeholder:text-faint focus:border-acc"
       />
       <div className="mt-2 flex items-center gap-2">
         {error && <span className="text-[12.5px] font-bold text-acc">{error}</span>}

@@ -14,9 +14,30 @@
   --code-bg: #1b1a18;
   --code-fg: #e8e4de;
   --code-chrome: #242220;
+  --bg: #ffffff;
+  --sel: #fbdcd5;
+}
+
+/* 다크 테마 — 웜 톤 유지 */
+[data-theme="dark"] {
+  --paper: #232019;
+  --card: #1d1b17;
+  --ink: #f0ece4;
+  --sub: #c9c2b8;
+  --muted: #948d84;
+  --faint: #635d55;
+  --line: #2f2b25;
+  --acc: #f0664f;
+  --acc-soft: #35211c;
+  --code-bg: #131211;
+  --code-fg: #e8e4de;
+  --code-chrome: #1d1b18;
+  --bg: #16140f;
+  --sel: #4a2a23;
 }
 
 @theme inline {
+  --color-bg: var(--bg);
   --color-paper: var(--paper);
   --color-card: var(--card);
   --color-ink: var(--ink);
@@ -30,11 +51,11 @@
 }
 
 ::selection {
-  background: #fbdcd5;
+  background: var(--sel);
 }
 
 body {
-  background: #ffffff;
+  background: var(--bg);
   color: var(--ink);
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
     "Apple SD Gothic Neo", "Segoe UI", Roboto, sans-serif;

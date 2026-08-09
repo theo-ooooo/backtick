@@ -18,7 +18,7 @@ export function DeleteAccount({ postCount }: { postCount: number }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-3.5 rounded-xl border border-acc/40 bg-white px-4 py-2.5 text-[13.5px] font-bold text-acc transition hover:bg-acc hover:text-white"
+        className="mt-3.5 rounded-xl border border-acc/40 bg-card px-4 py-2.5 text-[13.5px] font-bold text-acc transition hover:bg-acc hover:text-white"
       >
         탈퇴하기
       </button>

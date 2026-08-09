@@ -49,7 +49,7 @@ export function IntroPopup() {
       <div
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-[400px] overflow-hidden rounded-3xl bg-white shadow-[0_20px_60px_rgba(26,24,21,.3)]"
+        className="relative w-full max-w-[400px] overflow-hidden rounded-3xl bg-card shadow-[0_20px_60px_rgba(26,24,21,.3)]"
         style={{ animation: "btPop .26s cubic-bezier(.25,.8,.3,1.15) both" }}
       >
         {/* 다크 헤더 — 브랜드 */}

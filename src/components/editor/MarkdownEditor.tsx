@@ -253,7 +253,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
             }
           }}
           placeholder={"## 마크다운으로 작성하세요\n\n이미지는 붙여넣기/드래그로 바로 올라가요\n\n```ts\nconst hello = 'backtick';\n```"}
-          className="h-full min-h-[540px] w-full resize-none bg-white px-6 py-5 font-mono text-[13.5px] leading-relaxed outline-none placeholder:text-faint"
+          className="h-full min-h-[540px] w-full resize-none bg-card px-6 py-5 font-mono text-[13.5px] leading-relaxed outline-none placeholder:text-faint"
         />
         <div className="hidden overflow-y-auto px-6 py-5 md:block">
           <div className="mb-3 font-mono text-[10.5px] tracking-[0.14em] text-faint">PREVIEW</div>
@@ -270,7 +270,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         className="fixed inset-x-0 z-30 flex justify-center"
         style={{ bottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
       >
-        <div className="flex items-center gap-1 rounded-full border border-black/[.06] bg-white/90 px-2 py-1.5 shadow-[0_10px_34px_rgba(26,24,21,.16),0_2px_8px_rgba(26,24,21,.08)] backdrop-blur-xl">
+        <div className="flex items-center gap-1 rounded-full border border-black/[.06] bg-card/90 px-2 py-1.5 shadow-[0_10px_34px_rgba(26,24,21,.16),0_2px_8px_rgba(26,24,21,.08)] backdrop-blur-xl">
           <button
             type="button"
             disabled={aiBusy !== null || !isEmpty}

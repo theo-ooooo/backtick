@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 const VARIANTS = {
   primary: "bg-ink text-white hover:opacity-85",
   accent: "bg-acc text-white hover:opacity-90",
-  outline: "border border-line bg-white text-sub hover:border-ink hover:text-ink",
+  outline: "border border-line bg-card text-sub hover:border-ink hover:text-ink",
   soft: "bg-acc-soft text-acc hover:opacity-80",
 } as const;
 

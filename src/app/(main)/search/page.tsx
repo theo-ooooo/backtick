@@ -19,7 +19,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
           placeholder="제목·내용 검색"
           autoComplete="off"
           autoFocus={!q}
-          className="h-12 w-full rounded-2xl border border-line bg-white pl-11 pr-4 text-[15px] font-medium outline-none placeholder:text-faint focus:border-acc"
+          className="h-12 w-full rounded-2xl border border-line bg-card pl-11 pr-4 text-[15px] font-medium outline-none placeholder:text-faint focus:border-acc"
         />
       </form>
       <section>

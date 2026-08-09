@@ -58,7 +58,7 @@ export function CommentsSheet(props: Props) {
           <div
             role="dialog"
             aria-modal="true"
-            className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[82vh] w-full max-w-[720px] flex-col rounded-t-3xl bg-white shadow-[0_-12px_40px_rgba(26,24,21,.2)]"
+            className="absolute inset-x-0 bottom-0 mx-auto flex max-h-[82vh] w-full max-w-[720px] flex-col rounded-t-3xl bg-card shadow-[0_-12px_40px_rgba(26,24,21,.2)]"
             style={{ animation: "btSheetUp .3s cubic-bezier(.25,.8,.25,1) both" }}
           >
             <div className="flex items-center border-b border-line px-6 pb-3 pt-3">

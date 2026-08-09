@@ -39,7 +39,7 @@ export function NicknameField({ defaultValue }: { defaultValue: string }) {
           maxLength={40}
           placeholder="다른 사람과 겹치지 않는 닉네임"
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-white px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint"
+          className="w-full bg-card px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint"
         />
         <span className="flex w-9 items-center justify-center text-[15px]">
           {status === "checking" && (

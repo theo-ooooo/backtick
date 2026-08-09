@@ -72,7 +72,7 @@ export function UserMenu({ name, image, handle, provider }: Props) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+8px)] z-30 w-[200px] rounded-2xl border border-line bg-white p-1.5 shadow-[0_8px_30px_rgba(26,24,21,.12)]"
+          className="absolute right-0 top-[calc(100%+8px)] z-30 w-[200px] rounded-2xl border border-line bg-card p-1.5 shadow-[0_8px_30px_rgba(26,24,21,.12)]"
         >
           <div className="border-b border-line px-3.5 pb-2.5 pt-2">
             <div className="flex items-center gap-1.5">

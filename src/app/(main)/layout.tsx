@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { prisma } from "@/lib/prisma";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
@@ -11,7 +12,7 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
   const me = await currentUser();
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-line bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-line bg-card/90 backdrop-blur">
         <div className="mx-auto flex h-[60px] w-full max-w-[1200px] items-center gap-7 px-6">
           <Link href="/" aria-label="백틱 홈" className="flex items-center">
             <span className="font-mono text-[30px] font-semibold leading-none text-acc transition hover:opacity-75">`</span>
@@ -39,6 +40,7 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
               </svg>
             </Link>
             <span className="hidden sm:block"><ButtonLink href="/write">글쓰기</ButtonLink></span>
+            <ThemeToggle />
             {me ? (
               <UserMenu
                 name={me.name ?? me.email ?? "?"}

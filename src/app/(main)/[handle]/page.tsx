@@ -77,7 +77,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
         </div>
       </header>
 
-      <section className="mt-7 rounded-2xl border border-line bg-white p-5 sm:p-6">
+      <section className="mt-7 rounded-2xl border border-line bg-card p-5 sm:p-6">
         <h2 className="mb-4 text-[14px] font-extrabold">
           글쓰기 잔디 <span className="ml-1 font-mono text-[11.5px] font-semibold text-faint">최근 1년</span>
         </h2>

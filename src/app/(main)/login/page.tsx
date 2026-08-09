@@ -43,7 +43,7 @@ export default async function LoginPage() {
 
         {isGoogleEnabled && (
           <form action={googleLogin}>
-            <button className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-white px-4 py-3.5 text-[15px] font-bold text-ink transition hover:border-ink">
+            <button className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-line bg-card px-4 py-3.5 text-[15px] font-bold text-ink transition hover:border-ink">
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
                 <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l-.02.15 3.5 2.7.24.03c2.2-2.05 3.5-5.05 3.5-8.6" />
                 <path fill="#34A853" d="M12 24c3.2 0 5.9-1.06 7.9-2.9l-3.76-2.9c-1 .7-2.36 1.2-4.14 1.2-3.16 0-5.84-2.08-6.8-4.96l-.14.01-3.64 2.8-.05.14C3.35 21.3 7.36 24 12 24" />

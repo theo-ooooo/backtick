@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "내 통계", robots: { index: false 
 
 function StatCard({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-white px-5 py-4">
+    <div className="rounded-2xl border border-line bg-card px-5 py-4">
       <div className="font-mono text-[11px] font-semibold tracking-[0.08em] text-faint">{label}</div>
       <div className="mt-1 text-[26px] font-extrabold tracking-[-0.02em] text-ink">
         {value.toLocaleString()}
@@ -45,7 +45,7 @@ export default async function StatsPage() {
         </div>
       </div>
 
-      <section className="mt-8 rounded-2xl border border-line bg-white p-6">
+      <section className="mt-8 rounded-2xl border border-line bg-card p-6">
         <h2 className="mb-5 text-[15px] font-extrabold">
           글쓰기 잔디 <span className="ml-1 font-mono text-[12px] font-semibold text-faint">최근 1년</span>
         </h2>
@@ -55,14 +55,14 @@ export default async function StatsPage() {
       <section className="mt-8">
         <h2 className="mb-3 text-[15px] font-extrabold">글별 반응</h2>
         {stats.posts.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-white px-6 py-10 text-center text-[14px] text-muted">
+          <div className="rounded-2xl border border-line bg-card px-6 py-10 text-center text-[14px] text-muted">
             아직 발행한 글이 없어요.{" "}
             <Link href="/write" className="font-bold text-acc">
               첫 글을 써볼까요? →
             </Link>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-line bg-white">
+          <div className="overflow-hidden rounded-2xl border border-line bg-card">
             {stats.posts.slice(0, 20).map((p, i) => (
               <Link
                 key={p.id}

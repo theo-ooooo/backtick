@@ -6,7 +6,7 @@ import { passwordLogin, signup, type AuthFormState } from "@/lib/actions/auth";
 const INITIAL: AuthFormState = { error: "" };
 
 const inputCls =
-  "w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc";
+  "w-full rounded-xl border border-line bg-card px-4 py-3 text-[14.5px] font-medium outline-none placeholder:text-faint focus:border-acc";
 
 const DOMAINS = ["gmail.com", "naver.com", "kakao.com", "daum.net", "outlook.com", "icloud.com"];
 
@@ -43,7 +43,7 @@ function EmailInput() {
               key={d}
               type="button"
               onClick={() => setEmail(email.slice(0, at + 1) + d)}
-              className="rounded-full border border-line bg-white px-3 py-1.5 font-mono text-[12.5px] font-semibold text-sub transition hover:border-acc hover:text-acc"
+              className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-[12.5px] font-semibold text-sub transition hover:border-acc hover:text-acc"
             >
               {email.slice(0, at + 1)}
               <span className="text-acc">{d}</span>
@@ -82,7 +82,7 @@ export function EmailAuthForm() {
         {error && <p className="px-1 text-[12.5px] font-semibold text-acc">{error}</p>}
         <button
           disabled={pending}
-          className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[14.5px] font-bold text-ink transition hover:border-ink disabled:opacity-60"
+          className="w-full rounded-xl border border-line bg-card px-4 py-3 text-[14.5px] font-bold text-ink transition hover:border-ink disabled:opacity-60"
         >
           {pending ? "처리 중…" : mode === "login" ? "이메일로 로그인" : "회원가입"}
         </button>

@@ -107,7 +107,7 @@ export function HomeFeed({ initialItems, tab, sort, sourceNames }: Props) {
   return (
     <>
       {showFilter && (
-        <div className="scrollbar-none sticky top-[60px] z-10 -mx-1 flex gap-1 overflow-x-auto border-b border-line/70 bg-white px-1 py-3.5">
+        <div className="scrollbar-none sticky top-[60px] z-10 -mx-1 flex gap-1 overflow-x-auto border-b border-line/70 bg-card px-1 py-3.5">
           <button
             type="button"
             onClick={() => {

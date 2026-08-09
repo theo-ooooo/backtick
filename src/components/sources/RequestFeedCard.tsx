@@ -51,7 +51,7 @@ export function RequestFeedCard({ loggedIn }: { loggedIn: boolean }) {
           <div
             role="dialog"
             aria-modal="true"
-            className="relative w-full max-w-[380px] rounded-2xl bg-white p-6 shadow-[0_16px_48px_rgba(26,24,21,.25)]"
+            className="relative w-full max-w-[380px] rounded-2xl bg-card p-6 shadow-[0_16px_48px_rgba(26,24,21,.25)]"
             style={{ animation: "btPop .22s cubic-bezier(.25,.8,.3,1.2) both" }}
           >
             {sent ? (
@@ -95,7 +95,7 @@ export function RequestFeedCard({ loggedIn }: { loggedIn: boolean }) {
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="flex-1 rounded-xl border border-line bg-white py-2.5 text-[14px] font-bold text-sub transition hover:bg-paper"
+                    className="flex-1 rounded-xl border border-line bg-card py-2.5 text-[14px] font-bold text-sub transition hover:bg-paper"
                   >
                     취소
                   </button>

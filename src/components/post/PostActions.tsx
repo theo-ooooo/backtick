@@ -94,7 +94,7 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
         className={`flex items-center gap-2 rounded-full border px-4.5 py-2 text-[14px] font-bold transition ${
           isLiked
             ? "border-acc bg-acc-soft text-acc"
-            : "border-line bg-white text-sub hover:border-acc hover:text-acc"
+            : "border-line bg-card text-sub hover:border-acc hover:text-acc"
         }`}
       >
         {isLiked ? "♥" : "♡"} 좋아요 {count > 0 && count}
@@ -102,7 +102,7 @@ export function PostActions({ postId, views, likeCount, liked, loggedIn }: Props
       <button
         type="button"
         onClick={onShare}
-        className="flex items-center gap-2 rounded-full border border-line bg-white px-4.5 py-2 text-[14px] font-bold text-sub transition hover:border-acc hover:text-acc"
+        className="flex items-center gap-2 rounded-full border border-line bg-card px-4.5 py-2 text-[14px] font-bold text-sub transition hover:border-acc hover:text-acc"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
