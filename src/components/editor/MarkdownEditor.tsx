@@ -102,7 +102,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           const res = await fetch("/api/upload", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ dataUrl }),
+            body: JSON.stringify({ dataUrl, postId: draftId }),
           });
           const j = (await res.json()) as { url?: string; error?: string };
           if (res.ok && j.url) {
@@ -117,7 +117,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
         }
       }
     },
-    [content.length, setContent],
+    [content.length, setContent, draftId],
   );
   const [suggestion, setSuggestion] = useState("");
   const suggestBusyRef = useRef(false);
