@@ -94,7 +94,8 @@ export async function getFeed(
   take = 20,
   sources?: string[], // 기술블로그 소스 필터 (비면 전체)
 ): Promise<FeedItem[]> {
-  const wantNative = tab === "all" || tab === "backtick";
+  // 소스 필터를 골랐다면 그 소스만 보겠다는 뜻 — 백틱 네이티브 글은 제외
+  const wantNative = (tab === "all" || tab === "backtick") && !sources?.length;
   const wantExternal = tab === "all" || tab === "tech";
   const window = (page + 1) * take;
 
