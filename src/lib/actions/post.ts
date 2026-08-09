@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
+import { uploadImage } from "@/lib/storage";
 
 function slugify(title: string): string {
   const base = title
@@ -95,7 +96,11 @@ export async function savePost(formData: FormData) {
   const coverValid =
     (/^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(rawCover) && rawCover.length <= 400_000) ||
     /^https:\/\/.+/.test(rawCover);
-  const uploadedCover = coverValid ? rawCover : null;
+  let uploadedCover = coverValid ? rawCover : null;
+  if (uploadedCover?.startsWith("data:")) {
+    // Storage에 올려 URL만 DB에 저장 — 실패 시 data URL 그대로(프록시가 서빙)
+    uploadedCover = (await uploadImage(uploadedCover, `covers/${me.id}-${Date.now().toString(36)}`)) ?? uploadedCover;
+  }
   const publish = formData.get("action") === "publish";
   if (!title) redirect(id ? `/write/${id}?error=title` : "/write?error=title");
 

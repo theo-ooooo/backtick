@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { currentUser, signOut } from "@/lib/auth";
+import { uploadImage } from "@/lib/storage";
 
 const HANDLE_RE = /^[a-z0-9-]{3,20}$/;
 
@@ -55,12 +56,16 @@ export async function updateAvatar(dataUrl: string | null): Promise<{ ok: boolea
   const me = await currentUser();
   if (!me) return { ok: false, error: "로그인이 필요해요" };
 
+  let stored: string | null = null;
   if (dataUrl !== null) {
     if (!DATA_URL_RE.test(dataUrl)) return { ok: false, error: "지원하지 않는 이미지 형식이에요" };
     if (dataUrl.length > MAX_DATA_URL) return { ok: false, error: "이미지가 너무 커요" };
+    // base64를 DB에 넣지 않고 Storage에 올린 뒤 URL만 저장 (이그레스 절감)
+    stored = await uploadImage(dataUrl, `avatars/${me.id}-${Date.now().toString(36)}`);
+    if (!stored) return { ok: false, error: "업로드에 실패했어요. 잠시 후 다시 시도해주세요" };
   }
 
-  await prisma.user.update({ where: { id: me.id }, data: { image: dataUrl } });
+  await prisma.user.update({ where: { id: me.id }, data: { image: stored } });
   revalidatePath("/");
   revalidatePath("/settings");
   return { ok: true };
