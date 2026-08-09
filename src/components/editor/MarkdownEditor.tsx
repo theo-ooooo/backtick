@@ -59,6 +59,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [uploadErr, setUploadErr] = useState("");
   const contentRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const lastSnapshotRef = useRef(`${defaultTitle ?? ""}\u0000${defaultContent ?? ""}`);
   const uploadSeq = useRef(0);
   // 발행된 글은 자동 저장 제외 (수정 내용이 라이브로 새면 안 됨)
@@ -180,6 +181,30 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
       {draftId && <input type="hidden" name="id" value={draftId} />}
       <div className="flex items-center gap-3 border-b border-line px-6 py-3">
         <span className="font-mono text-[11px] text-faint">MARKDOWN</span>
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          className="flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1 text-[12px] font-semibold text-sub transition hover:border-acc hover:text-acc"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <rect x="3" y="3" width="18" height="18" rx="3" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="m21 15-4.5-4.5L6 21" />
+          </svg>
+          이미지
+        </button>
+        <span className="hidden text-[11px] text-faint lg:inline">붙여넣기·드래그로도 올라가요</span>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) void uploadInline(e.target.files);
+            e.target.value = "";
+          }}
+        />
         {aiError && <span className="text-[12px] font-semibold text-acc">{aiError}</span>}
         {uploadErr && <span className="text-[12px] font-semibold text-acc">{uploadErr}</span>}
         {savedAt && !saved && (
