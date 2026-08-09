@@ -15,7 +15,8 @@ const config: NextAuthConfig = {
   pages: { signIn: "/login" },
   providers: [
     ...(githubEnabled ? [GitHub] : []),
-    ...(googleEnabled ? [Google] : []),
+    // Google은 이메일 검증을 보장하므로 같은 이메일의 기존 계정(GitHub 가입)에 자동 연결해도 안전
+    ...(googleEnabled ? [Google({ allowDangerousEmailAccountLinking: true })] : []),
     Credentials({
       id: "password",
       name: "이메일 로그인",
