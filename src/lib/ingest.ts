@@ -73,10 +73,50 @@ function toThumbnail(item: Parser.Item & CustomItem): string | null {
   return m ? m[1] : null;
 }
 
+/** velog 트렌딩용 AI 분류 — 개발/기술 글만 남긴다 (광고·일상·판매글 제거). 실패 시 통과. */
+async function filterDevOnly(items: NormalizedItem[]): Promise<NormalizedItem[]> {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key || items.length === 0) return items;
+  try {
+    const list = items.map((it, i) => `${i}: ${it.title} [${it.tags.join(",")}]`).join("\n");
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        temperature: 0,
+        max_tokens: 500,
+        messages: [
+          {
+            role: "system",
+            content: "개발 블로그 큐레이션 필터다. 소프트웨어 개발·IT 기술 관련 글만 통과시킨다. 광고, 상품 판매, 명품, 도박, 일상/여행/재테크 글은 제외한다.",
+          },
+          {
+            role: "user",
+            content: `다음 글 목록에서 개발·기술 관련 글의 번호만 JSON 배열로 답해. 다른 말 없이 배열만.\n${list}`,
+          },
+        ],
+      }),
+      signal: AbortSignal.timeout(30000),
+    });
+    if (!res.ok) return items;
+    const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+    const m = /\[[\d,\s]*\]/.exec(json.choices?.[0]?.message?.content ?? "");
+    if (!m) return items;
+    const keep = new Set(JSON.parse(m[0]) as number[]);
+    const filtered = items.filter((_, i) => keep.has(i));
+    // 분류가 전멸시키면 오작동으로 보고 원본 유지
+    return filtered.length > 0 ? filtered : items;
+  } catch {
+    return items;
+  }
+}
+
 /** 스팸 수집 차단 — 광고 키워드·국제전화 패턴, velog 트렌딩은 한글 없는 글을 걸러낸다. */
 function looksSpam(item: { title: string; excerpt: string | null }, feedName: string): boolean {
   const text = `${item.title} ${item.excerpt ?? ""}`;
-  if (/(escorts?|call ?girls?|casino|betting|viagra|buy .{0,30}accounts?|verified sellers?|출장안마|출장마사지|텔레그램 ?@)/i.test(text)) return true;
+  if (/(escorts?|call ?girls?|casino|betting|viagra|buy .{0,30}accounts?|verified sellers?|출장안마|출장마사지|텔레그램 ?@|레플리카|미러급|명품 ?(시계|가방|선글라스)|구매대행)/i.test(text)) return true;
+  if (/카톡 ?[A-Za-z0-9]{3,}/.test(text)) return true;
   if (/\+\d{2,3}[ -]?\d{3,4}[ -]?\d{6,}/.test(text)) return true;
   if (feedName === "velog" && !/[가-힣]/.test(text)) return true;
   return false;
@@ -211,7 +251,9 @@ export async function ingestAllFeeds(): Promise<IngestResult[]> {
       try {
         const fetched =
           feed.rssUrl === "velog:trending" ? await fetchVelogTrending() : await fetchRss(feed.rssUrl);
-        const items = fetched.filter((it) => !looksSpam(it, feed.name));
+        const keywordFiltered = fetched.filter((it) => !looksSpam(it, feed.name));
+        const items =
+          feed.rssUrl === "velog:trending" ? await filterDevOnly(keywordFiltered) : keywordFiltered;
         let inserted = 0;
         for (const it of items) {
           const res = await prisma.externalPost.upsert({
