@@ -153,3 +153,37 @@ export async function savePost(formData: FormData) {
   }
   redirect(`/write/${post.id}?saved=1`);
 }
+
+/** 에디터 자동 저장 — 초안만. 새 글이면 DRAFT 생성 후 id 반환. redirect 없음. */
+export async function autosaveDraft(input: {
+  id?: string;
+  title: string;
+  content: string;
+}): Promise<{ id: string; savedAt: string } | { error: string }> {
+  const me = await currentUser();
+  if (!me) return { error: "로그인이 필요해요" };
+
+  const title = input.title.trim().slice(0, 150);
+  if (!title) return { error: "제목 없음" };
+  const content = input.content;
+
+  if (input.id) {
+    const post = await prisma.post.findFirst({ where: { id: input.id, authorId: me.id } });
+    if (!post) return { error: "글을 찾을 수 없어요" };
+    // 발행된 글은 자동 저장하지 않는다 — 수정 중 내용이 라이브에 새어나가면 안 됨
+    if (post.status !== "DRAFT") return { error: "published" };
+    await prisma.post.update({
+      where: { id: post.id },
+      data: { title, content, excerpt: toExcerpt(content) },
+    });
+    return { id: post.id, savedAt: new Date().toISOString() };
+  }
+
+  let slug = slugify(title);
+  const dupe = await prisma.post.findFirst({ where: { authorId: me.id, slug } });
+  if (dupe) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+  const post = await prisma.post.create({
+    data: { authorId: me.id, title, slug, content, excerpt: toExcerpt(content), status: "DRAFT" },
+  });
+  return { id: post.id, savedAt: new Date().toISOString() };
+}

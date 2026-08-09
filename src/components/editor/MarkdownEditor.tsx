@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Markdown } from "@/components/markdown/Markdown";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
 import { CoverPicker } from "./CoverPicker";
+import { autosaveDraft } from "@/lib/actions/post";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
@@ -17,7 +18,20 @@ interface Props {
   defaultCover?: string | null;
   saved?: boolean; // just returned from a draft save
   error?: string;
+  status?: string; // DRAFT | PUBLISHED — 발행글은 자동저장 안 함
   action: (formData: FormData) => Promise<void>;
+}
+
+/** 파일 → 최대 1400px webp data URL (본문 이미지용) */
+async function fileToInline(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 1400 / bitmap.width);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return canvas.toDataURL("image/webp", 0.85);
 }
 
 function SubmitButtons() {
@@ -35,12 +49,75 @@ function SubmitButtons() {
 }
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
-export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, defaultCover, saved, error, action }: Props) {
+export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, defaultCover, saved, error, status, action }: Props) {
   const { content, setContent, onChange, isEmpty } = useMarkdownEditor(defaultContent ?? "");
   const titleRef = useRef<HTMLInputElement>(null);
   const [aiBusy, setAiBusy] = useState<"draft" | "continue" | null>(null);
   const [aiError, setAiError] = useState("");
   const [resetOpen, setResetOpen] = useState(false);
+  const [draftId, setDraftId] = useState(postId);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [uploadErr, setUploadErr] = useState("");
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const lastSnapshotRef = useRef(`${defaultTitle ?? ""}\u0000${defaultContent ?? ""}`);
+  const uploadSeq = useRef(0);
+  // 발행된 글은 자동 저장 제외 (수정 내용이 라이브로 새면 안 됨)
+  const autosaveEnabled = !postId || status === "DRAFT";
+
+  // 자동 저장 — 3초 멈추면 초안 저장. 새 글이면 DRAFT 생성 후 URL 교체
+  useEffect(() => {
+    if (!autosaveEnabled) return;
+    const t = setTimeout(async () => {
+      const title = titleRef.current?.value.trim() ?? "";
+      if (!title || !content.trim()) return;
+      const snapshot = `${title}\u0000${content}`;
+      if (snapshot === lastSnapshotRef.current) return;
+      const res = await autosaveDraft({ id: draftId, title, content });
+      if ("id" in res) {
+        lastSnapshotRef.current = snapshot;
+        setSavedAt(new Date(res.savedAt).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
+        if (!draftId) {
+          setDraftId(res.id);
+          window.history.replaceState(null, "", `/write/${res.id}`);
+        }
+      }
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [content, draftId, autosaveEnabled]);
+
+  // 본문 이미지 업로드 — 붙여넣기/드래그 → 리사이즈 → Storage → 마크다운 삽입
+  const uploadInline = useCallback(
+    async (files: FileList | File[]) => {
+      const images = [...files].filter((f) => f.type.startsWith("image/"));
+      if (images.length === 0) return;
+      setUploadErr("");
+      for (const file of images) {
+        const token = `![업로드 중…](uploading-${++uploadSeq.current})`;
+        const ta = contentRef.current;
+        const pos = ta ? ta.selectionStart : content.length;
+        setContent((prev: string) => `${prev.slice(0, pos)}\n${token}\n${prev.slice(pos)}`);
+        try {
+          const dataUrl = await fileToInline(file);
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ dataUrl }),
+          });
+          const j = (await res.json()) as { url?: string; error?: string };
+          if (res.ok && j.url) {
+            setContent((prev: string) => prev.replace(token, `![](${j.url})`));
+          } else {
+            setContent((prev: string) => prev.replace(`\n${token}\n`, ""));
+            setUploadErr(j.error ?? "이미지 업로드에 실패했어요");
+          }
+        } catch {
+          setContent((prev: string) => prev.replace(`\n${token}\n`, ""));
+          setUploadErr("이미지 업로드에 실패했어요");
+        }
+      }
+    },
+    [content.length, setContent],
+  );
   const [suggestion, setSuggestion] = useState("");
   const suggestBusyRef = useRef(false);
   const lastSuggestLenRef = useRef(0);
@@ -100,10 +177,14 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
 
   return (
     <form action={action} className="flex min-h-0 flex-1 flex-col">
-      {postId && <input type="hidden" name="id" value={postId} />}
+      {draftId && <input type="hidden" name="id" value={draftId} />}
       <div className="flex items-center gap-3 border-b border-line px-6 py-3">
         <span className="font-mono text-[11px] text-faint">MARKDOWN</span>
         {aiError && <span className="text-[12px] font-semibold text-acc">{aiError}</span>}
+        {uploadErr && <span className="text-[12px] font-semibold text-acc">{uploadErr}</span>}
+        {savedAt && !saved && (
+          <span className="font-mono text-[11px] text-faint">자동 저장됨 {savedAt}</span>
+        )}
         {saved && (
           <span className="flex items-center gap-1.5 text-[12px] font-bold text-[#177245]">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#28c840]" /> 임시저장됨 — 내 글에서 이어서 쓸 수 있어요
@@ -148,16 +229,30 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
 
       <div className="mt-4 grid min-h-[540px] flex-1 grid-cols-1 divide-line border-t border-line md:grid-cols-2 md:divide-x">
         <textarea
+          ref={contentRef}
           name="content"
           value={content}
           onChange={onChange}
+          onPaste={(e) => {
+            if (e.clipboardData.files.length > 0) {
+              e.preventDefault();
+              void uploadInline(e.clipboardData.files);
+            }
+          }}
+          onDrop={(e) => {
+            if (e.dataTransfer.files.length > 0) {
+              e.preventDefault();
+              void uploadInline(e.dataTransfer.files);
+            }
+          }}
+          onDragOver={(e) => e.preventDefault()}
           onKeyDown={(e) => {
             if (e.key === "Tab" && suggestion) {
               e.preventDefault();
               applySuggestion();
             }
           }}
-          placeholder={"## 마크다운으로 작성하세요\n\n```ts\nconst hello = 'backtick';\n```"}
+          placeholder={"## 마크다운으로 작성하세요\n\n이미지는 붙여넣기/드래그로 바로 올라가요\n\n```ts\nconst hello = 'backtick';\n```"}
           className="h-full min-h-[540px] w-full resize-none bg-white px-6 py-5 font-mono text-[13.5px] leading-relaxed outline-none placeholder:text-faint"
         />
         <div className="hidden overflow-y-auto px-6 py-5 md:block">
