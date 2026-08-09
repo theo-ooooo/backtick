@@ -96,11 +96,9 @@ export async function savePost(formData: FormData) {
   const coverValid =
     (/^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(rawCover) && rawCover.length <= 400_000) ||
     /^https:\/\/.+/.test(rawCover);
-  let uploadedCover = coverValid ? rawCover : null;
-  if (uploadedCover?.startsWith("data:")) {
-    // Storage에 올려 URL만 DB에 저장 — 실패 시 data URL 그대로(프록시가 서빙)
-    uploadedCover = (await uploadImage(uploadedCover, `users/${me.id}/covers/${Date.now().toString(36)}`)) ?? uploadedCover;
-  }
+  const uploadedCover = coverValid ? rawCover : null;
+  // data URL 커버는 글 id가 정해진 뒤 posts/{id}/ 경로로 업로드한다 (아래에서)
+  const coverForSave = uploadedCover?.startsWith("data:") ? undefined : (uploadedCover ?? undefined);
   const publish = formData.get("action") === "publish";
   if (!title) redirect(id ? `/write/${id}?error=title` : "/write?error=title");
 
@@ -114,7 +112,7 @@ export async function savePost(formData: FormData) {
         title,
         content,
         excerpt: toExcerpt(content),
-        coverImage: uploadedCover ?? firstImage(content),
+        coverImage: coverForSave ?? firstImage(content),
         ...(publish && post.status === "DRAFT"
           ? { status: "PUBLISHED", publishedAt: new Date() }
           : {}),
@@ -132,11 +130,18 @@ export async function savePost(formData: FormData) {
         slug,
         content,
         excerpt: toExcerpt(content),
-        coverImage: uploadedCover ?? firstImage(content),
+        coverImage: coverForSave ?? firstImage(content),
         status: publish ? "PUBLISHED" : "DRAFT",
         publishedAt: publish ? new Date() : null,
       },
     });
+  }
+
+  // 새 커버(data URL)는 이제 id가 있으니 posts/{id}/ 경로로 Storage 업로드 → URL 저장
+  if (uploadedCover?.startsWith("data:")) {
+    const url = await uploadImage(uploadedCover, `posts/${post.id}/cover-${Date.now().toString(36)}`);
+    // 업로드 실패 시 data URL이라도 저장 — /api/img 프록시가 서빙해준다
+    post = await prisma.post.update({ where: { id: post.id }, data: { coverImage: url ?? uploadedCover } });
   }
 
   await upsertTags(post.id, tagsRaw);
