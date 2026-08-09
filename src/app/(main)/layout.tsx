@@ -2,6 +2,7 @@ import Link from "next/link";
 import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { prisma } from "@/lib/prisma";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
@@ -42,12 +43,15 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
             <span className="hidden sm:block"><ButtonLink href="/write">글쓰기</ButtonLink></span>
             <ThemeToggle />
             {me ? (
+              <>
+              <NotificationBell />
               <UserMenu
                 name={me.name ?? me.email ?? "?"}
                 image={imgProxy(me.image, "avatar", me.id)}
                 handle={me.handle}
                 provider={(await prisma.account.findFirst({ where: { userId: me.id }, select: { provider: true } }))?.provider ?? "email"}
               />
+              </>
             ) : (
               <Link href="/login" className="text-[13.5px] font-bold text-sub transition hover:text-ink">
                 로그인
