@@ -99,7 +99,7 @@ export async function savePost(formData: FormData) {
   let uploadedCover = coverValid ? rawCover : null;
   if (uploadedCover?.startsWith("data:")) {
     // Storage에 올려 URL만 DB에 저장 — 실패 시 data URL 그대로(프록시가 서빙)
-    uploadedCover = (await uploadImage(uploadedCover, `covers/${me.id}-${Date.now().toString(36)}`)) ?? uploadedCover;
+    uploadedCover = (await uploadImage(uploadedCover, `users/${me.id}/covers/${Date.now().toString(36)}`)) ?? uploadedCover;
   }
   const publish = formData.get("action") === "publish";
   if (!title) redirect(id ? `/write/${id}?error=title` : "/write?error=title");

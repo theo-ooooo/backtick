@@ -61,7 +61,7 @@ export async function updateAvatar(dataUrl: string | null): Promise<{ ok: boolea
     if (!DATA_URL_RE.test(dataUrl)) return { ok: false, error: "지원하지 않는 이미지 형식이에요" };
     if (dataUrl.length > MAX_DATA_URL) return { ok: false, error: "이미지가 너무 커요" };
     // base64를 DB에 넣지 않고 Storage에 올린 뒤 URL만 저장 (이그레스 절감)
-    stored = await uploadImage(dataUrl, `avatars/${me.id}-${Date.now().toString(36)}`);
+    stored = await uploadImage(dataUrl, `users/${me.id}/avatar-${Date.now().toString(36)}`);
     if (!stored) return { ok: false, error: "업로드에 실패했어요. 잠시 후 다시 시도해주세요" };
   }
 
