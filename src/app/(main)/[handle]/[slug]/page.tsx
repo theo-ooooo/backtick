@@ -11,6 +11,7 @@ import { TagChip } from "@/components/ui/TagChip";
 import { Avatar } from "@/components/ui/Avatar";
 import { AuthorCard } from "@/components/post/AuthorCard";
 import { PostSummary } from "@/components/post/PostSummary";
+import { imgProxy } from "@/lib/img";
 
 export const revalidate = 300;
 
@@ -86,7 +87,7 @@ export default async function PostPage(props: PageProps<"/[handle]/[slug]">) {
           )}
           <h1 className="text-[32px] font-extrabold leading-[1.3] tracking-[-0.03em]">{post.title}</h1>
           <div className="mt-4 flex items-center gap-2.5 border-b border-line pb-6 text-[13px]">
-            <Avatar name={author.name ?? author.handle ?? "?"} image={author.image} size="sm" />
+            <Avatar name={author.name ?? author.handle ?? "?"} image={imgProxy(author.image, "avatar", author.id)} size="sm" />
             <Link href={`/@${author.handle}`} className="font-bold text-sub hover:text-acc">
               {author.name ?? author.handle}
             </Link>

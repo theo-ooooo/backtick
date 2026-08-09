@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { currentUser } from "@/lib/auth";
+import { imgProxy } from "@/lib/img";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
@@ -38,7 +39,7 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
             </Link>
             <span className="hidden sm:block"><ButtonLink href="/write">글쓰기</ButtonLink></span>
             {me ? (
-              <UserMenu name={me.name ?? me.email ?? "?"} image={me.image} handle={me.handle} />
+              <UserMenu name={me.name ?? me.email ?? "?"} image={imgProxy(me.image, "avatar", me.id)} handle={me.handle} />
             ) : (
               <Link href="/login" className="text-[13.5px] font-bold text-sub transition hover:text-ink">
                 로그인

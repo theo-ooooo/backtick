@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
+import { imgProxy } from "./img";
 
 /** One unified card shape for the home feed (native posts + external posts). */
 export interface FeedItem {
@@ -50,13 +51,6 @@ export const feedExternalSelect = {
 type PostWithRels = Prisma.PostGetPayload<{ select: typeof feedPostSelect }>;
 type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ select: typeof feedExternalSelect }>;
 
-/** base64 이미지는 JSON에 싣지 않고 캐시되는 프록시 URL로 바꾼다 (이그레스 절감). */
-function imgUrl(raw: string | null, kind: "cover" | "avatar", id: string, v?: Date): string | null {
-  if (!raw) return null;
-  if (!raw.startsWith("data:")) return raw;
-  return `/api/img/${kind}/${id}${v ? `?v=${v.getTime()}` : ""}`;
-}
-
 /** shared row mappers — feed/search/tag pages all produce the same card shape */
 export function toFeedItem(p: PostWithRels): FeedItem {
   return {
@@ -66,9 +60,9 @@ export function toFeedItem(p: PostWithRels): FeedItem {
     excerpt: p.excerpt,
     author: p.author.name ?? p.author.handle,
     authorHandle: p.author.handle,
-    authorImage: imgUrl(p.author.image, "avatar", p.author.id),
+    authorImage: imgProxy(p.author.image, "avatar", p.author.id),
     source: null,
-    thumbnail: imgUrl(p.coverImage, "cover", p.id, p.updatedAt),
+    thumbnail: imgProxy(p.coverImage, "cover", p.id, p.updatedAt),
     likes: p._count.likes > 0 ? p._count.likes : null,
     tags: p.tags.map((t) => t.tag.name),
     publishedAt: p.publishedAt ?? p.createdAt,

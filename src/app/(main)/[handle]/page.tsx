@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getUserWithPosts } from "@/lib/queries/user";
 import { getWritingDays } from "@/lib/queries/stats";
+import { imgProxy } from "@/lib/img";
 import { ContributionCalendar } from "@/components/stats/ContributionCalendar";
 import { Avatar } from "@/components/ui/Avatar";
 import { BlogPostList } from "@/components/post/BlogPostList";
@@ -28,7 +29,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
   return (
     <main className="mx-auto w-full max-w-[980px] px-6 py-10">
       <header className="flex items-start gap-6 border-b border-line pb-8">
-        <Avatar name={user.name ?? user.handle} image={user.image} size="xl" tone="neutral" />
+        <Avatar name={user.name ?? user.handle} image={imgProxy(user.image, "avatar", user.id)} size="xl" tone="neutral" />
         <div className="min-w-0 flex-1 pt-1">
           <div className="flex flex-wrap items-baseline gap-2">
             <h1 className="text-[24px] font-extrabold tracking-[-0.03em]">{user.name ?? user.handle}</h1>

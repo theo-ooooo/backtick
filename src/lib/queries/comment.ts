@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { imgProxy } from "@/lib/img";
 
 export interface CommentView {
   id: string;
