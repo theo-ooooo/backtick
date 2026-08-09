@@ -89,7 +89,8 @@ async function filterDevOnly(items: NormalizedItem[]): Promise<NormalizedItem[]>
         messages: [
           {
             role: "system",
-            content: "개발 블로그 큐레이션 필터다. 소프트웨어 개발·IT 기술 관련 글만 통과시킨다. 광고, 상품 판매, 명품, 도박, 일상/여행/재테크 글은 제외한다.",
+            content:
+              "개발 블로그 큐레이션 필터다. 확실한 비기술 글(광고, 상품 판매, 명품, 도박, 성인, 순수 여행/음식/일상)만 제외한다. 개발자의 회고·커리어·취업기·스터디 기록은 기술 글로 보고 통과시킨다. 애매하면 통과시킨다.",
           },
           {
             role: "user",
@@ -105,8 +106,12 @@ async function filterDevOnly(items: NormalizedItem[]): Promise<NormalizedItem[]>
     if (!m) return items;
     const keep = new Set(JSON.parse(m[0]) as number[]);
     const filtered = items.filter((_, i) => keep.has(i));
-    // 분류가 전멸시키면 오작동으로 보고 원본 유지
-    return filtered.length > 0 ? filtered : items;
+    // 절반 넘게 잘리면 분류 오작동으로 보고 원본 유지 (트렌딩은 대부분 개발 글이다)
+    if (filtered.length < items.length / 2) return items;
+    for (const [i, it] of items.entries()) {
+      if (!keep.has(i)) console.log(`[filter] drop: ${it.title}`);
+    }
+    return filtered;
   } catch {
     return items;
   }
