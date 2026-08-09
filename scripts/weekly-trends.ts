@@ -109,6 +109,31 @@ ${list}`,
     });
     await prisma.postTag.create({ data: { postId: post.id, tagId: tag.id } });
   }
+  // 썸네일 — 글 페이지의 OG 이미지를 받아 Storage에 올려 커버로 사용
+  try {
+    const pageUrl = `https://backtick.blog/@backtick/${slug}`;
+    const html = await (await fetch(pageUrl)).text();
+    const og = /property="og:image" content="([^"]+)"/.exec(html)?.[1];
+    if (og) {
+      const png = Buffer.from(await (await fetch(og)).arrayBuffer());
+      const secret = process.env.UPLOAD_SECRET;
+      if (secret) {
+        const up = await fetch("https://eoassqhvtplpobndyhie.supabase.co/functions/v1/img-upload", {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-upload-secret": secret },
+          body: JSON.stringify({
+            dataUrl: `data:image/png;base64,${png.toString("base64")}`,
+            path: `posts/weekly-trends/cover-${new Date().toISOString().slice(0, 10)}`,
+          }),
+        });
+        const { url } = (await up.json()) as { url?: string };
+        if (url) await prisma.post.update({ where: { id: post.id }, data: { coverImage: url } });
+      }
+    }
+  } catch {
+    /* 커버는 실패해도 발행은 유지 */
+  }
+
   console.log(`발행 완료: ${title} → /@backtick/${slug} (수집글 ${posts.length}건 분석)`);
 }
 
