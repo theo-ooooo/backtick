@@ -214,26 +214,48 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
               />
             </div>
           ) : (
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="mt-2">
               {collections.length === 0 && (
-                <p className="col-span-full py-16 text-center text-sm text-faint">
+                <p className="py-16 text-center text-sm text-faint">
                   아직 시리즈가 없어요{mine ? " — 글 쓸 때 시리즈로 묶어보세요" : ""}
                 </p>
               )}
-              {collections.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/@${user.handle}/collections/${c.slug}`}
-                  className="rounded-2xl border border-line bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,24,21,.08)]"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[15px] text-acc">＃</span>
-                    <h3 className="min-w-0 flex-1 truncate text-[15px] font-extrabold text-ink">{c.name}</h3>
-                    <span className="shrink-0 font-mono text-[12px] text-faint">{c._count.posts}편</span>
-                  </div>
-                  {c.description && <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{c.description}</p>}
-                </Link>
-              ))}
+              <ul className="divide-y divide-line/70">
+                {collections.map((c) => (
+                  <li key={c.id}>
+                    <Link href={`/@${user.handle}/collections/${c.slug}`} className="group flex items-center gap-4 py-6">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-[16px] text-acc">＃</span>
+                          <h3 className="text-[17px] font-extrabold text-ink group-hover:text-acc">{c.name}</h3>
+                        </div>
+                        {c.description && <p className="mt-1.5 line-clamp-2 max-w-[520px] text-[13.5px] leading-relaxed text-muted">{c.description}</p>}
+                        <p className="mt-2 font-mono text-[12px] text-faint">{c._count.posts}편의 글</p>
+                      </div>
+                      {/* 우측 대표 글 썸네일 스택 */}
+                      <div className="relative hidden h-[76px] w-[150px] shrink-0 sm:block">
+                        {c.posts.slice(0, 3).map((pp, idx) => (
+                          <div
+                            key={pp.id}
+                            className="absolute top-1/2 h-[64px] w-[104px] -translate-y-1/2 overflow-hidden rounded-lg border border-line bg-[#1a1815] shadow-sm"
+                            style={{ right: `${idx * 22}px`, zIndex: 3 - idx, opacity: idx === 0 ? 1 : 0.85 - idx * 0.15 }}
+                          >
+                            {pp.coverImage ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={imgProxy(pp.coverImage, "cover", pp.id) ?? ""} alt="" className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="flex h-full flex-col justify-between p-2">
+                                <span className="font-mono text-[13px] leading-none text-acc">`</span>
+                                <span className="line-clamp-2 text-[8px] font-bold leading-tight text-white/80">{pp.title}</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </section>

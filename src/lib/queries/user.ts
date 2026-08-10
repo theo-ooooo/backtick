@@ -67,6 +67,12 @@ export async function getCollections(userId: string) {
     select: {
       id: true, name: true, slug: true, description: true,
       _count: { select: { posts: { where: { status: "PUBLISHED" } } } },
+      posts: {
+        where: { status: "PUBLISHED" },
+        orderBy: { publishedAt: "desc" },
+        take: 3,
+        select: { id: true, title: true, coverImage: true },
+      },
     },
   });
 }
