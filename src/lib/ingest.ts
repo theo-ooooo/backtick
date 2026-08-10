@@ -147,7 +147,7 @@ interface NormalizedItem {
 
 /** velog's public recent-RSS is spam-ridden; use the trending GraphQL API instead.
  *  velog GraphQL은 종종 수십 초씩 느려서 타임아웃을 넉넉히 주고 1회 재시도한다. */
-async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0, retry = 1) {
+async function fetchVelogTrendingPage(timeframe: string, limit: number, offset = 0, retry = 3) {
   const res = await fetch("https://v3.velog.io/graphql", {
     method: "POST",
     headers: {
@@ -170,7 +170,10 @@ async function fetchVelogTrendingPage(timeframe: string, limit: number, offset =
   });
   if (!res) return fetchVelogTrendingPage(timeframe, limit, offset, retry - 1);
   if (!res.ok) {
-    if (retry > 0) return fetchVelogTrendingPage(timeframe, limit, offset, retry - 1);
+    if (retry > 0) {
+      await new Promise((r) => setTimeout(r, 5000)); // velog 서버 불안정 — 잠깐 쉬고 재시도
+      return fetchVelogTrendingPage(timeframe, limit, offset, retry - 1);
+    }
     throw new Error(`velog graphql ${res.status}`);
   }
   const json = (await res.json()) as {
