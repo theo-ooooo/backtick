@@ -82,7 +82,7 @@ export async function getUserTeams(userId: string) {
   const rows = await prisma.teamMember.findMany({
     where: { userId },
     orderBy: { joinedAt: "asc" },
-    select: { team: { select: { name: true, slug: true } } },
+    select: { team: { select: { name: true, slug: true, image: true } } },
   });
   return rows.map((r) => r.team);
 }

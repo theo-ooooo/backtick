@@ -112,14 +112,23 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
           {teams.length > 0 && (
             <div className="mt-6 border-t border-line pt-5">
               <h2 className="mb-2.5 text-[12px] font-bold text-sub">소속 팀</h2>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {teams.map((t) => (
                   <Link
                     key={t.slug}
                     href={`/teams/${t.slug}`}
-                    className="rounded-full border border-line px-3 py-1 text-[12.5px] font-semibold text-sub transition hover:border-acc hover:text-acc"
+                    title={t.name}
+                    className="flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-3 transition hover:border-acc"
                   >
-                    {t.name}
+                    {t.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={t.image} alt="" className="h-6 w-6 rounded-full border border-line object-cover" />
+                    ) : (
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1a1815] font-mono text-[11px] text-acc">
+                        {t.name.slice(0, 1)}
+                      </span>
+                    )}
+                    <span className="text-[12.5px] font-semibold text-sub">{t.name}</span>
                   </Link>
                 ))}
               </div>

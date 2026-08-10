@@ -33,6 +33,13 @@ const ICONS = {
       <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
     </svg>
   ),
+  teams: (
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="9" cy="8" r="3.2" />
+      <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
+      <path d="M16 5.2a3.2 3.2 0 0 1 0 5.6M17.5 20a6.5 6.5 0 0 0-3-5.5" />
+    </svg>
+  ),
 } as const;
 
 /** 모바일 플로팅 필 탭바 (iOS 26 앱스토어 스타일) — 데스크톱에선 숨김. */
@@ -45,6 +52,7 @@ export function MobileTabBar({ handle, loggedIn }: Props) {
     { key: "tags", href: "/tags", label: "태그", icon: ICONS.tags, active: pathname.startsWith("/tags") },
     { key: "write", href: "/write", label: "", icon: null, active: false },
     { key: "sources", href: "/sources", label: "기업", icon: ICONS.sources, active: pathname.startsWith("/sources") },
+    { key: "teams", href: "/teams", label: "팀", icon: ICONS.teams, active: pathname.startsWith("/teams") },
     {
       key: "my",
       href: myHref,
@@ -79,7 +87,7 @@ export function MobileTabBar({ handle, loggedIn }: Props) {
             <Link
               key={t.key}
               href={t.href}
-              className={`flex min-w-[62px] flex-col items-center justify-center gap-0.5 rounded-full px-3 py-2 transition ${
+              className={`flex min-w-[48px] flex-col items-center justify-center gap-0.5 rounded-full px-2 py-2 transition ${
                 t.active ? "bg-ink/[.07] text-ink" : "text-faint active:bg-ink/[.04]"
               }`}
             >
