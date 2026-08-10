@@ -31,7 +31,7 @@ export function CoverPicker({ defaultCover }: { defaultCover?: string | null }) 
       {cover ? (
         <img src={cover} alt="썸네일" className="h-[44px] w-[70px] rounded-lg border border-line object-cover" />
       ) : (
-        <span className="flex h-[44px] w-[70px] items-center justify-center rounded-lg bg-[#1a1815] font-mono text-[16px] text-acc">
+        <span className="flex h-[44px] w-[70px] items-center justify-center rounded-lg border border-line bg-[#1a1815] font-mono text-[16px] text-acc">
           `
         </span>
       )}
