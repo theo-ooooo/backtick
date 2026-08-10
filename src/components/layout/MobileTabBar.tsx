@@ -51,7 +51,6 @@ export function MobileTabBar({ handle, loggedIn }: Props) {
     { key: "feed", href: "/", label: "피드", icon: ICONS.feed, active: pathname === "/" },
     { key: "tags", href: "/tags", label: "태그", icon: ICONS.tags, active: pathname.startsWith("/tags") },
     { key: "write", href: "/write", label: "", icon: null, active: false },
-    { key: "sources", href: "/sources", label: "기업", icon: ICONS.sources, active: pathname.startsWith("/sources") },
     { key: "teams", href: "/teams", label: "팀", icon: ICONS.teams, active: pathname.startsWith("/teams") },
     {
       key: "my",
@@ -87,7 +86,7 @@ export function MobileTabBar({ handle, loggedIn }: Props) {
             <Link
               key={t.key}
               href={t.href}
-              className={`flex min-w-[48px] flex-col items-center justify-center gap-0.5 rounded-full px-2 py-2 transition ${
+              className={`flex min-w-[58px] flex-col items-center justify-center gap-0.5 rounded-full px-2.5 py-2 transition ${
                 t.active ? "bg-ink/[.07] text-ink" : "text-faint active:bg-ink/[.04]"
               }`}
             >
