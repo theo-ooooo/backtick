@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getFeed, getTrendingTags, type FeedTab, type FeedSort } from "@/lib/feed";
-import { SortSelect } from "@/components/feed/SortSelect";
 import { getEnabledFeeds } from "@/lib/queries/source";
 import { HomeFeed } from "@/components/feed/HomeFeed";
 import { IntroPopup } from "@/components/home/IntroPopup";
@@ -8,7 +7,12 @@ import { Panel } from "@/components/ui/Panel";
 
 export const revalidate = 300;
 
-const TABS: { key: FeedTab; label: string }[] = [
+// velog 스타일 — 메인 탭은 정렬(트렌딩/최신), 글 종류는 하위 필터
+const SORT_TABS: { key: FeedSort; label: string }[] = [
+  { key: "popular", label: "🔥 트렌딩" },
+  { key: "latest", label: "최신" },
+];
+const TYPE_FILTERS: { key: FeedTab; label: string }[] = [
   { key: "all", label: "전체" },
   { key: "backtick", label: "백틱" },
   { key: "tech", label: "기술블로그" },
@@ -17,7 +21,7 @@ const TABS: { key: FeedTab; label: string }[] = [
 export default async function Home(props: PageProps<"/">) {
   const { tab: rawTab, sort: rawSort } = await props.searchParams;
   const tab: FeedTab = rawTab === "backtick" || rawTab === "tech" ? rawTab : "all";
-  const sort: FeedSort = rawSort === "popular" ? "popular" : "latest";
+  const sort: FeedSort = rawSort === "latest" ? "latest" : "popular";
   const [items, feeds, trending] = await Promise.all([
     getFeed(tab, sort, 0, 20),
     getEnabledFeeds(),
@@ -31,19 +35,39 @@ export default async function Home(props: PageProps<"/">) {
         <section className="min-w-0 flex-1">
           <div className="flex items-center border-b border-line">
             <div className="flex">
-              {TABS.map((t) => (
+              {SORT_TABS.map((t) => (
                 <Link
                   key={t.key}
-                  href={`/?${new URLSearchParams({ ...(t.key !== "all" ? { tab: t.key } : {}), ...(sort !== "latest" ? { sort } : {}) }).toString()}`}
-                  className={`px-4 py-3.5 text-[14.5px] font-bold tracking-tight ${
-                    tab === t.key ? "-mb-px border-b-2 border-ink text-ink" : "text-muted hover:text-sub"
+                  href={`/?${new URLSearchParams({
+                    ...(tab !== "all" ? { tab } : {}),
+                    ...(t.key === "latest" ? { sort: "latest" } : {}),
+                  }).toString()}`}
+                  className={`px-4 py-3.5 text-[15px] font-bold tracking-tight ${
+                    sort === t.key ? "-mb-px border-b-2 border-ink text-ink" : "text-muted hover:text-sub"
                   }`}
                 >
                   {t.label}
                 </Link>
               ))}
             </div>
-            <SortSelect current={sort} />
+            <div className="ml-auto flex items-center gap-1">
+              {TYPE_FILTERS.map((t) => (
+                <Link
+                  key={t.key}
+                  href={`/?${new URLSearchParams({
+                    ...(t.key !== "all" ? { tab: t.key } : {}),
+                    ...(sort === "latest" ? { sort: "latest" } : {}),
+                  }).toString()}`}
+                  className={`rounded-full px-3 py-1.5 text-[12.5px] font-bold transition ${
+                    tab === t.key
+                      ? "bg-ink text-bg shadow-[0_2px_8px_rgba(26,24,21,.18)]"
+                      : "text-muted hover:bg-paper hover:text-ink"
+                  }`}
+                >
+                  {t.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           <HomeFeed key={`${tab}-${sort}`} initialItems={items} tab={tab} sort={sort} sourceNames={feeds.map((f) => f.name)} />
