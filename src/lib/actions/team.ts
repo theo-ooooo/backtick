@@ -46,3 +46,19 @@ export async function inviteMember(teamId: string, handle: string): Promise<{ ok
   if (team) revalidatePath(`/teams/${team.slug}`);
   return { ok: true };
 }
+
+/** 팀 이미지 변경 — owner만. Storage 업로드 후 URL 저장. */
+export async function updateTeamImage(teamId: string, dataUrl: string): Promise<{ ok: boolean; url?: string; error?: string }> {
+  const me = await currentUser();
+  if (!me) return { ok: false, error: "로그인이 필요해요" };
+  const owner = await prisma.teamMember.findUnique({ where: { teamId_userId: { teamId, userId: me.id } } });
+  if (owner?.role !== "owner") return { ok: false, error: "팀장만 변경할 수 있어요" };
+
+  const { uploadImage } = await import("@/lib/storage");
+  const url = await uploadImage(dataUrl, `teams/${teamId}/logo-${Date.now().toString(36)}`);
+  if (!url) return { ok: false, error: "업로드 실패" };
+  await prisma.team.update({ where: { id: teamId }, data: { image: url } });
+  const team = await prisma.team.findUnique({ where: { id: teamId }, select: { slug: true } });
+  if (team) revalidatePath(`/teams/${team.slug}`);
+  return { ok: true, url };
+}

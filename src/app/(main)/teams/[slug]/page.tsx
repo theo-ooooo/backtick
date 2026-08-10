@@ -7,6 +7,7 @@ import { toFeedItem, feedPostSelect } from "@/lib/feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { FeedList } from "@/components/feed/FeedList";
 import { InviteMember } from "@/components/team/InviteMember";
+import { TeamLogoUploader } from "@/components/team/TeamLogoUploader";
 
 export const revalidate = 120;
 
@@ -47,7 +48,9 @@ export default async function TeamPage(props: PageProps<"/teams/[slug]">) {
   return (
     <main className="mx-auto w-full max-w-[900px] px-6 py-10">
       <div className="flex items-center gap-4">
-        {team.image ? (
+        {isOwner ? (
+          <TeamLogoUploader teamId={team.id} image={team.image} name={team.name} />
+        ) : team.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={team.image} alt="" className="h-16 w-16 shrink-0 rounded-2xl border border-line object-cover" />
         ) : (
