@@ -10,6 +10,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { BlogPostList } from "@/components/post/BlogPostList";
 import { FeedList } from "@/components/feed/FeedList";
 import { ContributionCalendar } from "@/components/stats/ContributionCalendar";
+import { Markdown } from "@/components/markdown/Markdown";
 
 export const revalidate = 300;
 
@@ -133,6 +134,11 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
 
           {view === "overview" ? (
             <div className="mt-6 space-y-9">
+              {user.readme && (
+                <div className="rounded-2xl border border-line bg-card px-6 py-5">
+                  <Markdown content={user.readme} />
+                </div>
+              )}
               <div className="rounded-2xl border border-line bg-card p-5 sm:p-6">
                 <h2 className="mb-4 text-[14px] font-extrabold">
                   글쓰기 잔디 <span className="ml-1 font-mono text-[11.5px] font-semibold text-faint">최근 1년</span>

@@ -16,6 +16,7 @@ export async function saveProfile(formData: FormData) {
   const handle = String(formData.get("handle") ?? "").trim().toLowerCase();
   const name = String(formData.get("name") ?? "").trim().slice(0, 40);
   const bio = String(formData.get("bio") ?? "").trim().slice(0, 180);
+  const readme = String(formData.get("readme") ?? "").trim().slice(0, 5000);
   const githubUrl = String(formData.get("githubUrl") ?? "").trim().slice(0, 120);
   const websiteUrl = String(formData.get("websiteUrl") ?? "").trim().slice(0, 200);
   const publicEmail = String(formData.get("publicEmail") ?? "").trim().slice(0, 120);
@@ -39,6 +40,7 @@ export async function saveProfile(formData: FormData) {
       handle,
       name: name || me.name,
       bio: bio || null,
+      readme: readme || null,
       githubUrl: githubUrl || null,
       websiteUrl: websiteUrl || null,
       publicEmail: publicEmail || null,

@@ -50,7 +50,10 @@ export default async function SettingsPage(props: PageProps<"/settings">) {
           <HandleField defaultValue={user.handle ?? ""} />
         </div>
         <Field label="소개">
-          <Textarea name="bio" defaultValue={user.bio ?? ""} rows={3} maxLength={180} />
+          <Textarea name="bio" defaultValue={user.bio ?? ""} rows={2} maxLength={180} />
+        </Field>
+        <Field label="자기소개 (개요 페이지 · 마크다운)">
+          <Textarea name="readme" defaultValue={user.readme ?? ""} rows={8} maxLength={5000} placeholder="## 안녕하세요&#10;&#10;블로그 개요 탭 상단에 표시되는 소개예요. 마크다운을 쓸 수 있어요." className="font-mono text-[13px]" />
         </Field>
         <Field label="GitHub">
           <Input name="githubUrl" defaultValue={user.githubUrl ?? ""} placeholder="github.com/username" className="font-mono text-[13.5px]" />

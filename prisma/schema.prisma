@@ -13,6 +13,7 @@ model User {
   id        String   @id @default(cuid())
   handle    String?  @unique // /@handle — set on first login
   passwordHash String? // 이메일+비밀번호 로그인용 (bcrypt)
+  readme    String? // 프로필 개요 마크다운 소개 (bio와 별개, 길게)
   notifications Notification[] @relation("received")
   activities    Notification[] @relation("acted")
   bookmarks     Bookmark[]
