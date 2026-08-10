@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Markdown } from "@/components/markdown/Markdown";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
 import { CoverPicker } from "./CoverPicker";
+import { CollectionPicker } from "./CollectionPicker";
 import { autosaveDraft } from "@/lib/actions/post";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useFormStatus } from "react-dom";
@@ -19,6 +20,8 @@ interface Props {
   saved?: boolean; // just returned from a draft save
   error?: string;
   status?: string; // DRAFT | PUBLISHED — 발행글은 자동저장 안 함
+  collections?: { id: string; name: string }[];
+  defaultCollectionId?: string | null;
   action: (formData: FormData) => Promise<void>;
 }
 
@@ -49,7 +52,7 @@ function SubmitButtons() {
 }
 
 /** Split markdown editor — left input / right live preview (design screen 03). */
-export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, defaultCover, saved, error, status, action }: Props) {
+export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTags, defaultCover, saved, error, status, collections = [], defaultCollectionId, action }: Props) {
   const { content, setContent, onChange, isEmpty } = useMarkdownEditor(defaultContent ?? "");
   const titleRef = useRef<HTMLInputElement>(null);
   const [aiBusy, setAiBusy] = useState<"draft" | "continue" | null>(null);
@@ -237,6 +240,7 @@ export function MarkdownEditor({ postId, defaultTitle, defaultContent, defaultTa
           className="w-full bg-transparent font-mono text-[13px] font-medium outline-none placeholder:text-faint"
         />
         <CoverPicker defaultCover={defaultCover} />
+        {collections !== undefined && <CollectionPicker collections={collections} defaultId={defaultCollectionId} />}
       </div>
 
       {suggestion && (

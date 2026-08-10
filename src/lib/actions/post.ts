@@ -100,6 +100,7 @@ export async function savePost(formData: FormData) {
   const content = String(formData.get("content") ?? "");
   const tagsRaw = String(formData.get("tags") ?? "");
   const rawCover = String(formData.get("coverImage") ?? "").trim();
+  const collectionId = String(formData.get("collectionId") ?? "").trim() || null;
   const coverValid =
     (/^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(rawCover) && rawCover.length <= 400_000) ||
     /^https:\/\/.+/.test(rawCover);
@@ -121,6 +122,7 @@ export async function savePost(formData: FormData) {
         excerpt: toExcerpt(content),
         readMinutes: readMinutes(content),
         coverImage: coverForSave ?? firstImage(content),
+        collectionId,
         ...(publish && post.status === "DRAFT"
           ? { status: "PUBLISHED", publishedAt: new Date() }
           : {}),
@@ -140,6 +142,7 @@ export async function savePost(formData: FormData) {
         excerpt: toExcerpt(content),
         readMinutes: readMinutes(content),
         coverImage: coverForSave ?? firstImage(content),
+        collectionId,
         status: publish ? "PUBLISHED" : "DRAFT",
         publishedAt: publish ? new Date() : null,
       },

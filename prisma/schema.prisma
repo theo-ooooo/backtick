@@ -16,6 +16,7 @@ model User {
   notifications Notification[] @relation("received")
   activities    Notification[] @relation("acted")
   bookmarks     Bookmark[]
+  collections   Collection[]
   name      String?
   email     String? // 프로바이더별 계정 분리 정책 — 같은 이메일이 여러 계정에 있을 수 있다
   emailVerified DateTime?
@@ -96,9 +97,12 @@ model Post {
 
   @@unique([authorId, slug])
   @@index([status, publishedAt])
-  @@map("posts")
   notifications Notification[]
   bookmarks     Bookmark[]
+  collectionId  String?
+  collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+
+  @@map("posts")
 }
 
 model Comment {
@@ -242,4 +246,19 @@ model Bookmark {
   @@unique([userId, externalPostId])
   @@index([userId, createdAt])
   @@map("bookmarks")
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  slug        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts Post[]
+
+  @@unique([userId, slug])
+  @@map("collections")
 }

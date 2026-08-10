@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { getMyPost } from "@/lib/queries/post";
 import { savePost } from "@/lib/actions/post";
+import { myCollections } from "@/lib/actions/collection";
 import { MarkdownEditor } from "@/components/editor/MarkdownEditor";
 
 export const metadata: Metadata = { title: "글 수정" };
@@ -14,6 +15,7 @@ export default async function EditPage(props: PageProps<"/write/[id]">) {
   const { saved, error } = await props.searchParams;
   const post = await getMyPost(me.id, id);
   if (!post) notFound();
+  const collections = await myCollections();
 
   return (
     <main className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col">
@@ -24,6 +26,8 @@ export default async function EditPage(props: PageProps<"/write/[id]">) {
         defaultTags={post.tags.map((t) => t.tag.name).join(", ")}
         defaultCover={post.coverImage}
         status={post.status}
+        collections={collections}
+        defaultCollectionId={post.collectionId}
         saved={saved === "1"}
         error={typeof error === "string" ? error : undefined}
         action={savePost}

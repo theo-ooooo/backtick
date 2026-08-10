@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getUserWithPosts, getPopularPosts } from "@/lib/queries/user";
+import { getUserWithPosts, getPopularPosts, getCollections } from "@/lib/queries/user";
+import { getUserStars } from "@/lib/queries/bookmark";
 import { getWritingDays } from "@/lib/queries/stats";
 import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
 import { Avatar } from "@/components/ui/Avatar";
 import { BlogPostList } from "@/components/post/BlogPostList";
+import { FeedList } from "@/components/feed/FeedList";
 import { ContributionCalendar } from "@/components/stats/ContributionCalendar";
 
 export const revalidate = 300;
@@ -39,14 +41,16 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
 export default async function BlogHome(props: PageProps<"/[handle]">) {
   const { handle } = await props.params;
   const { tab } = await props.searchParams;
-  const view = tab === "posts" ? "posts" : "overview";
+  const view = tab === "posts" || tab === "collections" || tab === "stars" ? tab : "overview";
 
   const user = await getUserWithPosts(handle);
   if (!user || !user.handle) notFound();
-  const [days, popular, me] = await Promise.all([
+  const [days, popular, me, collections, stars] = await Promise.all([
     getWritingDays(user.id),
     getPopularPosts(user.id, 3),
     currentUser(),
+    view === "collections" || view === "overview" ? getCollections(user.id) : Promise.resolve([]),
+    view === "stars" ? getUserStars(user.id) : Promise.resolve([]),
   ]);
   const mine = me?.id === user.id;
   const recent = user.posts.slice(0, 4);
@@ -109,7 +113,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
 
         {/* 우측 콘텐츠 */}
         <section className="min-w-0 flex-1">
-          <div className="flex gap-6 border-b border-line">
+          <div className="flex gap-5 overflow-x-auto border-b border-line">
             <Link href={`/@${user.handle}`} className={tabCls(view === "overview")}>
               개요
             </Link>
@@ -118,6 +122,12 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
               <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-[11px] font-semibold text-muted">
                 {user._count.posts}
               </span>
+            </Link>
+            <Link href={`/@${user.handle}?tab=collections`} className={tabCls(view === "collections")}>
+              시리즈
+            </Link>
+            <Link href={`/@${user.handle}?tab=stars`} className={tabCls(view === "stars")}>
+              저장
             </Link>
           </div>
 
@@ -188,7 +198,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
                 </ul>
               </div>
             </div>
-          ) : (
+          ) : view === "posts" ? (
             <div className="mt-2">
               <BlogPostList
                 handle={user.handle}
@@ -202,6 +212,32 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
                   tags: p.tags.map((t) => t.tag.name),
                 }))}
               />
+            </div>
+          ) : view === "collections" ? (
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {collections.length === 0 && (
+                <p className="col-span-full py-16 text-center text-sm text-faint">
+                  아직 시리즈가 없어요{mine ? " — 글 쓸 때 시리즈로 묶어보세요" : ""}
+                </p>
+              )}
+              {collections.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/@${user.handle}/collections/${c.slug}`}
+                  className="rounded-2xl border border-line bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,24,21,.08)]"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[15px] text-acc">＃</span>
+                    <h3 className="min-w-0 flex-1 truncate text-[15px] font-extrabold text-ink">{c.name}</h3>
+                    <span className="shrink-0 font-mono text-[12px] text-faint">{c._count.posts}편</span>
+                  </div>
+                  {c.description && <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{c.description}</p>}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4">
+              <FeedList items={stars} empty="아직 저장한 글이 없어요. 피드에서 🔖 아이콘으로 저장해보세요" />
             </div>
           )}
         </section>

@@ -16,3 +16,8 @@ export async function getBookmarkedItems(userId: string): Promise<FeedItem[]> {
     .map((b) => (b.post ? toFeedItem(b.post) : b.externalPost ? toExternalFeedItem(b.externalPost) : null))
     .filter((x): x is FeedItem => x !== null);
 }
+
+/** 유저가 Star(북마크)한 글 — 프로필 Stars 탭 공개용. */
+export async function getUserStars(userId: string) {
+  return getBookmarkedItems(userId);
+}

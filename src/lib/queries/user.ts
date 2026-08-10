@@ -58,3 +58,15 @@ export async function getPopularPosts(userId: string, take = 3) {
     select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, views: true, publishedAt: true, readMinutes: true },
   });
 }
+
+/** 유저의 컬렉션(시리즈) 목록 + 글 수. */
+export async function getCollections(userId: string) {
+  return prisma.collection.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true, name: true, slug: true, description: true,
+      _count: { select: { posts: { where: { status: "PUBLISHED" } } } },
+    },
+  });
+}
