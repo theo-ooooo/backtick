@@ -64,8 +64,8 @@ body {
 
 /* ---------- article prose (post pages + editor preview) ---------- */
 .bt-prose {
-  font-size: 15.5px;
-  line-height: 1.85;
+  font-size: 15px;
+  line-height: 1.72;
   color: var(--sub);
   word-break: break-word;
 }
@@ -75,8 +75,8 @@ body {
   color: var(--ink);
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin: 2em 0 0.6em;
-  line-height: 1.4;
+  margin: 1.6em 0 0.5em;
+  line-height: 1.3;
 }
 .bt-prose h1 { font-size: 1.55em; }
 .bt-prose h2 { font-size: 1.3em; }

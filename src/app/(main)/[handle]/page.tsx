@@ -123,6 +123,11 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
             </Link>
             <Link href={`/@${user.handle}?tab=collections`} className={tabCls(view === "collections")}>
               시리즈
+              {collections.length > 0 && (
+                <span className="rounded-full bg-paper px-2 py-0.5 font-mono text-[11px] font-semibold text-muted">
+                  {collections.length}
+                </span>
+              )}
             </Link>
           </div>
 

@@ -38,7 +38,7 @@ export default async function CollectionPage(props: PageProps<"/[handle]/collect
   return (
     <main className="mx-auto w-full max-w-[760px] px-6 py-10">
       <Link href={`/@${user.handle}?tab=collections`} className="font-mono text-[12.5px] font-semibold text-muted hover:text-acc">
-        ← 컬렉션
+        ← 시리즈
       </Link>
       <div className="mt-3 flex items-baseline gap-2">
         <span className="font-mono text-[22px] text-acc">＃</span>
