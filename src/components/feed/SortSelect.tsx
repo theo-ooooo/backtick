@@ -21,16 +21,19 @@ export function SortSelect({ current }: { current: FeedSort }) {
   }
 
   return (
-    <div className="ml-auto flex items-center gap-0.5 rounded-full bg-paper p-0.5">
+    <div className="ml-auto flex items-center gap-1">
       {OPTIONS.map((o) => (
         <button
           key={o.key}
           type="button"
           onClick={() => go(o.key)}
-          className={`rounded-full px-3 py-1 text-[12.5px] font-bold transition ${
-            current === o.key ? "bg-card text-ink shadow-sm" : "text-muted hover:text-sub"
+          className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-bold transition ${
+            current === o.key
+              ? "bg-ink text-bg shadow-[0_2px_8px_rgba(26,24,21,.18)]"
+              : "text-muted hover:bg-paper hover:text-ink"
           }`}
         >
+          {o.key === "popular" ? "🔥 " : ""}
           {o.label}
         </button>
       ))}

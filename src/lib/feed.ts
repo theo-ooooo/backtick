@@ -14,6 +14,7 @@ export interface FeedItem {
   source: string | null; // external only — e.g. "토스"
   thumbnail: string | null;
   likes: number | null;
+  views: number | null; // native only
   tags: string[];
   publishedAt: Date;
 }
@@ -25,6 +26,7 @@ export type FeedSort = "latest" | "popular";
 export const feedPostSelect = {
   id: true,
   slug: true,
+  views: true,
   title: true,
   excerpt: true,
   coverImage: true,
@@ -64,6 +66,7 @@ export function toFeedItem(p: PostWithRels): FeedItem {
     source: null,
     thumbnail: imgProxy(p.coverImage, "cover", p.id, p.updatedAt),
     likes: p._count.likes > 0 ? p._count.likes : null,
+    views: p.views,
     tags: p.tags.map((t) => t.tag.name),
     publishedAt: p.publishedAt ?? p.createdAt,
   };
@@ -81,6 +84,7 @@ export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
     source: e.feed.name,
     thumbnail: e.thumbnail,
     likes: e.likes,
+    views: null,
     tags: e.tags,
     publishedAt: e.publishedAt,
   };
@@ -123,12 +127,20 @@ export async function getFeed(
 
   const merged = [...native, ...external];
   if (sort === "popular") {
-    // 트렌딩 — 좋아요를 경과 시간으로 감쇠 (오래된 인기글이 상단을 점령하지 않게)
+    // 트렌딩 — 참여 신호(좋아요·조회수)가 있는 글을 시간 감쇠 점수로 상단에,
+    // 참여가 없는 글은 그 뒤에 최신순으로. (좋아요가 희소해도 최신순과 확실히 달라진다)
+    const engagement = (i: FeedItem) => (i.likes ?? 0) * 10 + (i.views ?? 0);
     const score = (i: FeedItem) => {
       const hours = Math.max(0, (Date.now() - i.publishedAt.getTime()) / 3600000);
-      return ((i.likes ?? 0) + 1) / Math.pow(hours + 2, 1.2);
+      return engagement(i) / Math.pow(hours + 12, 1.1);
     };
-    merged.sort((a, b) => score(b) - score(a));
+    merged.sort((a, b) => {
+      const ea = engagement(a) > 0 ? 1 : 0;
+      const eb = engagement(b) > 0 ? 1 : 0;
+      if (ea !== eb) return eb - ea;
+      if (ea === 1) return score(b) - score(a);
+      return b.publishedAt.getTime() - a.publishedAt.getTime();
+    });
   } else {
     merged.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
   }
