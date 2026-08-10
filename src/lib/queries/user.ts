@@ -76,3 +76,13 @@ export async function getCollections(userId: string) {
     },
   });
 }
+
+/** 유저가 속한 팀 목록. */
+export async function getUserTeams(userId: string) {
+  const rows = await prisma.teamMember.findMany({
+    where: { userId },
+    orderBy: { joinedAt: "asc" },
+    select: { team: { select: { name: true, slug: true } } },
+  });
+  return rows.map((r) => r.team);
+}

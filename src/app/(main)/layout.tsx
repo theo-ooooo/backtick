@@ -23,6 +23,7 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">피드</Link>
             <Link href="/tags" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">태그</Link>
             <Link href="/sources" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">기업 블로그</Link>
+            <Link href="/teams" className="rounded-lg px-3 py-1.5 transition hover:bg-black/[.04] hover:text-ink">팀</Link>
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <form action="/search" className="relative hidden md:block">

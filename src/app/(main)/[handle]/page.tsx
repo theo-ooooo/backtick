@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getUserWithPosts, getPopularPosts, getCollections } from "@/lib/queries/user";
+import { getUserWithPosts, getPopularPosts, getCollections, getUserTeams } from "@/lib/queries/user";
 import { getWritingDays } from "@/lib/queries/stats";
 import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
@@ -44,11 +44,12 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
 
   const user = await getUserWithPosts(handle);
   if (!user || !user.handle) notFound();
-  const [days, popular, me, collections] = await Promise.all([
+  const [days, popular, me, collections, teams] = await Promise.all([
     getWritingDays(user.id),
     getPopularPosts(user.id, 3),
     currentUser(),
     view === "collections" || view === "overview" ? getCollections(user.id) : Promise.resolve([]),
+    getUserTeams(user.id),
   ]);
   const mine = me?.id === user.id;
   const recent = user.posts.slice(0, 4);
@@ -107,6 +108,23 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
               </SocialIcon>
             )}
           </div>
+
+          {teams.length > 0 && (
+            <div className="mt-6 border-t border-line pt-5">
+              <h2 className="mb-2.5 text-[12px] font-bold text-sub">소속 팀</h2>
+              <div className="flex flex-wrap gap-1.5">
+                {teams.map((t) => (
+                  <Link
+                    key={t.slug}
+                    href={`/teams/${t.slug}`}
+                    className="rounded-full border border-line px-3 py-1 text-[12.5px] font-semibold text-sub transition hover:border-acc hover:text-acc"
+                  >
+                    {t.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </aside>
 
         {/* 우측 콘텐츠 */}
