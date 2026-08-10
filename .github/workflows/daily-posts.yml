@@ -1,0 +1,29 @@
+name: daily-posts
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # 10:00 KST — 오전 글
+    - cron: "0 10 * * *" # 19:00 KST — 저녁 글
+  workflow_dispatch: {}
+
+concurrency:
+  group: daily-posts
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx prisma generate
+      - name: Publish daily post
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npx tsx scripts/daily-posts.ts
