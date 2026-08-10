@@ -95,6 +95,7 @@ ${titles}
       slug,
       content,
       excerpt: toExcerpt(content),
+      readMinutes: Math.max(1, Math.round(content.length / 700)),
       status: "PUBLISHED",
       publishedAt: new Date(),
     },

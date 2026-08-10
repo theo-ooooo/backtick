@@ -90,6 +90,9 @@ export function UserMenu({ name, image, handle, provider }: Props) {
             <Link href="/posts" className={item} role="menuitem">
               내 글
             </Link>
+            <Link href="/bookmarks" className={item} role="menuitem">
+              저장한 글
+            </Link>
             <Link href="/stats" className={item} role="menuitem">
               내 통계
             </Link>

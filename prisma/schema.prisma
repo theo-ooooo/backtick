@@ -15,6 +15,7 @@ model User {
   passwordHash String? // 이메일+비밀번호 로그인용 (bcrypt)
   notifications Notification[] @relation("received")
   activities    Notification[] @relation("acted")
+  bookmarks     Bookmark[]
   name      String?
   email     String? // 프로바이더별 계정 분리 정책 — 같은 이메일이 여러 계정에 있을 수 있다
   emailVerified DateTime?
@@ -82,6 +83,7 @@ model Post {
   coverImage  String?
   status      PostStatus @default(DRAFT)
   views       Int        @default(0)
+  readMinutes Int        @default(1) // 읽기 시간(분) — 저장 시 계산
   summary     String? // AI 3줄 요약 캐시
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
@@ -96,6 +98,7 @@ model Post {
   @@index([status, publishedAt])
   @@map("posts")
   notifications Notification[]
+  bookmarks     Bookmark[]
 }
 
 model Comment {
@@ -204,6 +207,7 @@ model ExternalPost {
 
   @@index([publishedAt])
   @@map("external_posts")
+  bookmarks Bookmark[]
 }
 
 model Notification {
@@ -221,4 +225,21 @@ model Notification {
 
   @@index([userId, read])
   @@map("notifications")
+}
+
+model Bookmark {
+  id             String   @id @default(cuid())
+  userId         String
+  postId         String? // 백틱 글
+  externalPostId String? // 수집 글
+  createdAt      DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post         Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  externalPost ExternalPost? @relation(fields: [externalPostId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, externalPostId])
+  @@index([userId, createdAt])
+  @@map("bookmarks")
 }

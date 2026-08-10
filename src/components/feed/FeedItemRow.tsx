@@ -13,10 +13,12 @@ interface Props {
   item: FeedItem;
   read?: boolean;
   onRead?: () => void;
+  bookmarked?: boolean;
+  onBookmark?: () => void;
 }
 
 /** One row in the unified feed — native posts and collected external posts share this. */
-export function FeedItemRow({ item, read = false, onRead }: Props) {
+export function FeedItemRow({ item, read = false, onRead, bookmarked = false, onBookmark }: Props) {
   const external = item.kind === "external";
   const [summary, setSummary] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -70,7 +72,10 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
             <>
               <Avatar name={item.author ?? "?"} image={item.authorImage} size="sm" />
               <span className="font-bold text-sub">{item.author}</span>
-              <span className="text-faint">· {timeAgo(item.publishedAt)}</span>
+              <span className="text-faint">
+                · {timeAgo(item.publishedAt)}
+                {item.readMinutes ? ` · ${item.readMinutes}분 읽기` : ""}
+              </span>
             </>
           )}
           {read && (
@@ -93,6 +98,24 @@ export function FeedItemRow({ item, read = false, onRead }: Props) {
               <span className="ml-1 flex shrink-0 items-center gap-1 text-[12px] font-semibold text-faint">
                 <span className="text-acc">♡</span> {item.likes}
               </span>
+            )}
+            {onBookmark && (
+              <button
+                type="button"
+                aria-label={bookmarked ? "저장 취소" : "저장"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onBookmark();
+                }}
+                className={`ml-1 flex shrink-0 items-center rounded-full p-1.5 transition ${
+                  bookmarked ? "text-acc" : "text-faint hover:bg-paper hover:text-sub"
+                }`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M19 21 12 16.5 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z" />
+                </svg>
+              </button>
             )}
             {external && (
               <button

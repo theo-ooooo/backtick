@@ -4,6 +4,7 @@ import { imgProxy } from "./img";
 
 /** One unified card shape for the home feed (native posts + external posts). */
 export interface FeedItem {
+  id: string;
   kind: "native" | "external";
   title: string;
   url: string; // native: /@handle/slug, external: original article URL
@@ -15,6 +16,7 @@ export interface FeedItem {
   thumbnail: string | null;
   likes: number | null;
   views: number | null; // native only
+  readMinutes: number | null; // native only
   tags: string[];
   publishedAt: Date;
 }
@@ -27,6 +29,7 @@ export const feedPostSelect = {
   id: true,
   slug: true,
   views: true,
+  readMinutes: true,
   title: true,
   excerpt: true,
   coverImage: true,
@@ -39,6 +42,7 @@ export const feedPostSelect = {
 } satisfies Prisma.PostSelect;
 
 export const feedExternalSelect = {
+  id: true,
   title: true,
   url: true,
   excerpt: true,
@@ -56,6 +60,7 @@ type ExternalWithFeed = Prisma.ExternalPostGetPayload<{ select: typeof feedExter
 /** shared row mappers — feed/search/tag pages all produce the same card shape */
 export function toFeedItem(p: PostWithRels): FeedItem {
   return {
+    id: p.id,
     kind: "native",
     title: p.title,
     url: `/@${p.author.handle}/${p.slug}`,
@@ -67,6 +72,7 @@ export function toFeedItem(p: PostWithRels): FeedItem {
     thumbnail: imgProxy(p.coverImage, "cover", p.id, p.updatedAt),
     likes: p._count.likes > 0 ? p._count.likes : null,
     views: p.views,
+    readMinutes: p.readMinutes,
     tags: p.tags.map((t) => t.tag.name),
     publishedAt: p.publishedAt ?? p.createdAt,
   };
@@ -74,6 +80,7 @@ export function toFeedItem(p: PostWithRels): FeedItem {
 
 export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
   return {
+    id: e.id,
     kind: "external",
     title: e.title,
     url: e.url,
@@ -85,6 +92,7 @@ export function toExternalFeedItem(e: ExternalWithFeed): FeedItem {
     thumbnail: e.thumbnail,
     likes: e.likes,
     views: null,
+    readMinutes: null,
     tags: e.tags,
     publishedAt: e.publishedAt,
   };

@@ -23,6 +23,10 @@ function firstImage(md: string): string | null {
   return m ? m[1] : null;
 }
 
+function readMinutes(md: string): number {
+  return Math.max(1, Math.round(md.length / 700));
+}
+
 function toExcerpt(md: string, max = 160): string {
   return md
     .replace(/```[\s\S]*?```/g, " ")
@@ -115,6 +119,7 @@ export async function savePost(formData: FormData) {
         title,
         content,
         excerpt: toExcerpt(content),
+        readMinutes: readMinutes(content),
         coverImage: coverForSave ?? firstImage(content),
         ...(publish && post.status === "DRAFT"
           ? { status: "PUBLISHED", publishedAt: new Date() }
@@ -133,6 +138,7 @@ export async function savePost(formData: FormData) {
         slug,
         content,
         excerpt: toExcerpt(content),
+        readMinutes: readMinutes(content),
         coverImage: coverForSave ?? firstImage(content),
         status: publish ? "PUBLISHED" : "DRAFT",
         publishedAt: publish ? new Date() : null,
@@ -183,7 +189,7 @@ export async function autosaveDraft(input: {
     if (post.status !== "DRAFT") return { error: "published" };
     await prisma.post.update({
       where: { id: post.id },
-      data: { title, content, excerpt: toExcerpt(content) },
+      data: { title, content, excerpt: toExcerpt(content), readMinutes: readMinutes(content) },
     });
     return { id: post.id, savedAt: new Date().toISOString() };
   }
@@ -192,7 +198,7 @@ export async function autosaveDraft(input: {
   const dupe = await prisma.post.findFirst({ where: { authorId: me.id, slug } });
   if (dupe) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
   const post = await prisma.post.create({
-    data: { authorId: me.id, title, slug, content, excerpt: toExcerpt(content), status: "DRAFT" },
+    data: { authorId: me.id, title, slug, content, excerpt: toExcerpt(content), readMinutes: readMinutes(content), status: "DRAFT" },
   });
   return { id: post.id, savedAt: new Date().toISOString() };
 }
