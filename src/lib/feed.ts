@@ -123,10 +123,12 @@ export async function getFeed(
 
   const merged = [...native, ...external];
   if (sort === "popular") {
-    // 좋아요 많은 순 (없으면 0), 동률이면 최신순
-    merged.sort(
-      (a, b) => (b.likes ?? 0) - (a.likes ?? 0) || b.publishedAt.getTime() - a.publishedAt.getTime(),
-    );
+    // 트렌딩 — 좋아요를 경과 시간으로 감쇠 (오래된 인기글이 상단을 점령하지 않게)
+    const score = (i: FeedItem) => {
+      const hours = Math.max(0, (Date.now() - i.publishedAt.getTime()) / 3600000);
+      return ((i.likes ?? 0) + 1) / Math.pow(hours + 2, 1.2);
+    };
+    merged.sort((a, b) => score(b) - score(a));
   } else {
     merged.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
   }
