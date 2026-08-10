@@ -14,7 +14,7 @@ export default async function TeamsPage() {
   const teams = await prisma.team.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,
-    select: { id: true, name: true, slug: true, description: true, _count: { select: { members: true } } },
+    select: { id: true, name: true, slug: true, description: true, image: true, _count: { select: { members: true } } },
   });
 
   return (
@@ -40,9 +40,14 @@ export default async function TeamsPage() {
       <div className="mt-8 divide-y divide-line/70">
         {teams.map((t) => (
           <Link key={t.id} href={`/teams/${t.slug}`} className="group flex items-center gap-3 py-4">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1a1815] font-mono text-[18px] text-acc">
-              {t.name.slice(0, 1)}
-            </span>
+            {t.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={t.image} alt="" className="h-11 w-11 shrink-0 rounded-xl border border-line object-cover" />
+            ) : (
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1a1815] font-mono text-[18px] text-acc">
+                {t.name.slice(0, 1)}
+              </span>
+            )}
             <div className="min-w-0 flex-1">
               <h3 className="text-[15px] font-extrabold text-ink group-hover:text-acc">{t.name}</h3>
               {t.description && <p className="line-clamp-1 text-[13px] text-muted">{t.description}</p>}

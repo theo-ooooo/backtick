@@ -47,9 +47,14 @@ export default async function TeamPage(props: PageProps<"/teams/[slug]">) {
   return (
     <main className="mx-auto w-full max-w-[900px] px-6 py-10">
       <div className="flex items-center gap-4">
-        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#1a1815] font-mono text-[28px] text-acc">
-          {team.name.slice(0, 1)}
-        </span>
+        {team.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={team.image} alt="" className="h-16 w-16 shrink-0 rounded-2xl border border-line object-cover" />
+        ) : (
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#1a1815] font-mono text-[28px] text-acc">
+            {team.name.slice(0, 1)}
+          </span>
+        )}
         <div className="min-w-0 flex-1">
           <h1 className="text-[24px] font-extrabold tracking-[-0.02em]">{team.name}</h1>
           {team.description && <p className="mt-1 text-[14px] text-muted">{team.description}</p>}
