@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getUserWithPosts, getPopularPosts, getCollections } from "@/lib/queries/user";
-import { getUserStars } from "@/lib/queries/bookmark";
 import { getWritingDays } from "@/lib/queries/stats";
 import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
 import { Avatar } from "@/components/ui/Avatar";
 import { BlogPostList } from "@/components/post/BlogPostList";
-import { FeedList } from "@/components/feed/FeedList";
 import { ContributionCalendar } from "@/components/stats/ContributionCalendar";
 import { Markdown } from "@/components/markdown/Markdown";
 
@@ -42,16 +40,15 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
 export default async function BlogHome(props: PageProps<"/[handle]">) {
   const { handle } = await props.params;
   const { tab } = await props.searchParams;
-  const view = tab === "posts" || tab === "collections" || tab === "stars" ? tab : "overview";
+  const view = tab === "posts" || tab === "collections" ? tab : "overview";
 
   const user = await getUserWithPosts(handle);
   if (!user || !user.handle) notFound();
-  const [days, popular, me, collections, stars] = await Promise.all([
+  const [days, popular, me, collections] = await Promise.all([
     getWritingDays(user.id),
     getPopularPosts(user.id, 3),
     currentUser(),
     view === "collections" || view === "overview" ? getCollections(user.id) : Promise.resolve([]),
-    view === "stars" ? getUserStars(user.id) : Promise.resolve([]),
   ]);
   const mine = me?.id === user.id;
   const recent = user.posts.slice(0, 4);
@@ -126,9 +123,6 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
             </Link>
             <Link href={`/@${user.handle}?tab=collections`} className={tabCls(view === "collections")}>
               시리즈
-            </Link>
-            <Link href={`/@${user.handle}?tab=stars`} className={tabCls(view === "stars")}>
-              저장
             </Link>
           </div>
 
@@ -219,7 +213,7 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
                 }))}
               />
             </div>
-          ) : view === "collections" ? (
+          ) : (
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {collections.length === 0 && (
                 <p className="col-span-full py-16 text-center text-sm text-faint">
@@ -240,10 +234,6 @@ export default async function BlogHome(props: PageProps<"/[handle]">) {
                   {c.description && <p className="mt-1.5 line-clamp-2 text-[13px] text-muted">{c.description}</p>}
                 </Link>
               ))}
-            </div>
-          ) : (
-            <div className="mt-4">
-              <FeedList items={stars} empty="아직 저장한 글이 없어요. 피드에서 🔖 아이콘으로 저장해보세요" />
             </div>
           )}
         </section>
