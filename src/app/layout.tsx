@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Source_Code_Pro } from "next/font/google";
 import { ProgressBar } from "@/components/layout/ProgressBar";
+import { PwaRegister } from "@/components/layout/PwaRegister";
 import "./globals.css";
 
 const codeFont = Source_Code_Pro({
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
   description:
     "코드를 감싸는 기호처럼, 당신의 기록을 감싸는 곳. 마크다운으로 글을 쓰고 국내 기술블로그 소식을 한곳에서 받아보세요.",
   twitter: { card: "summary_large_image" },
+  appleWebApp: { capable: true, title: "백틱", statusBarStyle: "default" },
+  icons: { apple: "/apple-touch-icon.png" },
   alternates: {
     canonical: "/",
     types: { "application/rss+xml": [{ url: "/rss.xml", title: "백틱 최신 글" }] },
@@ -51,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
+        <PwaRegister />
         <ProgressBar />
         {children}
       </body>
