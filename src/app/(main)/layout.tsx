@@ -3,6 +3,7 @@ import { currentUser } from "@/lib/auth";
 import { imgProxy } from "@/lib/img";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { CommandPalette } from "@/components/layout/CommandPalette";
 import { prisma } from "@/lib/prisma";
 import { ButtonLink } from "@/components/ui/Button";
 import { UserMenu } from "@/components/layout/UserMenu";
@@ -84,6 +85,7 @@ export default async function MainLayout({ children }: LayoutProps<"/">) {
         </div>
       </footer>
 
+      <CommandPalette />
       <MobileTabBar handle={me?.handle ?? null} loggedIn={Boolean(me)} />
     </>
   );
