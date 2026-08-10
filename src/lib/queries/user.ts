@@ -48,3 +48,13 @@ export async function getBlogPostsPage(handleParam: string, page: number, take =
     },
   });
 }
+
+/** 블로그 개요 탭 — 조회수 상위 발행글. */
+export async function getPopularPosts(userId: string, take = 3) {
+  return prisma.post.findMany({
+    where: { authorId: userId, status: "PUBLISHED" },
+    orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
+    take,
+    select: { id: true, slug: true, title: true, excerpt: true, coverImage: true, views: true, publishedAt: true, readMinutes: true },
+  });
+}
