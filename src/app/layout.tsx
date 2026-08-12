@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   description:
     "코드를 감싸는 기호처럼, 당신의 기록을 감싸는 곳. 마크다운으로 글을 쓰고 국내 기술블로그 소식을 한곳에서 받아보세요.",
   twitter: { card: "summary_large_image" },
+  verification: {
+    ...(process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : {}),
+    ...(process.env.NAVER_SITE_VERIFICATION ? { other: { "naver-site-verification": process.env.NAVER_SITE_VERIFICATION } } : {}),
+  },
   appleWebApp: { capable: true, title: "백틱", statusBarStyle: "default" },
   icons: { apple: "/apple-touch-icon.png" },
   alternates: {
