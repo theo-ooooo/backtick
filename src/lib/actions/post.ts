@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { currentUser } from "@/lib/auth";
 import { uploadImage, adoptInlineImages } from "@/lib/storage";
 import { notify } from "@/lib/notify";
+import { pingIndexNow } from "@/lib/indexnow";
 
 function slugify(title: string): string {
   const base = title
@@ -166,6 +167,7 @@ export async function savePost(formData: FormData) {
   revalidatePath("/");
   if (publish || post.status === "PUBLISHED") {
     revalidatePath(`/@${me.handle}`);
+    void pingIndexNow([`/@${me.handle}/${encodeURIComponent(post.slug)}`]);
     // redirect는 HTTP 헤더를 타므로 한글 슬러그는 반드시 인코딩 (ERR_INVALID_CHAR 방지)
     redirect(`/@${me.handle}/${encodeURIComponent(post.slug)}`);
   }
