@@ -19,6 +19,10 @@ test('liveness returns JSON and security headers', async () => {
   const response = await fetch(url + '/api/v1/health');
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.doesNotMatch(
+    response.headers.get('content-security-policy'),
+    /upgrade-insecure-requests/,
+  );
   assert.deepEqual(await response.json(), {
     status: 'ok',
     service: 'backtick-backend',

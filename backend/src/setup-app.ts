@@ -5,7 +5,17 @@ import helmet from 'helmet';
 
 export function setupApp(app: INestApplication) {
   const config = app.get(ConfigService);
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          // Safari upgrades localhost asset requests to HTTPS with this directive.
+          upgradeInsecureRequests:
+            config.getOrThrow<string>('NODE_ENV') === 'production' ? [] : null,
+        },
+      },
+    }),
+  );
   app.setGlobalPrefix('api/v1');
   app.enableCors({ origin: config.getOrThrow<string[]>('CORS_ORIGINS') });
   app.useGlobalPipes(

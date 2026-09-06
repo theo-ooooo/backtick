@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '../../generated/client/index.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { escapeLikePattern } from '../common/search.js';
 import { ListPostsDto } from './dto/list-posts.dto.js';
 import { PostDetailDto, PostsPageDto } from './dto/post-response.dto.js';
 
@@ -36,15 +37,16 @@ export class PostsService {
 
   async list(query: ListPostsDto): Promise<PostsPageDto> {
     const { page, limit, author, tag, q } = query;
+    const search = q ? escapeLikePattern(q) : undefined;
     const where: Prisma.PostWhereInput = {
       status: 'PUBLISHED',
       author: { handle: author ?? { not: null } },
       ...(tag ? { tags: { some: { tag: { name: tag } } } } : {}),
-      ...(q
+      ...(search
         ? {
             OR: [
-              { title: { contains: q, mode: 'insensitive' } },
-              { excerpt: { contains: q, mode: 'insensitive' } },
+              { title: { contains: search, mode: 'insensitive' } },
+              { excerpt: { contains: search, mode: 'insensitive' } },
             ],
           }
         : {}),

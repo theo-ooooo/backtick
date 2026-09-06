@@ -142,3 +142,21 @@ test('Swagger describes list filters and response schemas', async () => {
   assert.ok(doc.components.schemas.PostsPageDto);
   assert.ok(doc.components.schemas.PostDetailDto);
 });
+
+test('search treats SQL wildcard and escape characters literally', async () => {
+  const slash = String.fromCharCode(92);
+  const cases = [
+    ['%', slash + '%'],
+    ['foo_bar', 'foo' + slash + '_bar'],
+    ['path' + slash + 'file', 'path' + slash + slash + 'file'],
+  ];
+  for (const [q, expected] of cases) {
+    const response = await fetch(
+      url + '/api/v1/posts?' + new URLSearchParams({ q }),
+    );
+    assert.equal(response.status, 200);
+    assert.equal(listCall.where.OR[0].title.contains, expected);
+    assert.equal(listCall.where.OR[1].excerpt.contains, expected);
+    assert.deepEqual(countCall.where, listCall.where);
+  }
+});
