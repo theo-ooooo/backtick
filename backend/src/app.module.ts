@@ -5,6 +5,7 @@ import { validateEnvironment } from './config/environment.js';
 import { HealthModule } from './health/health.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { FeedsModule } from './feeds/feeds.module.js';
+import { DiscoveryModule } from './discovery/discovery.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FeedsModule } from './feeds/feeds.module.js';
     PrismaModule,
     HealthModule,
     FeedsModule,
+    DiscoveryModule,
   ],
 })
 export class AppModule {}
