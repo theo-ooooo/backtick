@@ -1,4 +1,9 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "feat/nestjs-*": false
+    }
+  },
   "regions": ["icn1"],
   "redirects": [
     {

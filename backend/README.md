@@ -62,6 +62,19 @@ npm --prefix backend test
 실제 PostgreSQL 연결과 기존 데이터 조회는 개발 DB로 별도 확인해야 합니다.
 GitHub Actions가 백엔드 및 공유 스키마 변경 시 설치·린트·포맷·빌드·HTTP 테스트를 실행합니다.
 
+## Vercel Preview 정책
+
+`feat/nestjs-*`는 NestJS 백엔드 전용 브랜치입니다. 루트 `vercel.json`의
+`git.deploymentEnabled` 설정으로 이 브랜치들의 Vercel 자동 배포를 끕니다.
+백엔드 변경은 위의 Backend CI로 검증하므로 Vercel Preview용 `DATABASE_URL`을 추가할 필요가 없습니다.
+
+이 설정은 변경 파일이 아닌 브랜치 이름 기준입니다. 프론트엔드 화면이나 공통 설정의
+Preview 검증이 필요하면 `feat/nestjs-*` 밖의 별도 브랜치를 사용하고 테스트 DB를 설정하세요.
+`main` 및 다른 브랜치의 자동 배포, 기존 리전·리다이렉트·크론 설정은 유지됩니다.
+
+공통 기반 PR과 이에 의존하는 기능 PR 모두 이 설정을 포함해야 적용됩니다.
+과거 커밋의 배포 실패 기록은 남지만, 설정 반영 후 새 커밋은 이 자동 배포를 실행하지 않습니다.
+
 ## 이번 작업 범위
 
 독립 서버 기반을 추가합니다. 기존 Next.js API/Server Actions와 Auth.js 인증은 현재 경로에서 동작합니다.
