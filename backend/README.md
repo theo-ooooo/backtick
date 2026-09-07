@@ -53,6 +53,7 @@ JSON 응답은 성공 시 `{ status, data }`, 오류 시 `{ status, data: null, 
 자세한 규약과 소비자 변경 사항은 [공통 API 응답](docs/api-response.md)을 참고하세요.
 검색·빠른 검색·태그 목록/인기 태그/태그별 글은 [검색·태그 API](docs/discovery-api.md)에 정리되어 있습니다.
 공개 프로필과 작성자별 글·인기 글은 [공개 프로필 API](docs/users-api.md)를 참고하세요.
+공개 글의 댓글·답글과 삭제 표시 규칙은 [댓글 API](docs/comments-api.md)에 정리되어 있습니다.
 
 ## 검증
 
@@ -62,9 +63,12 @@ npm --prefix backend run format:check
 npm --prefix backend test
 ~~~
 
-테스트는 실제 Nest HTTP 서버와 테스트용 Prisma 대역을 사용하므로 DB 없이 실행됩니다.
-실제 PostgreSQL 연결과 기존 데이터 조회는 개발 DB로 별도 확인해야 합니다.
-GitHub Actions가 백엔드 및 공유 스키마 변경 시 설치·린트·포맷·빌드·HTTP 테스트를 실행합니다.
+기본 HTTP 테스트는 실제 Nest 서버와 Prisma 대역을 사용하므로 DB 없이 실행됩니다.
+댓글 PostgreSQL 통합 테스트는 `BACKEND_TEST_DATABASE_URL`이 없으면 건너뜁니다.
+통합 테스트는 localhost/127.0.0.1의 `backtick_test` DB만 허용하며 자신이 생성한 데이터만 정리합니다.
+GitHub Actions는 백엔드·공유 스키마·migrations 변경 시 임시 PostgreSQL 16 DB에 migrations를 적용하고
+설치·린트·포맷·빌드·HTTP 테스트와 PostgreSQL 통합 테스트를 실행합니다.
+운영 데이터·성능·프론트 연결·배포는 별도 검증이 필요합니다.
 
 ## Vercel Preview 정책
 
