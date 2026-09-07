@@ -4,6 +4,7 @@ import { PostsModule } from './posts/posts.module.js';
 import { validateEnvironment } from './config/environment.js';
 import { HealthModule } from './health/health.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { FeedsModule } from './feeds/feeds.module.js';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     }),
     PrismaModule,
     HealthModule,
+    FeedsModule,
   ],
 })
 export class AppModule {}
