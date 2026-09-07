@@ -49,6 +49,8 @@ Swagger: http://localhost:4000/docs
 
 서버 시작 시 DB 연결을 확인하고 종료 시 연결을 해제합니다.
 공통 ValidationPipe는 DTO 타입 변환과 허용 필드 검증을 수행합니다.
+JSON 응답은 성공 시 `{ status, data }`, 오류 시 `{ status, data: null, message }`입니다.
+자세한 규약과 소비자 변경 사항은 [공통 API 응답](docs/api-response.md)을 참고하세요.
 
 ## 검증
 
