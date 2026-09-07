@@ -1,9 +1,10 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
-  ApiOkResponse,
-  ApiServiceUnavailableResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from '../common/api-response.decorator.js';
+import { LivenessDto, ReadinessDto } from './health-response.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @ApiTags('Health')
@@ -12,20 +13,22 @@ export class HealthController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  @ApiOkResponse({ description: 'The API process is running.' })
+  @ApiSuccessResponse(LivenessDto)
   live() {
     return { status: 'ok', service: 'backtick-backend' };
   }
 
   @Get('ready')
-  @ApiOkResponse({ description: 'The API can query PostgreSQL.' })
-  @ApiServiceUnavailableResponse({ description: 'PostgreSQL is unavailable.' })
+  @ApiSuccessResponse(ReadinessDto)
+  @ApiErrorResponse(503, 'PostgreSQL is unavailable.')
   async ready() {
     try {
       await this.prisma.$queryRaw`SELECT 1`;
       return { status: 'ok', database: 'up' };
-    } catch {
-      throw new ServiceUnavailableException('Database is unavailable');
+    } catch (cause) {
+      throw new ServiceUnavailableException('Database is unavailable', {
+        cause,
+      });
     }
   }
 }

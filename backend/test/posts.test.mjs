@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { createTestApp } from './helpers.mjs';
+import { createTestApp, readSuccess } from './helpers.mjs';
 
 const row = {
   id: 'public-post',
@@ -51,7 +51,7 @@ test('list applies public filters, stable order and numeric pagination', async (
     url + '/api/v1/posts?page=2&limit=10&author=THEO&tag=nestjs&q=API',
   );
   assert.equal(response.status, 200);
-  const body = await response.json();
+  const body = await readSuccess(response);
   assert.deepEqual(body.pagination, {
     page: 2,
     limit: 10,
@@ -74,7 +74,7 @@ test('list applies public filters, stable order and numeric pagination', async (
 
 test('list selects only public author fields and omits post bodies', async () => {
   const response = await fetch(url + '/api/v1/posts');
-  const body = await response.json();
+  const body = await readSuccess(response);
   assert.deepEqual(listCall.where.author, { handle: { not: null } });
   assert.deepEqual(Object.keys(listCall.select.author.select).sort(), [
     'handle',
@@ -112,7 +112,7 @@ test('invalid pagination and unrecognized/private filters fail before database a
 test('detail exposes published content and scopes lookup to public posts', async () => {
   const response = await fetch(url + '/api/v1/posts/public-post');
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).content, '# Hello');
+  assert.equal((await readSuccess(response)).content, '# Hello');
   assert.deepEqual(detailCall.where, {
     id: 'public-post',
     status: 'PUBLISHED',

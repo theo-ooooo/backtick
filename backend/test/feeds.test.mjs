@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { createTestApp } from './helpers.mjs';
+import { createTestApp, readSuccess } from './helpers.mjs';
 
 const source = {
   id: 'source-1',
@@ -52,7 +52,7 @@ after(async () => app?.close());
 test('source list is scoped to enabled feeds and returns public metadata', async () => {
   const response = await fetch(url + '/api/v1/feeds');
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), [
+  assert.deepEqual(await readSuccess(response), [
     { ...source, description: null, postCount: 12 },
   ]);
   assert.deepEqual(sourceCall.where, { enabled: true });
@@ -66,7 +66,7 @@ test('external posts support source/tag/search filters and bounded pagination', 
       '/api/v1/feeds/posts?page=2&limit=5&feedId=source-1&tag=typescript&q=Type',
   );
   assert.equal(response.status, 200);
-  const body = await response.json();
+  const body = await readSuccess(response);
   assert.deepEqual(body.pagination, {
     page: 2,
     limit: 5,
@@ -98,7 +98,7 @@ test('default list still excludes disabled sources', async () => {
 
 test('unknown sources produce an empty paginated response', async () => {
   const response = await fetch(url + '/api/v1/feeds/posts?feedId=missing');
-  assert.deepEqual(await response.json(), {
+  assert.deepEqual(await readSuccess(response), {
     items: [],
     pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
   });

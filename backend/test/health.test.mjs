@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, before, test } from 'node:test';
-import { createTestApp } from './helpers.mjs';
+import { createTestApp, readSuccess } from './helpers.mjs';
 
 let app;
 let url;
@@ -23,7 +23,7 @@ test('liveness returns JSON and security headers', async () => {
     response.headers.get('content-security-policy'),
     /upgrade-insecure-requests/,
   );
-  assert.deepEqual(await response.json(), {
+  assert.deepEqual(await readSuccess(response), {
     status: 'ok',
     service: 'backtick-backend',
   });
@@ -35,7 +35,11 @@ test('readiness reports database health and redacts failures', async () => {
   try {
     const response = await fetch(url + '/api/v1/health/ready');
     assert.equal(response.status, 503);
-    assert.equal((await response.json()).message, 'Database is unavailable');
+    assert.deepEqual(await response.json(), {
+      status: 503,
+      data: null,
+      message: 'Service Unavailable',
+    });
     assert.equal((await fetch(url + '/api/v1/health')).status, 200);
   } finally {
     available = true;
