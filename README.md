@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## NestJS Backend
+
+독립 NestJS API 서버의 설치·실행·환경설정은 [backend/README.md](backend/README.md)를 참고하세요.
+프론트엔드는 루트, 백엔드는 `backend/`에서 각각 패키지를 설치합니다.
+
 ## Getting Started
 
 First, run the development server:
