@@ -51,6 +51,7 @@ Swagger: http://localhost:4000/docs
 공통 ValidationPipe는 DTO 타입 변환과 허용 필드 검증을 수행합니다.
 JSON 응답은 성공 시 `{ status, data }`, 오류 시 `{ status, data: null, message }`입니다.
 자세한 규약과 소비자 변경 사항은 [공통 API 응답](docs/api-response.md)을 참고하세요.
+검색·빠른 검색·태그 목록/인기 태그/태그별 글은 [검색·태그 API](docs/discovery-api.md)에 정리되어 있습니다.
 
 ## 검증
 
