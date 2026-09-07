@@ -3,7 +3,11 @@ import { Prisma } from '../../generated/client/index.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { escapeLikePattern } from '../common/search.js';
 import { ListPostsDto } from './dto/list-posts.dto.js';
-import { PostDetailDto, PostsPageDto } from './dto/post-response.dto.js';
+import {
+  PostDetailDto,
+  PostSummaryDto,
+  PostsPageDto,
+} from './dto/post-response.dto.js';
 
 const summarySelect = {
   id: true,
@@ -65,6 +69,23 @@ export class PostsService {
       items: rows.map(toSummary),
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     };
+  }
+
+  async listPopularByAuthor(
+    author: string,
+    limit: number,
+  ): Promise<PostSummaryDto[]> {
+    const posts = await this.prisma.post.findMany({
+      where: { status: 'PUBLISHED', author: { handle: author } },
+      select: summarySelect,
+      orderBy: [
+        { views: 'desc' },
+        { publishedAt: { sort: 'desc', nulls: 'last' } },
+        { id: 'desc' },
+      ],
+      take: limit,
+    });
+    return posts.map(toSummary);
   }
 
   async getById(id: string): Promise<PostDetailDto> {
